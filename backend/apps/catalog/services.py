@@ -82,12 +82,15 @@ def add_photos(user, item, files, caption=""):
     if len(files) > room:
         raise ValidationError(f"Each listing can have up to {MAX_PHOTOS_PER_LISTING} photos "
                               f"({max(room, 0)} more allowed).")
+    from django.db import transaction
+
     photos = []
-    for f in files:
-        photo = InventoryPhoto(inventory_item=item, image=f, caption=caption[:120])
-        photo.full_clean()
-        photo.save()
-        photos.append(photo)
+    with transaction.atomic():  # all photos or none, e.g. if storage fails part-way
+        for f in files:
+            photo = InventoryPhoto(inventory_item=item, image=f, caption=caption[:120])
+            photo.full_clean()
+            photo.save()
+            photos.append(photo)
     return photos
 
 

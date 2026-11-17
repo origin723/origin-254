@@ -97,6 +97,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.RequestContextMiddleware",
+    "apps.core.middleware.StorageErrorMiddleware",  # object-storage failures -> message, not 500
 ]
 
 ROOT_URLCONF = "origin254.urls"

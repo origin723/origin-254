@@ -31,6 +31,13 @@ def api_exception_handler(exc, context):
         return Response({"error": {"code": "permission_denied", "message": str(exc) or "Not allowed.", "details": {}}},
                         status=status.HTTP_403_FORBIDDEN)
 
+    from apps.core.files import STORAGE_UNAVAILABLE_MESSAGE, is_storage_error
+
+    if is_storage_error(exc):
+        logger.error("Storage error in API: %s", exc)
+        return Response({"error": {"code": "storage_unavailable", "message": STORAGE_UNAVAILABLE_MESSAGE, "details": {}}},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
     response = exception_handler(exc, context)
     if response is None:
         logger.exception("Unhandled API error", exc_info=exc)
