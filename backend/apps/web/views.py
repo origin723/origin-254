@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.db.models import Q
 from django.http import FileResponse, Http404
+from apps.core.files import open_stored
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -184,7 +185,7 @@ def document_download(request, pk):
         raise Http404
     if request.user.is_platform_admin and doc.owner_id != request.user.pk:
         log_action(request.user, "document.viewed", doc)
-    return FileResponse(doc.file.open("rb"), as_attachment=True, filename=doc.original_name or "document")
+    return FileResponse(open_stored(doc.file), as_attachment=True, filename=doc.original_name or "document")
 
 
 # --- Buyer: sourcing requests ------------------------------------------------------------
@@ -439,7 +440,7 @@ def photo_view(request, pk):
         raise Http404
     ext = photo.image.name.rsplit(".", 1)[-1].lower()
     content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}[ext]
-    response = FileResponse(photo.image.open("rb"), content_type=content_type)
+    response = FileResponse(open_stored(photo.image), content_type=content_type)
     response["Cache-Control"] = "private, max-age=3600"
     response["X-Content-Type-Options"] = "nosniff"
     return response

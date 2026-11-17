@@ -1,4 +1,5 @@
 from django.http import FileResponse
+from apps.core.files import open_stored
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.exceptions import ValidationError
@@ -77,7 +78,7 @@ class DocumentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Ret
         doc = self.get_object()
         if request.user.is_platform_admin and doc.owner_id != request.user.pk:
             log_action(request.user, "document.viewed", doc)
-        return FileResponse(doc.file.open("rb"), as_attachment=True, filename=doc.original_name or "document")
+        return FileResponse(open_stored(doc.file), as_attachment=True, filename=doc.original_name or "document")
 
 
 class SupplierDirectoryViewSet(viewsets.ReadOnlyModelViewSet):

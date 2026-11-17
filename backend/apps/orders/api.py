@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import FileResponse, Http404
+from apps.core.files import open_stored
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, parsers, status, viewsets
@@ -182,7 +183,7 @@ class DeliveryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
         d = self.get_object()
         if not d.proof_of_delivery:
             raise Http404
-        return FileResponse(d.proof_of_delivery.open("rb"), as_attachment=True)
+        return FileResponse(open_stored(d.proof_of_delivery), as_attachment=True)
 
 
 class InspectionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -203,7 +204,7 @@ class InspectionViewSet(viewsets.ReadOnlyModelViewSet):
         insp = self.get_object()
         if not insp.report:
             raise Http404
-        return FileResponse(insp.report.open("rb"), as_attachment=True)
+        return FileResponse(open_stored(insp.report), as_attachment=True)
 
 
 class DisputeViewSet(viewsets.ReadOnlyModelViewSet):
