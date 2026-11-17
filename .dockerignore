@@ -1,8 +1,15 @@
-.venv
+# Build context is the repo root (docker build -f backend/Dockerfile .)
 .git
-__pycache__
-*.pyc
+.venv
+env
+.vscode
 .env
+**/__pycache__
+**/*.pyc
+*.sqlite3
 private_media
 backups
 staticfiles
+docs
+*.dump
+.DS_Store
