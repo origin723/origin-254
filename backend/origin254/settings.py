@@ -148,11 +148,18 @@ if "test" in sys.argv[1:2]:  # keep files written by the test suite out of the r
     import tempfile
     PRIVATE_MEDIA_ROOT = Path(tempfile.mkdtemp(prefix="origin254-test-media-"))
 # Uploaded files (product photos, verification documents, inspection reports, PODs).
-# With S3_BUCKET set they go to S3-compatible object storage (PrimeCloud Storage /
-# Cloudflare R2); otherwise to PRIVATE_MEDIA_ROOT on local disk. The bucket stays
-# private: files are streamed through Django views that check permissions.
+# MEDIA_STORAGE picks where they live: "s3" (S3-compatible object storage, e.g.
+# PrimeCloud Storage / R2), "database" (core.StoredFile rows in PostgreSQL; fine for
+# small volumes when no working bucket or disk exists) or "local" (PRIVATE_MEDIA_ROOT).
+# Default: s3 if S3_BUCKET is set, else local. Tests always use a temporary local folder.
+# Files are never public: they are streamed through permission-checked views.
 S3_BUCKET = env("S3_BUCKET", "")
-if S3_BUCKET and "test" not in sys.argv[1:2]:
+MEDIA_STORAGE = env("MEDIA_STORAGE", "s3" if S3_BUCKET else "local").lower()
+if "test" in sys.argv[1:2]:
+    MEDIA_STORAGE = "local"
+if MEDIA_STORAGE == "database":
+    _default_storage = {"BACKEND": "apps.core.storage.DatabaseStorage"}
+elif MEDIA_STORAGE == "s3":
     _default_storage = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {

@@ -119,3 +119,19 @@ class MatchingConfig(models.Model):
         }
         total = sum(raw.values()) or Decimal(1)
         return {k: float(v / total) for k, v in raw.items()}
+
+
+class StoredFile(models.Model):
+    """An uploaded file kept in the database (MEDIA_STORAGE=database).
+
+    Used when no working object storage or persistent disk is available. Files are
+    only ever streamed through permission-checked views, never served directly.
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    content = models.BinaryField()
+    size = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
