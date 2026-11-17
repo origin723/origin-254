@@ -1,0 +1,32 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ user.display_name }}</h1><p class="muted">{{ user.get_role_display }}</p></div>{% if profile %}{% badge profile "verification_status" %}{% endif %}</div>
+<div class="grid g2">
+  <div class="card"><h2>Account</h2>
+    <dl class="kv">
+      <dt>Name</dt><dd>{{ user.get_full_name|default:"—" }}</dd>
+      <dt>Username</dt><dd>{{ user.username }}</dd>
+      <dt>Email</dt><dd>{{ user.email }}</dd>
+      <dt>Phone</dt><dd>{{ user.phone|default:"—" }}</dd>
+      {% if profile %}<dt>Location</dt><dd>{{ profile.location }}</dd>
+      {% if profile.registration_number %}<dt>Registration</dt><dd>{{ profile.registration_number }}</dd>{% endif %}
+      {% if user.is_supplier %}
+        <dt>Delivers</dt><dd>{% if profile.can_deliver %}Yes, up to {{ profile.delivery_radius_km }} km{% else %}No{% endif %}</dd>
+        <dt>Reliability</dt><dd>{{ profile.reliability_score|pct }} {% if not profile.reliability_score %}<small>(new supplier)</small>{% endif %}</dd>
+        <dt>Rating</dt><dd>{% if profile.average_rating %}{{ profile.average_rating }} ★{% else %}—{% endif %} · {{ profile.completed_orders }} completed</dd>
+        <dt>On-time</dt><dd>{{ profile.on_time_rate|pct }}</dd>
+        <dt>Inspection pass</dt><dd>{{ profile.inspection_pass_rate|pct }}</dd>
+      {% endif %}{% endif %}
+    </dl>
+  </div>
+  <div class="card"><h2>Verification documents</h2>
+    <p class="muted">Stored privately. Only you and Origin 254 administrators can open them.</p>
+    {% for d in documents %}<div class="spread" style="padding:6px 0;border-bottom:1px solid var(--border)"><a href="{% url 'web:document_download' d.pk %}">{{ d.get_doc_type_display }}</a><span>{% badge d %}</span></div>{% empty %}<p class="muted">No documents uploaded.</p>{% endfor %}
+    <form method="post" enctype="multipart/form-data" style="margin-top:12px">{% csrf_token %}{% include "web/_form.html" with form=doc_form %}<button class="primary">Upload</button></form>
+  </div>
+</div>
+<div class="card"><h2>Reviews received</h2>
+{% for r in reviews %}<p><strong>{{ r.rating }} ★</strong> from {{ r.reviewer.display_name }} <small>{{ r.created_at|date:"d M Y" }}</small><br>{{ r.comment }}</p>{% empty %}<p class="muted">No reviews yet. Reviews can only be left after completed transactions.</p>{% endfor %}
+</div>
+{% endblock %}

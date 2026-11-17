@@ -1,0 +1,31 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Nearest suppliers{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>📍 Nearest suppliers</h1><p class="muted">Find verified suppliers with current stock closest to where you need delivery.</p></div></div>
+<form method="get" class="card"><div class="form-grid">{% for field in form %}{% include "web/_field.html" %}{% endfor %}</div><button class="primary">Find nearest suppliers</button></form>
+
+{% if results is not None %}
+<div class="card">
+  <h2>{{ results|length }} supplier{{ results|length|pluralize }} near {{ form.cleaned_data.location }}</h2>
+  <p class="muted"><small>Straight-line distance from your location; road distance and travel time are estimates (×1.3, ~50 km/h).</small></p>
+  <div class="table-wrap"><table>
+  <tr><th>#</th><th>Supplier</th><th class="num">Distance</th><th class="num">Est. road / time</th><th class="num">In stock</th><th>Grade</th><th class="num">Indicative</th><th>Delivers</th><th>Reliability</th></tr>
+  {% for r in results %}
+  <tr class="{% if forloop.first %}near-1{% endif %}">
+    <td>{{ forloop.counter }}</td>
+    <td><strong>{{ r.supplier.business_name }}</strong>{% if forloop.first %} <span class="badge ok">Nearest</span>{% endif %}<br><small>{{ r.supplier.user.get_role_display }} · {{ r.item.location }}{% if r.item.variety %} · {{ r.item.variety.name }}{% endif %}</small>
+      {% include "web/_thumbs.html" with item=r.item small=1 %}</td>
+    <td class="num"><strong>{{ r.distance_km|floatformat:0 }} km</strong></td>
+    <td class="num">≈ {{ r.road_km }} km<br><small>~{{ r.travel_hours }} h</small></td>
+    <td class="num">{{ r.item.quantity_available|qty }} {{ r.item.get_unit_display|lower }}</td>
+    <td>{{ r.item.get_quality_grade_display }}</td>
+    <td class="num">{{ r.item.price_per_unit|kes }}</td>
+    <td>{% if r.item.can_deliver and r.supplier.can_deliver and r.supplier.delivery_radius_km >= r.distance_km %}<span class="badge ok">Yes</span>{% elif r.item.can_deliver and r.supplier.can_deliver and r.supplier.delivery_radius_km %}<span class="badge warn">Up to {{ r.supplier.delivery_radius_km }} km</span>{% else %}<span class="badge">Collection only</span>{% endif %}</td>
+    <td>{% if r.supplier.reliability_score %}{{ r.supplier.reliability_score|pct }}{% else %}<small class="muted">New</small>{% endif %}{% if r.supplier.average_rating %}<br><small>{{ r.supplier.average_rating }} ★</small>{% endif %}</td>
+  </tr>
+  {% empty %}<tr><td colspan="9" class="empty">{% if form.cleaned_data.product %}No verified suppliers with current {{ form.product_name }} stock in range. Try a larger radius.{% else %}No supplier lists {{ form.product_name }} yet.{% endif %}</td></tr>{% endfor %}
+  </table></div>
+  <p style="margin-top:12px"><a class="btn primary" href="{% url 'web:request_new' %}?product={{ form.product_name|urlencode }}&delivery_location={{ form.cleaned_data.location.pk }}">Create a sourcing request for {{ form.product_name }} →</a> <small class="muted">{% if results %}to get quotations from these suppliers{% else %}suppliers are matched as soon as they list it{% endif %}</small></p>
+</div>
+{% endif %}
+{% endblock %}

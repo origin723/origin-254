@@ -1,0 +1,9 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Disputes{% endblock %}
+{% block content %}
+<div class="pagehead"><h1>Disputes</h1></div>
+{% for d in disputes %}<div class="card"><div class="spread"><div><h2 style="margin:0"><a href="{% url 'web:order_detail' d.order_id %}">{{ d.order.reference }}</a>{% if d.order_line %} · {{ d.order_line.supplier.business_name }}{% endif %}</h2><small class="muted">Raised by {{ d.raised_by.display_name }} · {{ d.created_at|date:"d M Y H:i" }}</small></div>{% badge d %}</div>
+<p style="margin-top:10px">{{ d.reason }}</p>{% if d.resolution %}<p><small><strong>Resolution:</strong> {{ d.resolution }}</small></p>{% endif %}
+{% if d.status == "open" or d.status == "under_review" %}<form method="post" action="{% url 'web:admin_dispute_resolve' d.pk %}">{% csrf_token %}<textarea name="resolution" rows="2" required placeholder="Resolution / notes"></textarea><div class="row" style="margin-top:6px"><button class="sm" name="status" value="under_review">Mark under review</button><button class="primary sm" name="status" value="resolved">Resolve</button><button class="danger sm" name="status" value="rejected">Reject</button></div></form>{% endif %}</div>
+{% empty %}<div class="card empty">No disputes 🎉</div>{% endfor %}
+{% endblock %}

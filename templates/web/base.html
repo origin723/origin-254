@@ -1,0 +1,77 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Origin 254{% endblock %} · Origin 254</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+{% with p=request.path %}
+<div class="topbar">
+  <a class="brand" href="{% url 'web:dashboard' %}" style="margin:0">Origin<b>254</b></a>
+  <button class="sm" onclick="document.querySelector('.side').classList.toggle('open')" aria-label="Menu">☰ Menu</button>
+</div>
+<div class="shell">
+  <aside class="side" onclick="if(event.target.tagName==='A')this.classList.remove('open')">
+    <a class="brand" href="{% url 'web:dashboard' %}">🥭 Origin<b>254</b></a>
+    <nav>
+      {% if user.is_platform_admin %}
+        <a href="{% url 'web:admin_dashboard' %}" class="{% if p == '/app/admin/' %}active{% endif %}">Overview</a>
+        <div class="group">Administration</div>
+        <a href="{% url 'web:admin_verification' %}" class="{% if 'verification' in p %}active{% endif %}">Verification</a>
+        <a href="{% url 'web:admin_requests' %}" class="{% if '/admin/requests' in p %}active{% endif %}">Sourcing &amp; matching</a>
+        <a href="{% url 'web:order_list' %}" class="{% if '/orders' in p %}active{% endif %}">Orders &amp; delivery</a>
+        <a href="{% url 'web:history' %}" class="{% if 'history' in p %}active{% endif %}">Transaction history</a>
+        <a href="{% url 'web:admin_payments' %}" class="{% if '/admin/payments' in p %}active{% endif %}">Payments &amp; payouts</a>
+        <a href="{% url 'web:admin_disputes' %}" class="{% if 'disputes' in p %}active{% endif %}">Disputes</a>
+        <a href="{% url 'web:admin_config' %}" class="{% if 'config' in p %}active{% endif %}">Matching config</a>
+        <a href="{% url 'web:admin_audit' %}" class="{% if 'audit' in p %}active{% endif %}">Audit log</a>
+        <a href="/django-admin/">Catalogue &amp; data ↗</a>
+      {% else %}
+        <a href="{% url 'web:dashboard' %}" class="{% if p == '/app/' %}active{% endif %}">Dashboard</a>
+        {% if user.is_buyer %}
+          <div class="group">Sourcing</div>
+          <a href="{% url 'web:request_new' %}" class="{% if p == '/app/requests/new/' %}active{% endif %}">+ New request</a>
+          <a href="{% url 'web:request_list' %}" class="{% if '/requests' in p and 'new' not in p %}active{% endif %}">My requests</a>
+          <a href="{% url 'web:nearest_suppliers' %}" class="{% if 'nearest' in p %}active{% endif %}">Nearest suppliers</a>
+          <a href="{% url 'web:order_list' %}" class="{% if '/orders' in p %}active{% endif %}">Orders</a>
+          <a href="{% url 'web:payments' %}" class="{% if p == '/app/payments/' %}active{% endif %}">💳 Payments</a>
+          <a href="{% url 'web:history' %}" class="{% if 'history' in p %}active{% endif %}">Purchase history</a>
+        {% elif user.is_supplier %}
+          <div class="group">Supply</div>
+          <a href="{% url 'web:inventory' %}" class="{% if 'inventory' in p %}active{% endif %}">My inventory</a>
+          <a href="{% url 'web:market' %}" class="{% if '/market' in p %}active{% endif %}">🔎 Market search</a>
+          <a href="{% url 'web:opportunities' %}" class="{% if 'opportunit' in p %}active{% endif %}">Opportunities</a>
+          <a href="{% url 'web:quotation_list' %}" class="{% if 'quotations' in p %}active{% endif %}">Quotations</a>
+          <a href="{% url 'web:order_list' %}" class="{% if '/orders' in p %}active{% endif %}">Orders</a>
+          <a href="{% url 'web:deliveries' %}" class="{% if 'deliveries' in p %}active{% endif %}">Deliveries</a>
+          <a href="{% url 'web:payments' %}" class="{% if p == '/app/payments/' %}active{% endif %}">💳 My payments</a>
+          <a href="{% url 'web:history' %}" class="{% if 'history' in p %}active{% endif %}">Sales history</a>
+        {% elif user.is_logistics %}
+          <div class="group">Logistics</div>
+          <a href="{% url 'web:deliveries' %}" class="{% if 'deliveries' in p %}active{% endif %}">Delivery jobs</a>
+          <a href="{% url 'web:order_list' %}" class="{% if '/orders' in p %}active{% endif %}">Orders</a>
+        {% endif %}
+      {% endif %}
+      <div class="group">Account</div>
+      <a href="{% url 'web:conversations' %}" class="{% if 'messages' in p %}active{% endif %}">Messages</a>
+      <a href="{% url 'web:notifications' %}" class="{% if 'notifications' in p %}active{% endif %}">Notifications {% if unread_notifications %}<span class="badge warn">{{ unread_notifications }}</span>{% endif %}</a>
+      <a href="{% url 'web:profile' %}" class="{% if 'profile' in p %}active{% endif %}">Profile &amp; verification</a>
+    </nav>
+    <div class="who">
+      <strong>{{ user.display_name }}</strong><br>
+      <small>{{ user.get_role_display }}{% if not user.is_verified %} · <span class="badge warn">unverified</span>{% endif %}</small>
+      <form method="post" action="{% url 'web:logout' %}" style="margin-top:8px">{% csrf_token %}<button class="sm">Sign out</button></form>
+    </div>
+  </aside>
+  <main class="main">
+    {% for m in messages %}<div class="flash {{ m.tags }}">{{ m }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% endwith %}
+</body>
+</html>

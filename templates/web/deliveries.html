@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Deliveries{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Deliveries</h1><p class="muted">Produce can only be picked up after it passes pre-dispatch inspection.</p></div></div>
+{% for d in deliveries %}
+<div class="card"><div class="spread"><div><h2 style="margin:0"><a href="{% url 'web:order_detail' d.order_line.order_id %}">{{ d.order_line.order.reference }}</a> · {{ d.order_line.quantity|qty }} {{ d.order_line.unit }}</h2>
+<small class="muted">{{ d.order_line.supplier.business_name }} · {{ d.pickup_location }} → {{ d.dropoff_location }}{% if d.scheduled_date %} · {{ d.scheduled_date|date:"D d M" }}{% endif %}</small></div><div>{% badge d %} <span class="badge {{ d.order_line.status|tone }}">{{ d.order_line.get_status_display }}</span></div></div>
+{% if d.status != "delivered" %}<details style="margin-top:10px"><summary>Update status</summary><form method="post" enctype="multipart/form-data" action="{% url 'web:order_line_action' d.order_line_id 'delivery' %}">{% csrf_token %}{% include "web/_form.html" %}<button class="primary sm">Update</button></form></details>{% endif %}
+{% if d.tracking_log %}<ul class="timeline" style="margin-top:10px">{% for t in d.tracking_log %}<li>{{ t.status|label }} {% if t.note %}— {{ t.note }}{% endif %}<br><small>{{ t.by }} · {{ t.at|isodate|date:"d M H:i" }}</small></li>{% endfor %}</ul>{% endif %}
+</div>
+{% empty %}<div class="card empty">No deliveries assigned to you.</div>{% endfor %}
+{% endblock %}

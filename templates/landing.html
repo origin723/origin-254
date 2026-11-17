@@ -1,0 +1,96 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Origin 254 · From farm to factory</title>
+  <meta name="description" content="Origin 254 connects Kenyan farmers with food processors through verified sourcing, intelligent matching and coordinated delivery.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <style>
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    header.site { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    header.site nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    header.site .links { display: flex; gap: 22px; align-items: center; font-weight: 500; }
+    header.site .links a:not(.btn) { color: var(--muted); }
+    .hero { position: relative; padding: 90px 0 120px; min-height: 640px; overflow: hidden;
+            background:
+              linear-gradient(90deg, rgba(244, 250, 241, .97) 0%, rgba(244, 250, 241, .92) 38%, rgba(244, 250, 241, .4) 55%, rgba(244, 250, 241, 0) 66%),
+              url("{% static 'img/hero-agritech.svg' %}") right bottom / cover no-repeat, #eaf8ff; }
+    .hero .wrap { position: relative; }
+    .eyebrow { display: inline-block; font-size: .85rem; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); padding: 6px 12px; border-radius: 999px; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(2.3rem, 6vw, 3.9rem); line-height: 1.05; letter-spacing: -.03em; font-weight: 800; max-width: 15ch; }
+    .hero p.lead { font-size: 1.15rem; color: var(--muted); max-width: 58ch; margin: 20px 0 30px; }
+    .btn.lg { padding: 12px 22px; font-size: 1rem; }
+    section.band { padding: 70px 0; }
+    section.band h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 10px; }
+    .sub { color: var(--muted); max-width: 62ch; margin-bottom: 34px; }
+    .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .flow { display: flex; flex-wrap: wrap; gap: 8px; }
+    .flow span { background: var(--surface); border: 1px solid var(--border); padding: 7px 12px; border-radius: 999px; font-size: .9rem; font-weight: 500; }
+    .flow span::after { content: " →"; color: var(--muted); }
+    .flow span:last-child::after { content: ""; }
+    .problem li { margin-bottom: 6px; }
+    footer.site { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: .9rem; }
+    @media (max-width: 760px) { header.site .links a:not(.btn) { display: none; }
+      .hero { padding: 56px 0 300px; min-height: 0;
+              background:
+                linear-gradient(180deg, rgba(244, 250, 241, .97) 0%, rgba(244, 250, 241, .92) 52%, rgba(244, 250, 241, 0) 72%),
+                url("{% static 'img/hero-agritech.svg' %}") 70% bottom / auto 420px no-repeat, #eaf8ff; } }
+  </style>
+</head>
+<body>
+<header class="site"><nav class="wrap">
+  <a class="brand" href="/" style="margin:0">🥭 Origin<b>254</b></a>
+  <div class="links">
+    <a href="#how">How it works</a><a href="#who">Who it's for</a><a href="/api/docs/">API</a>
+    {% if user.is_authenticated %}<a class="btn primary" href="{% url 'web:dashboard' %}">Open app</a>
+    {% else %}<a href="{% url 'web:login' %}">Sign in</a><a class="btn primary" href="{% url 'web:register' %}">Join</a>{% endif %}
+  </div>
+</nav></header>
+
+<main>
+  <section class="hero"><div class="wrap">
+    <span class="eyebrow">Made in Kenya 🇰🇪 · +254</span>
+    <h1>From farm to factory, without the guesswork.</h1>
+    <p class="lead">Origin 254 connects farmers with food entrepreneurs and processors. Buyers post what they need, our matching engine finds verified suppliers who can deliver it, and every step from quotation to quality inspection to delivery is tracked.</p>
+    <div class="row"><a class="btn primary lg" href="{% url 'web:register' %}">Get started</a><a class="btn lg" href="{% url 'web:login' %}">Sign in</a></div>
+  </div></section>
+
+  <section class="band" style="background:var(--surface);border-block:1px solid var(--border)"><div class="wrap grid g2" style="align-items:center">
+    <div><h2>The gap we close</h2><p class="sub" style="margin:0">Producers struggle to reach reliable markets while processors struggle to source consistent, affordable, quality-assured raw materials. The result:</p></div>
+    <ul class="problem"><li>Post-harvest losses and wasted produce</li><li>Unreliable supply chains and production stoppages</li><li>High sourcing costs and inconsistent quality</li><li>Limited local agro-processing and value addition</li></ul>
+  </div></section>
+
+  <section class="band" id="how"><div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">A structured sourcing workflow, so everyone knows what has been agreed, what has been checked and what has been delivered.</p>
+    <div class="flow" style="margin-bottom:34px"><span>Register</span><span>Verify</span><span>List inventory</span><span>Buyer request</span><span>Smart matching</span><span>Quotations &amp; negotiation</span><span>Supply confirmed</span><span>Quality inspection</span><span>Delivery</span><span>Feedback</span></div>
+    <div class="grid g4">
+      <div class="card"><div class="icon">📝</div><h3>Post a request</h3><p class="muted">Product, quantity, quality grade, packaging, deadline and where to deliver. Every request gets a tracking number.</p></div>
+      <div class="card"><div class="icon">🎯</div><h3>Get matched</h3><p class="muted">Suppliers ranked on quantity, quality, distance, delivery capability and track record, with large orders split across several suppliers.</p></div>
+      <div class="card"><div class="icon">💬</div><h3>Compare &amp; agree</h3><p class="muted">Message suppliers, compare landed costs side by side, counter-offer and accept, all on the record.</p></div>
+      <div class="card"><div class="icon">🚚</div><h3>Inspect &amp; deliver</h3><p class="muted">Stock is reconfirmed, inspected at source, tracked in transit and signed for on arrival.</p></div>
+    </div>
+  </div></section>
+
+  <section class="band" id="who" style="background:var(--surface);border-block:1px solid var(--border)"><div class="wrap">
+    <h2>Built for every link in the chain</h2>
+    <div class="grid g3" style="margin-top:24px">
+      <div><div class="icon">🌱</div><h3>Farmers</h3><p class="muted">List your harvest once and get matched to buyers who need it, with fair, comparable offers and ratings that build your reputation.</p></div>
+      <div><div class="icon">🏭</div><h3>Food entrepreneurs &amp; processors</h3><p class="muted">Reliable, quality-assured raw materials from verified suppliers, with every specification recorded and traceable.</p></div>
+      <div><div class="icon">🛻</div><h3>Logistics partners</h3><p class="muted">Receive pickup and delivery jobs with clear locations, quantities and proof-of-delivery records.</p></div>
+    </div>
+  </div></section>
+
+  <section class="band"><div class="wrap" style="text-align:center">
+    <h2>Ready to source smarter?</h2>
+    <p class="sub" style="margin:10px auto 26px">Join the network connecting Kenyan agriculture to food processing.</p>
+    <a class="btn primary lg" href="{% url 'web:register' %}">Create your account</a>
+  </div></section>
+</main>
+
+<footer class="site"><div class="wrap spread"><span>© {% now "Y" %} Origin 254</span><span><a href="/api/docs/">API documentation</a> · Nairobi, Kenya</span></div></footer>
+</body>
+</html>

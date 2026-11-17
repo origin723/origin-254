@@ -1,0 +1,82 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Karibu, {{ user.first_name|default:user.display_name }}</h1><p class="muted">{{ user.display_name }} · {{ user.get_role_display }}</p></div>
+{% if user.is_buyer %}<div class="row"><a class="btn pay-btn" href="{% url 'web:payments' %}">💳 Payments{% if to_pay.count %} <span class="badge warn">{{ to_pay.count }} to pay</span>{% endif %}</a><a class="btn" href="{% url 'web:nearest_suppliers' %}">📍 Nearest suppliers</a><a class="btn primary" href="{% url 'web:request_new' %}">+ New sourcing request</a></div>{% endif %}
+{% if user.is_supplier %}<div class="row"><a class="btn pay-btn" href="{% url 'web:payments' %}">💳 My payments</a><a class="btn primary" href="{% url 'web:inventory' %}">Update inventory</a></div>{% endif %}</div>
+
+{% if profile and profile.verification_status != "approved" %}
+<div class="flash warning">Your account is <strong>{{ profile.get_verification_status_display|lower }}</strong>. {% if profile.verification_status == "pending" %}Upload your registration documents on your <a href="{% url 'web:profile' %}">profile</a> so the Origin 254 team can verify you.{% else %}{{ profile.verification_notes }}{% endif %}</div>
+{% endif %}
+
+{% if user.is_buyer %}
+{% if to_pay.count %}<div class="flash warning spread"><span>💳 {{ to_pay.count }} order{{ to_pay.count|pluralize }} waiting for payment: <strong>{{ to_pay.amount|kes }}</strong></span><a class="btn primary sm" href="{% url 'web:payments' %}">Pay now</a></div>{% endif %}
+<div class="grid g4" style="margin-bottom:18px">
+  <div class="stat"><div class="v">{{ stats.open }}</div><div class="l">Active requests</div></div>
+  <div class="stat"><div class="v">{{ stats.quotes }}</div><div class="l">Quotations to review</div></div>
+  <div class="stat"><div class="v">{{ stats.orders }}</div><div class="l">Orders in progress</div></div>
+  <div class="stat"><div class="v">{{ stats.completed }}</div><div class="l">Completed orders</div></div>
+</div>
+<div class="grid g2">
+  <div class="card"><h2>Active sourcing requests</h2>
+    {% for r in active_requests %}
+      <div class="spread" style="padding:8px 0;border-bottom:1px solid var(--border)"><div><a href="{% url 'web:request_detail' r.pk %}"><strong>{{ r.reference }}</strong></a> · {{ r.quantity|qty }} {{ r.unit }} {{ r.product }}<br><small>Due {{ r.delivery_deadline|date:"d M" }} · {{ r.matches.count }} matches · {{ r.quotations.count }} quotes</small></div>{% badge r %}</div>
+    {% empty %}<div class="empty">No active requests. <a href="{% url 'web:request_new' %}">Create one</a>.</div>{% endfor %}
+  </div>
+  <div class="card"><h2>Recent orders</h2>
+    {% for o in orders %}
+      <div class="spread" style="padding:8px 0;border-bottom:1px solid var(--border)"><div><a href="{% url 'web:order_detail' o.pk %}"><strong>{{ o.reference }}</strong></a> · {{ o.total_quantity|qty }} kg {{ o.sourcing_request.product }}<br><small>{{ o.lines.count }} supplier(s) · {{ o.total|kes }}</small></div>{% badge o %}</div>
+    {% empty %}<div class="empty">No orders yet.</div>{% endfor %}
+  </div>
+</div>
+
+{% elif user.is_supplier %}
+{% for item in listings %}{% if item.photos.all|length < min_photos %}<div class="flash error">📷 {{ item.product }}{% if item.variety %} ({{ item.variety.name }}){% endif %} needs at least {{ min_photos }} photos before buyers can see it. <a href="#photos">Upload photos ↓</a></div>{% endif %}{% endfor %}
+{% if stale %}<div class="flash warning">Some of your stock hasn't been confirmed recently and is hidden from buyers. <a href="{% url 'web:inventory' %}">Review inventory</a>.</div>{% endif %}
+<div class="card spread"><div><h2 style="margin:0">💳 My payments</h2><small class="muted">Received <strong>{{ earnings.received|kes }}</strong> · on the way <strong>{{ earnings.awaiting|kes }}</strong> · you receive each sale's value minus Origin 254's {{ earnings.pct|floatformat:0 }}% commission</small></div><a class="btn primary" href="{% url 'web:payments' %}">View payments</a></div>
+<form method="get" action="{% url 'web:market' %}" class="card market-search">
+  <h2>🔎 Is there a market for my product?</h2>
+  <p class="muted">Type any product to see how many buyers want it right now, how much, where, and recent prices paid.</p>
+  <div class="row"><input type="search" name="product" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Search market</button></div>
+</form>
+<div class="grid g4" style="margin-bottom:18px">
+  <div class="stat"><div class="v">{{ stats.listings }}</div><div class="l">Active listings</div></div>
+  <div class="stat"><div class="v">{{ stats.opportunities }}</div><div class="l">New opportunities</div></div>
+  <div class="stat"><div class="v">{{ stats.quotes }}</div><div class="l">Open quotations</div></div>
+  <div class="stat"><div class="v">{{ stats.completed }}</div><div class="l">Completed deliveries</div></div>
+</div>
+<div class="grid g2">
+  <div class="card"><h2>Sourcing opportunities</h2>
+    {% for m in opportunities %}
+      <div class="spread" style="padding:8px 0;border-bottom:1px solid var(--border)"><div><a href="{% url 'web:opportunity_detail' m.pk %}"><strong>{{ m.sourcing_request.quantity|qty }} {{ m.sourcing_request.unit }} {{ m.sourcing_request.product }}</strong></a><br><small>{{ m.sourcing_request.reference }} · {{ m.distance_km }} km away · due {{ m.sourcing_request.delivery_deadline|date:"d M" }}</small></div>{% badge m %}</div>
+    {% empty %}<div class="empty">No open opportunities. Keep your inventory current to be matched.</div>{% endfor %}
+  </div>
+  <div class="card"><h2>Supply agreements</h2>
+    {% for l in lines %}
+      <div class="spread" style="padding:8px 0;border-bottom:1px solid var(--border)"><div><a href="{% url 'web:order_detail' l.order_id %}"><strong>{{ l.order.reference }}</strong></a> · {{ l.quantity|qty }} {{ l.unit }}<br><small>Deliver by {{ l.agreed_delivery_date|date:"d M" }}</small></div>{% badge l %}</div>
+    {% empty %}<div class="empty">No active orders.</div>{% endfor %}
+  </div>
+</div>
+
+<div class="card" id="photos">
+  <div class="spread"><h2>Product photos</h2><a href="{% url 'web:inventory' %}"><small>Manage inventory →</small></a></div>
+  <p class="muted">Every product needs <strong>at least {{ min_photos }} photos</strong> before buyers can see it. Clear photos of the actual produce help you win orders. Up to {{ max_photos }} per listing.</p>
+  <div class="photo-list">
+  {% for item in listings %}
+    <div><div class="spread"><strong>{{ item.product }}{% if item.variety %} · {{ item.variety.name }}{% endif %} <small class="muted">{{ item.quantity_available|qty }} {{ item.unit }}</small></strong>{% if item.photos.all|length < min_photos %}<span class="badge bad">{{ item.photos.all|length }}/{{ min_photos }} photos: hidden from buyers</span>{% else %}<small class="muted">{{ item.photos.all|length }} / {{ max_photos }} <span class="badge ok">Visible to buyers</span></small>{% endif %}</div>
+      <div class="thumbs">{% for p in item.photos.all %}<div class="thumb"><a href="{% url 'web:photo' p.pk %}" target="_blank"><img src="{% url 'web:photo' p.pk %}" alt="{{ p.caption|default:item.product.name }}" loading="lazy"></a><form method="post" action="{% url 'web:photo_delete' p.pk %}">{% csrf_token %}<button title="Remove photo" aria-label="Remove photo">×</button></form></div>{% empty %}<div class="thumb empty-slot">📷</div>{% endfor %}</div>
+      {% if item.photos.all|length < max_photos %}{% include "web/_photo_upload.html" %}{% endif %}
+    </div>
+  {% empty %}<div class="empty">Add stock first, then upload photos of it. <a href="{% url 'web:inventory' %}#form">Add stock →</a></div>{% endfor %}
+  </div>
+</div>
+
+{% elif user.is_logistics %}
+<div class="card"><h2>Active delivery jobs</h2>
+  <div class="table-wrap"><table><tr><th>Order</th><th>From</th><th>To</th><th>Date</th><th>Status</th></tr>
+  {% for d in deliveries %}<tr><td><a href="{% url 'web:order_detail' d.order_line.order_id %}">{{ d.order_line.order.reference }}</a></td><td>{{ d.pickup_location }}</td><td>{{ d.dropoff_location }}</td><td>{{ d.scheduled_date|date:"d M"|default:"—" }}</td><td>{% badge d %}</td></tr>
+  {% empty %}<tr><td colspan="5" class="empty">No active jobs.</td></tr>{% endfor %}</table></div>
+  <a href="{% url 'web:deliveries' %}">Manage deliveries →</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "web/base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<div class="pagehead"><h1>Notifications</h1><form method="post">{% csrf_token %}<button class="sm">Mark all read</button></form></div>
+<div class="card">{% for n in notifications %}<div class="spread" style="padding:9px 0;border-bottom:1px solid var(--border);{% if not n.read_at %}font-weight:600{% endif %}"><div><a href="{% url 'web:notification_open' n.pk %}">{{ n.title }}</a>{% if n.body %}<br><small class="muted" style="font-weight:400">{{ n.body|truncatechars:160 }}</small>{% endif %}</div><small class="muted" style="font-weight:400">{{ n.created_at|timesince }} ago · {{ n.channels_sent|join:", " }}</small></div>{% empty %}<p class="empty">Nothing yet.</p>{% endfor %}</div>
+{% endblock %}

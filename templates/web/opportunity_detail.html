@@ -1,0 +1,47 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ req.reference }}{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ req.quantity|qty }} {{ req.unit }} {{ req.product }} wanted</h1><p class="muted">{{ req.reference }} · {{ req.intended_application }} · {{ req.buyer.display_name }}</p></div>{% badge match %}</div>
+<div class="grid g2">
+  <div class="card"><h2>Buyer requirements</h2><dl class="kv">
+    <dt>Deliver to</dt><dd>{{ req.delivery_location }} ({{ match.distance_km }} km from your stock)</dd>
+    <dt>Deadline</dt><dd>{{ req.delivery_deadline|date:"D d M Y" }}</dd>
+    <dt>Variety</dt><dd>{{ req.variety.name|default:"Any" }}</dd>
+    <dt>Min. grade</dt><dd>{{ req.get_min_quality_grade_display }}</dd>
+    {% for k, v in req.quality_specifications.items %}<dt>{{ k|capfirst }}</dt><dd>{{ v }}</dd>{% endfor %}
+    {% if req.quality_notes %}<dt>Notes</dt><dd>{{ req.quality_notes }}</dd>{% endif %}
+    <dt>Packaging</dt><dd>{{ req.packaging_requirements|default:"—" }}</dd>
+    <dt>Delivery</dt><dd>{{ req.get_delivery_arrangement_display }}</dd>
+  </dl></div>
+  <div class="card"><h2>Your match</h2><dl class="kv">
+    <dt>Listing</dt><dd>{{ match.inventory_item.product }} {{ match.inventory_item.variety.name|default:"" }} · {{ match.inventory_item.get_quality_grade_display }}
+      {% include "web/_thumbs.html" with item=match.inventory_item small=1 %}{% if not match.inventory_item.photos.exists %}<small><a href="{% url 'web:dashboard' %}#photos">Add photos so the buyer can see your produce →</a></small>{% endif %}</dd>
+    <dt>Available</dt><dd>{{ match.available_quantity|qty }} {{ req.unit }}</dd>
+    <dt>Suggested share</dt><dd>{{ match.suggested_quantity|qty }} {{ req.unit }}</dd>
+    <dt>Match score</dt><dd>{{ match.score|floatformat:2 }} (rank #{{ match.rank }})</dd>
+    {% for n in match.score_breakdown.notes %}<dt></dt><dd><small>• {{ n }}</small></dd>{% endfor %}
+  </dl>
+  {% if match.status == "potential" or match.status == "contacted" %}
+  <h3 style="margin-top:14px">Confirm availability</h3>
+  <form method="post" action="{% url 'web:opportunity_respond' match.pk %}" class="row">{% csrf_token %}
+    <input name="quantity" type="number" step="0.01" value="{{ match.suggested_quantity|default:match.available_quantity }}" style="max-width:140px"> <span>{{ req.unit }}</span>
+    <input name="note" placeholder="Note (optional)" style="max-width:220px">
+    <button class="primary sm" name="available" value="yes">Available</button>
+    <button class="danger sm" name="available" value="no">Decline</button>
+  </form>{% endif %}
+  </div>
+</div>
+{% if req.is_active and match.status != "declined" %}
+<form method="post" class="card">{% csrf_token %}<input type="hidden" name="form" value="quote">
+  <h2>Submit a quotation</h2>
+  {% include "web/_form.html" with form=quote_form %}
+  <button class="primary">Send quotation</button>
+</form>{% endif %}
+<div class="grid g2">
+<div class="card"><h2>Your quotations</h2>
+{% for q in quotes %}<div class="spread" style="padding:6px 0;border-bottom:1px solid var(--border)"><a href="{% url 'web:quotation_detail' q.pk %}">{{ q.reference }} · {{ q.quantity|qty }} @ {{ q.price_per_unit|kes }}</a>{% badge q %}</div>{% empty %}<p class="muted">None yet.</p>{% endfor %}</div>
+<div class="card"><h2>Message the buyer</h2>
+{% if convo %}<p><a href="{% url 'web:conversation' convo.pk %}">Open conversation →</a></p>{% endif %}
+<form method="post" action="{% url 'web:opportunity_message' match.pk %}">{% csrf_token %}<textarea name="message" rows="2" required placeholder="Ask a question…"></textarea><button class="sm" style="margin-top:6px">Send</button></form></div>
+</div>
+{% endblock %}

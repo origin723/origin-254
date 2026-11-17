@@ -1,0 +1,98 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ req.reference }}{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><h1>{{ req.reference }} · {{ req.quantity|qty }} {{ req.unit }} {{ req.product }}</h1>
+  <p class="muted">{{ req.intended_application }} · deliver to {{ req.delivery_location }} by {{ req.delivery_deadline|date:"D d M Y" }}</p></div>
+  <div class="row">{% badge req %}
+  {% if req.is_active %}<form method="post" action="{% url 'web:request_action' req.pk 'rematch' %}" class="inline">{% csrf_token %}<button class="sm">↻ Re-run matching</button></form>{% endif %}</div>
+</div>
+
+<div class="grid g3">
+  <div class="card"><h2>Requirements</h2><dl class="kv">
+    <dt>Variety</dt><dd>{{ req.variety.name|default:"Any" }}</dd>
+    <dt>Min. grade</dt><dd>{{ req.get_min_quality_grade_display }}</dd>
+    {% for k, v in req.quality_specifications.items %}<dt>{{ k|label }}</dt><dd>{{ v }}</dd>{% endfor %}
+    {% if req.quality_notes %}<dt>Notes</dt><dd>{{ req.quality_notes }}</dd>{% endif %}
+    <dt>Packaging</dt><dd>{{ req.packaging_requirements|default:"—" }}</dd>
+    <dt>Delivery</dt><dd>{{ req.get_delivery_arrangement_display }}</dd>
+    <dt>Budget</dt><dd>{{ req.target_budget|kes }}</dd></dl></div>
+  <div class="card"><h2>Supply coverage</h2>
+    <p><span style="font-size:1.6rem;font-weight:700">{{ planned|qty }}</span> / {{ req.quantity|qty }} {{ req.unit }} <small>planned across matched suppliers</small></p>
+    <div class="meter"><span style="width:{% widthratio planned req.quantity 100 %}%"></span></div>
+    <p style="margin-top:10px"><span style="font-size:1.2rem;font-weight:700">{{ comparison.cheapest_plan_quantity|qty }}</span> {{ req.unit }} <small>covered by quotations · cheapest plan {{ comparison.cheapest_plan_cost|kes }}{% if comparison.within_budget is not None %} · {% if comparison.within_budget %}<span class="badge ok">within budget</span>{% else %}<span class="badge bad">over budget</span>{% endif %}{% endif %}</small></p>
+  </div>
+  <div class="card"><h2>Orders</h2>
+    {% for o in orders %}<div class="spread"><a href="{% url 'web:order_detail' o.pk %}"><strong>{{ o.reference }}</strong></a>{% badge o %}</div>{% empty %}<p class="muted">Accept quotations, then place an order.</p>{% endfor %}
+    {% if req.is_active and not orders %}<details style="margin-top:12px"><summary>Cancel request</summary><form method="post" action="{% url 'web:request_action' req.pk 'cancel' %}">{% csrf_token %}<input name="reason" placeholder="Reason (optional)"><button class="danger sm" style="margin-top:8px">Cancel request</button></form></details>{% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="spread"><h2>Matched suppliers</h2>
+  {% if req.is_active %}<form method="post" action="{% url 'web:request_action' req.pk 'notify' %}" class="inline">{% csrf_token %}<button class="primary sm">Notify all new matches</button></form>{% endif %}</div>
+  <div class="spread" style="margin-bottom:8px"><p class="muted" style="margin:0">{% if sort == "nearest" %}Sorted by distance from {{ req.delivery_location }}, closest first.{% else %}Ranked by weighted score: product fit, quantity, quality, proximity, delivery and reliability.{% endif %} Only verified suppliers with current stock are shown.</p>
+  <div class="tabs"><a href="?sort=best" class="{% if sort == 'best' %}on{% endif %}">Best match</a><a href="?sort=nearest" class="{% if sort == 'nearest' %}on{% endif %}">📍 Nearest first</a></div></div>
+  {% if nearest_plan.plan %}<div class="flash info" style="margin-bottom:12px">📍 <strong>Nearest suppliers suggestion:</strong> {% for m, q in nearest_plan.plan %}{{ m.supplier.business_name }} ({{ q|qty }} {{ req.unit }}, {{ m.distance_km|floatformat:0 }} km){% if not forloop.last %} + {% endif %}{% endfor %}{% if nearest_plan.fully_covered %} covers the full {{ req.quantity|qty }} {{ req.unit }}, all within {{ nearest_plan.furthest_km|floatformat:0 }} km.{% else %} covers {{ nearest_plan.covered|qty }} of {{ req.quantity|qty }} {{ req.unit }}.{% endif %}</div>{% endif %}
+  <div class="table-wrap"><table>
+  <tr><th>#</th><th>Supplier</th><th>Score</th><th class="num">Distance</th><th class="num">Available</th><th class="num">Suggested</th><th>Grade</th><th class="num">Indicative</th><th>Status</th><th></th></tr>
+  {% for m in matches %}
+  <tr class="{% if sort == 'nearest' and m.pk == nearest_id %}near-1{% elif sort != 'nearest' and m.suggested_quantity > 0 %}highlight{% endif %}">
+    <td>{{ m.rank }}</td>
+    <td><strong>{{ m.supplier.business_name }}</strong><br><small>{{ m.supplier.user.get_role_display }} · {{ m.inventory_item.location }}{% if m.inventory_item.variety %} · {{ m.inventory_item.variety.name }}{% endif %}</small>
+      {% include "web/_thumbs.html" with item=m.inventory_item small=1 %}
+      <details><summary><small>Why this match</small></summary>
+        {% for k, v in m.score_breakdown.components.items %}<div class="hbar"><span>{{ k|capfirst }}</span><div class="meter"><span style="width:{{ v|bar }}%"></span></div><small>{{ v|floatformat:2 }}</small></div>{% endfor %}
+        {% for n in m.score_breakdown.notes %}<small>• {{ n }}</small><br>{% endfor %}
+      </details></td>
+    <td style="min-width:90px"><strong>{{ m.score|floatformat:2 }}</strong><div class="meter accent"><span style="width:{{ m.score|bar }}%"></span></div></td>
+    <td class="num">{{ m.distance_km|floatformat:0 }} km{% if m.pk == nearest_id %}<br><span class="badge ok">Nearest</span>{% endif %}<br><small class="muted">≈ {% widthratio m.distance_km 10 13 %} km road</small></td>
+    <td class="num">{{ m.available_quantity|qty }}</td>
+    <td class="num">{% if m.suggested_quantity > 0 %}<strong>{{ m.suggested_quantity|qty }}</strong>{% else %}—{% endif %}</td>
+    <td>{{ m.inventory_item.get_quality_grade_display }}</td>
+    <td class="num">{{ m.inventory_item.price_per_unit|kes }}</td>
+    <td>{% badge m %}{% if m.confirmed_quantity %}<br><small>{{ m.confirmed_quantity|qty }} confirmed</small>{% endif %}</td>
+    <td><details><summary><small>Message</small></summary><form method="post" action="{% url 'web:request_action' req.pk 'contact' %}">{% csrf_token %}<input type="hidden" name="supplier_user_id" value="{{ m.supplier.user_id }}"><textarea name="message" rows="2" required placeholder="Ask about quality, packaging…"></textarea><button class="sm" style="margin-top:6px">Send</button></form></details></td>
+  </tr>
+  {% empty %}<tr><td colspan="10" class="empty">No suitable verified suppliers yet. Try re-running matching later, widening the deadline or lowering the grade.</td></tr>{% endfor %}
+  </table></div>
+</div>
+
+<div class="card">
+  <h2>Compare offers</h2>
+  <p class="muted">Landed cost = goods + delivery, per {{ req.unit }}. Sorted cheapest first. Several suppliers can fill one request.</p>
+  <div class="table-wrap"><table>
+  <tr><th>Quotation</th><th>Supplier</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Delivery</th><th class="num">Total</th><th class="num">Landed/{{ req.unit }}</th><th class="num">Score</th><th>Ready</th><th>Status</th><th>Actions</th></tr>
+  {% for row in comparison.offers %}{% with q=row.quotation %}
+  <tr><td><strong>{{ q.reference }}</strong>{% if q.revision > 1 %}<br><small>rev {{ q.revision }}</small>{% endif %}</td>
+    <td>{{ q.supplier.business_name }}<br><small>{% if row.average_rating %}{{ row.average_rating }} ★ · {% endif %}reliability {{ row.reliability|pct }}</small></td>
+    <td class="num">{{ q.quantity|qty }}</td><td class="num">{{ q.price_per_unit|kes }}</td><td class="num">{{ q.delivery_cost|kes }}</td><td class="num"><strong>{{ q.total|kes }}</strong></td><td class="num">{{ row.landed_unit_cost }}</td><td class="num">{{ row.match_score|floatformat:2|default:"—" }}</td>
+    <td>{{ q.earliest_delivery_date|date:"d M" }}<br><small>valid to {{ q.valid_until|date:"d M" }}</small></td>
+    <td>{% badge q %}{% if q.status == "countered" %}<br><small>You offered {% if q.counter_price_per_unit %}{{ q.counter_price_per_unit|kes }}{% endif %}{% if q.counter_quantity %} × {{ q.counter_quantity|qty }}{% endif %}</small>{% endif %}</td>
+    <td>{% if q.status == "submitted" %}
+      <form method="post" action="{% url 'web:quotation_buyer_action' q.pk 'accept' %}" class="inline">{% csrf_token %}<button class="primary sm">Accept</button></form>
+      <details><summary><small>Counter / reject</small></summary>
+        <form method="post" action="{% url 'web:quotation_buyer_action' q.pk 'counter' %}">{% csrf_token %}<input name="price_per_unit" type="number" step="0.01" placeholder="Price / {{ req.unit }}"><input name="quantity" type="number" step="0.01" placeholder="Quantity" style="margin-top:4px"><input name="note" placeholder="Note" style="margin-top:4px"><button class="sm" style="margin-top:6px">Send counter-offer</button></form>
+        <form method="post" action="{% url 'web:quotation_buyer_action' q.pk 'reject' %}" style="margin-top:6px">{% csrf_token %}<button class="danger sm">Reject</button></form>
+      </details>{% endif %}</td></tr>
+  {% endwith %}{% empty %}<tr><td colspan="11" class="empty">No quotations yet. Notify matched suppliers to invite offers.</td></tr>{% endfor %}
+  </table></div>
+  {% if comparison.cheapest_plan %}<p style="margin-top:10px"><small><strong>Cheapest combination:</strong> {% for p in comparison.cheapest_plan %}{{ p.quotation.supplier.business_name }} ({{ p.quantity|qty }}){% if not forloop.last %} + {% endif %}{% endfor %} = {{ comparison.cheapest_plan_quantity|qty }} {{ req.unit }} for {{ comparison.cheapest_plan_cost|kes }}</small></p>{% endif %}
+</div>
+
+{% if accepted_not_ordered %}
+<div class="card" style="border-color:var(--brand)">
+  <h2>Place order</h2>
+  <p class="muted">Each supplier will be asked to reconfirm availability before the order is confirmed.</p>
+  <form method="post" action="{% url 'web:request_action' req.pk 'order' %}">{% csrf_token %}
+    {% for q in accepted_not_ordered %}<div class="checkbox field"><input type="checkbox" name="quotation_ids" value="{{ q.pk }}" id="q{{ q.pk }}" checked><label for="q{{ q.pk }}">{{ q.reference }} · {{ q.supplier.business_name }} · {{ q.quantity|qty }} {{ req.unit }} · {{ q.total|kes }}</label></div>{% endfor %}
+    <div class="field"><input name="notes" placeholder="Order notes (optional)"></div>
+    <button class="primary">Place order</button>
+  </form>
+</div>
+{% endif %}
+
+{% if all_quotes %}<details class="card"><summary>Negotiation history ({{ all_quotes|length }} quotations)</summary>
+{% for q in all_quotes %}<h3 style="margin-top:12px">{{ q.reference }} · {{ q.supplier.business_name }} {% badge q %}</h3><ul class="timeline">{% for h in q.history %}<li><strong>{{ h.event|capfirst }}</strong> by {{ h.by }}{% if h.price_per_unit and h.price_per_unit != "None" %} · price {{ h.price_per_unit }}{% endif %}{% if h.quantity and h.quantity != "None" %} · qty {{ h.quantity }}{% endif %}{% if h.note %} · “{{ h.note }}”{% endif %}<br><small>{{ h.at|isodate|date:"d M Y H:i" }}</small></li>{% endfor %}</ul>{% endfor %}
+</details>{% endif %}
+{% endblock %}

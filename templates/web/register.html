@@ -1,0 +1,13 @@
+{% load static %}<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register · Origin 254</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="{% static 'css/app.css' %}"></head>
+<body><div class="auth" style="max-width:720px">
+  <a class="brand" href="/">🥭 Origin<b>254</b></a>
+  <div class="card">
+    <h1>Join Origin 254</h1>
+    <p class="muted">Farmers, processors and logistics partners.{% if needs_verification %} Every account is verified by our team before it can transact.{% else %} Your account is ready to use as soon as you sign up.{% endif %}</p>
+    <form method="post">{% csrf_token %}{% include "web/_form.html" %}
+      <button class="primary" type="submit">Create account</button>
+    </form>
+    <p style="margin-top:14px" class="muted">Already registered? <a href="{% url 'web:login' %}">Sign in</a></p>
+  </div>
+</div></body></html>

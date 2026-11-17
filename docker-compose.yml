@@ -1,0 +1,51 @@
+# Local / single-server deployment with PostGIS.
+#   docker compose up -d --build
+#   docker compose exec web python manage.py createsuperuser
+#   docker compose exec web python manage.py seed_demo      # optional demo data
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: origin254
+      POSTGRES_USER: origin254
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U origin254"]
+      interval: 5s
+      retries: 10
+
+  web:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://origin254:${POSTGRES_PASSWORD:-change-me}@db:5432/origin254
+      DJANGO_DEBUG: "0"
+      DJANGO_SECURE_SSL_REDIRECT: "0"   # terminate TLS at your proxy and set this to 1
+    ports:
+      - "8000:8000"
+    volumes:
+      - private_media:/app/private_media
+      - backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backup:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://origin254:${POSTGRES_PASSWORD:-change-me}@db:5432/origin254
+    volumes:
+      - backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    # Backs up every 24 hours from container start, keeping 14 days. Use a real scheduler in production.
+    command: ["sh", "-c", "while true; do python manage.py backup_db; sleep 86400; done"]
+
+volumes:
+  pgdata:
+  private_media:
+  backups:

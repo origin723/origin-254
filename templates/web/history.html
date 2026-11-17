@@ -1,0 +1,28 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ title }}</h1><p class="muted">Every product {% if counterparty == "Buyer" %}you sold{% elif counterparty == "Supplier" %}you bought{% else %}bought on Origin 254{% endif %}, saved once the buyer confirmed receipt.</p></div>
+<form method="get" class="row"><input type="search" name="q" value="{{ q }}" placeholder="Search product, order or name" style="width:240px"><button type="submit">Search</button>{% if q %}<a class="btn" href="{% url 'web:history' %}">Clear</a>{% endif %}</form></div>
+
+<div class="grid g3">
+  <div class="stat"><div class="v">{{ records|length }}</div><div class="l">{% if counterparty == "Buyer" %}Sales{% else %}Purchases{% endif %} completed</div></div>
+  <div class="stat"><div class="v">{{ total_value|kes }}</div><div class="l">Total value</div></div>
+  <div class="stat"><div class="l" style="margin-bottom:4px">By product</div>{% for p, unit, n in by_product|slice:":4" %}<div class="spread"><span>{{ p }}</span><strong>{{ n|qty }} {{ unit }}</strong></div>{% empty %}<span class="muted">—</span>{% endfor %}</div>
+</div>
+
+<div class="card" style="margin-top:18px"><div class="table-wrap"><table>
+<tr><th>Date</th><th>Product</th><th>Photos</th><th class="num">Quantity</th><th class="num">Price/unit</th><th class="num">Total</th>{% if counterparty != "Supplier" %}<th>Buyer</th>{% endif %}{% if counterparty != "Buyer" %}<th>Supplier</th>{% endif %}<th>Delivered to</th><th>Order</th></tr>
+{% for r in records %}<tr>
+  <td>{{ r.completed_at|date:"d M Y" }}</td>
+  <td><strong>{{ r.product_name }}</strong>{% if r.variety_name %}<br><small>{{ r.variety_name }}</small>{% endif %}<br><span class="badge">{{ r.get_quality_grade_display }}</span></td>
+  <td>{% if r.inventory_item %}{% include "web/_thumbs.html" with item=r.inventory_item small=1 %}{% else %}<span class="muted">—</span>{% endif %}</td>
+  <td class="num">{{ r.quantity|qty }} {{ r.unit }}</td>
+  <td class="num">{{ r.price_per_unit|kes }}</td>
+  <td class="num"><strong>{{ r.total|kes }}</strong>{% if r.delivery_cost %}<br><small>incl. {{ r.delivery_cost|kes }} delivery</small>{% endif %}</td>
+  {% if counterparty != "Supplier" %}<td>{{ r.buyer_name }}</td>{% endif %}
+  {% if counterparty != "Buyer" %}<td>{{ r.supplier_name }}</td>{% endif %}
+  <td><small>{{ r.delivered_to }}</small></td>
+  <td>{% if r.order_id %}<a href="{% url 'web:order_detail' r.order_id %}">{{ r.order_reference }}</a>{% else %}{{ r.order_reference }}{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="10" class="empty">{% if q %}Nothing matches “{{ q }}”.{% else %}Nothing yet. Products appear here once an order is delivered and the buyer confirms receipt.{% endif %}</td></tr>{% endfor %}
+</table></div></div>
+{% endblock %}

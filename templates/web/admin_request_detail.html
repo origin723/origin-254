@@ -1,0 +1,16 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ req.reference }}{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ req.reference }} · {{ req.quantity|qty }} {{ req.unit }} {{ req.product }}</h1><p class="muted">{{ req.buyer.display_name }} · {{ req.intended_application }} · {{ req.delivery_location }} by {{ req.delivery_deadline|date:"d M Y" }}</p></div>
+<div class="row">{% badge req %}<form method="post" class="inline">{% csrf_token %}<button class="sm">↻ Re-run matching</button></form></div></div>
+<div class="card"><h2>Matches &amp; score breakdown</h2><div class="table-wrap"><table>
+<tr><th>#</th><th>Supplier</th><th class="num">Score</th><th class="num">Prod</th><th class="num">Qty</th><th class="num">Qual</th><th class="num">Prox</th><th class="num">Deliv</th><th class="num">Rel</th><th class="num">km</th><th class="num">Suggested</th><th>Status</th></tr>
+{% for m in matches %}{% with c=m.score_breakdown.components %}<tr><td>{{ m.rank }}</td><td>{{ m.supplier.business_name }}</td><td class="num"><strong>{{ m.score|floatformat:3 }}</strong></td>
+<td class="num">{{ c.product|floatformat:2 }}</td><td class="num">{{ c.quantity|floatformat:2 }}</td><td class="num">{{ c.quality|floatformat:2 }}</td><td class="num">{{ c.proximity|floatformat:2 }}</td><td class="num">{{ c.delivery|floatformat:2 }}</td><td class="num">{{ c.reliability|floatformat:2 }}</td>
+<td class="num">{{ m.distance_km }}</td><td class="num">{{ m.suggested_quantity|qty }}</td><td>{% badge m %}</td></tr>{% endwith %}
+{% empty %}<tr><td colspan="12" class="empty">No matches.</td></tr>{% endfor %}</table></div>
+{% if matches %}<p><small class="muted">Weights: {% for k, v in matches.0.score_breakdown.weights.items %}{{ k }} {{ v|floatformat:2 }}{% if not forloop.last %} · {% endif %}{% endfor %}</small></p>{% endif %}</div>
+<div class="card"><h2>Offers</h2><div class="table-wrap"><table><tr><th>Quotation</th><th>Supplier</th><th class="num">Qty</th><th class="num">Total</th><th class="num">Landed/unit</th><th>Status</th></tr>
+{% for row in comparison.offers %}<tr><td>{{ row.quotation.reference }}</td><td>{{ row.quotation.supplier.business_name }}</td><td class="num">{{ row.quotation.quantity|qty }}</td><td class="num">{{ row.quotation.total|kes }}</td><td class="num">{{ row.landed_unit_cost }}</td><td>{% badge row.quotation %}</td></tr>{% empty %}<tr><td colspan="6" class="muted">No open offers.</td></tr>{% endfor %}</table></div></div>
+<div class="card"><h2>Orders</h2>{% for o in req.orders.all %}<p><a href="{% url 'web:order_detail' o.pk %}">{{ o.reference }}</a> {% badge o %}</p>{% empty %}<p class="muted">None.</p>{% endfor %}</div>
+{% endblock %}

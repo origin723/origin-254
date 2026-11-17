@@ -1,0 +1,31 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ q.reference }}{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ q.reference }}</h1><p class="muted">For {{ q.sourcing_request.reference }} · {{ q.sourcing_request.quantity|qty }} {{ q.sourcing_request.unit }} {{ q.sourcing_request.product }}</p></div>{% badge q %}</div>
+<div class="grid g2">
+<div class="card"><h2>Terms (revision {{ q.revision }})</h2><dl class="kv">
+  <dt>Quantity</dt><dd>{{ q.quantity|qty }} {{ q.sourcing_request.unit }}</dd>
+  <dt>Price</dt><dd>{{ q.price_per_unit|kes }} / {{ q.sourcing_request.unit }}</dd>
+  <dt>Delivery cost</dt><dd>{{ q.delivery_cost|kes }}{% if q.includes_delivery %} (supplier delivers){% endif %}</dd>
+  <dt>Total</dt><dd><strong>{{ q.total|kes }}</strong></dd>
+  <dt>Grade</dt><dd>{{ q.get_quality_grade_display }}</dd>
+  <dt>Earliest delivery</dt><dd>{{ q.earliest_delivery_date|date:"d M Y" }}</dd>
+  <dt>Valid until</dt><dd>{{ q.valid_until|date:"d M Y" }}</dd>
+  {% if q.notes %}<dt>Notes</dt><dd>{{ q.notes }}</dd>{% endif %}
+</dl></div>
+<div class="card">
+  {% if q.status == "countered" %}
+    <h2>Buyer counter-offer</h2>
+    <p>{% if q.counter_price_per_unit %}Price <strong>{{ q.counter_price_per_unit|kes }}</strong> / {{ q.sourcing_request.unit }}. {% endif %}{% if q.counter_quantity %}Quantity <strong>{{ q.counter_quantity|qty }}</strong>. {% endif %}{% if q.counter_note %}“{{ q.counter_note }}”{% endif %}</p>
+    <form method="post" action="{% url 'web:quotation_supplier_action' q.pk 'accept_counter' %}" class="inline">{% csrf_token %}<button class="primary">Accept counter-offer</button></form>
+  {% endif %}
+  {% if q.status == "submitted" or q.status == "countered" %}
+    <h2 style="margin-top:14px">Revise</h2>
+    <form method="post" action="{% url 'web:quotation_supplier_action' q.pk 'revise' %}">{% csrf_token %}{% include "web/_form.html" with form=counter_form %}<button>Send revision</button></form>
+    <form method="post" action="{% url 'web:quotation_supplier_action' q.pk 'withdraw' %}" style="margin-top:10px">{% csrf_token %}<button class="danger sm">Withdraw quotation</button></form>
+  {% elif q.status == "accepted" %}
+    <h2>Accepted 🎉</h2><p>{% if q.order_line %}On order <a href="{% url 'web:order_detail' q.order_line.order_id %}">{{ q.order_line.order.reference }}</a>.{% else %}The buyer will place an order shortly; you'll be asked to reconfirm availability.{% endif %}</p>
+  {% else %}<p class="muted">This quotation is closed.</p>{% endif %}
+</div></div>
+<div class="card"><h2>Negotiation history</h2><ul class="timeline">{% for h in q.history %}<li><strong>{{ h.event|capfirst }}</strong> by {{ h.by }}{% if h.price_per_unit and h.price_per_unit != "None" %} · price {{ h.price_per_unit }}{% endif %}{% if h.quantity and h.quantity != "None" %} · qty {{ h.quantity }}{% endif %}{% if h.note %} · “{{ h.note }}”{% endif %}<br><small>{{ h.at|isodate|date:"d M Y H:i" }}</small></li>{% endfor %}</ul></div>
+{% endblock %}

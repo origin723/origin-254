@@ -1,0 +1,56 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Market search{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>🔎 Market search</h1><p class="muted">Check whether buyers are looking for a product before you plant, harvest or list it.</p></div></div>
+<form method="get" class="card market-search">
+  <div class="row"><input type="search" name="product" value="{{ q }}" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px" autofocus><button class="primary" type="submit">Search market</button></div>
+  {% if q and q|length < 2 %}<div class="err">Type at least 2 letters.</div>{% endif %}
+</form>
+
+{% if report %}
+{% with p=report.product %}
+{% if not p %}
+<div class="card"><h2>No market for “{{ q }}” on Origin 254 yet</h2>
+  <p>No buyer has asked for this product and nobody has sold it here. You can still list it: buyers who search for it will find you, and you'll be matched as soon as someone posts a request.</p>
+  <a class="btn primary" href="{% url 'web:inventory' %}?product={{ q|urlencode }}">List {{ q }} in my inventory →</a></div>
+{% elif not p.is_active %}
+<div class="card"><h2>{{ p.name }} is not currently traded on Origin 254</h2><p class="muted">Contact the Origin 254 team if you'd like it added back.</p></div>
+{% else %}
+<div class="card">
+  <div class="spread"><h2 style="margin:0">{{ p.name }}{% if q|lower != p.name|lower %} <small class="muted">(you searched “{{ q }}”)</small>{% endif %}</h2>
+  {% if report.level == "strong" %}<span class="badge ok">Strong demand</span>{% elif report.level == "some" %}<span class="badge info">Some demand</span>{% elif report.level == "past" %}<span class="badge warn">No open requests · sold recently</span>{% else %}<span class="badge">No demand yet</span>{% endif %}</div>
+  <p style="margin-top:8px">{% if report.rows %}<strong>{{ report.rows|length }}</strong> open request{{ report.rows|length|pluralize }} from <strong>{{ report.buyers }}</strong> buyer{{ report.buyers|pluralize }} want {% if report.demand_kg %}<strong>{{ report.demand_kg|qty }} kg</strong>{% endif %}{% for u, n in report.other_units.items %}{% if not forloop.first or report.demand_kg %} + {% endif %}<strong>{{ n|qty }} {{ u|lower }}</strong>{% endfor %} of {{ p.name|lower }}.{% else %}No buyer is asking for {{ p.name|lower }} right now.{% if report.sales_count %} But it sold {{ report.sales_count }} time{{ report.sales_count|pluralize }} in the last 90 days, so demand comes back.{% endif %}{% endif %}</p>
+</div>
+
+<div class="grid g4">
+  <div class="stat"><div class="v">{{ report.rows|length }}</div><div class="l">Open buyer requests</div></div>
+  <div class="stat"><div class="v">{% if report.demand_kg %}{{ report.demand_kg|qty }} kg{% elif report.other_units %}{% for u, n in report.other_units.items %}{{ n|qty }} {{ u|lower }}{% endfor %}{% else %}0{% endif %}</div><div class="l">Quantity wanted</div></div>
+  <div class="stat"><div class="v">{% if report.avg_price_kg %}{{ report.avg_price_kg|kes }}{% else %}—{% endif %}</div><div class="l">Average price paid / kg{% if report.avg_price_kg %}<br><small>{{ report.min_price_kg|kes }} – {{ report.max_price_kg|kes }}, {{ report.sales_count }} sale{{ report.sales_count|pluralize }}, last 90 days</small>{% else %}<br><small>no sales in the last 90 days</small>{% endif %}</div></div>
+  <div class="stat"><div class="v">{{ report.competitors }}</div><div class="l">Other suppliers with stock</div></div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <div class="spread"><h2>Buyers looking for {{ p.name|lower }}</h2>
+  {% if report.my_listings %}<small class="muted">You list {{ p.name|lower }}: {% for i in report.my_listings %}{{ i.quantity_available|qty }} {{ i.unit }}{% if i.variety %} {{ i.variety.name }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</small>{% endif %}</div>
+  <div class="table-wrap"><table>
+  <tr><th>Needed by</th><th class="num">Quantity</th><th>Variety · grade</th><th>Deliver to</th><th class="num">From you</th><th class="num">Budget / unit</th><th>For</th><th></th></tr>
+  {% for row in report.rows %}{% with r=row.request %}
+  <tr>
+    <td>{{ r.delivery_deadline|date:"d M Y" }}<br><small class="muted">{{ r.delivery_deadline|timeuntil }}</small></td>
+    <td class="num"><strong>{{ r.quantity|qty }} {{ r.get_unit_display|lower }}</strong></td>
+    <td>{{ r.variety.name|default:"Any variety" }}<br><small>{{ r.get_min_quality_grade_display }} or better</small></td>
+    <td>{{ r.delivery_location.name }}<br><small class="muted">{{ r.delivery_location.county }}</small></td>
+    <td class="num">{% if row.distance_km is not None %}{{ row.distance_km|floatformat:0 }} km{% else %}—{% endif %}</td>
+    <td class="num">{% if row.budget_per_unit %}{{ row.budget_per_unit|kes }}{% else %}<small class="muted">not given</small>{% endif %}</td>
+    <td><small>{{ r.intended_application }}</small></td>
+    <td>{% if row.my_match %}<a class="btn sm primary" href="{% url 'web:opportunity_detail' row.my_match.pk %}">You're matched →</a>{% elif row.i_can_supply %}<small class="muted">Not matched: check grade, deadline, distance, photos</small>{% else %}<a class="btn sm" href="{% url 'web:inventory' %}?product={{ p.name|urlencode }}">List stock</a>{% endif %}</td>
+  </tr>{% endwith %}
+  {% empty %}<tr><td colspan="8" class="empty">No open requests right now. List your stock anyway: you'll be matched automatically as soon as a buyer posts one.</td></tr>{% endfor %}
+  </table></div>
+  <p class="muted" style="margin-top:10px"><small>Buyer names are shown once you're matched to their request. When you list or confirm stock, it is matched straight away to open requests it can serve.</small></p>
+  {% if not report.my_listings %}<a class="btn primary" href="{% url 'web:inventory' %}?product={{ p.name|urlencode }}">List {{ p.name|lower }} in my inventory →</a>{% endif %}
+</div>
+{% endif %}
+{% endwith %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "web/base.html" %}
+{% block title %}New sourcing request{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>New sourcing request</h1><p class="muted">Tell us what you need. We'll match you with verified suppliers immediately.</p></div></div>
+{% if not user.is_verified %}<div class="flash warning">Your account must be verified before you can submit requests.</div>{% endif %}
+<form method="post" class="card" id="request-form">{% csrf_token %}
+  {% for e in form.non_field_errors %}<div class="flash error">{{ e }}</div>{% endfor %}
+  {% if form.errors %}<div class="flash error">Please correct the highlighted fields below.</div>{% endif %}
+  <h2>Product</h2>
+  <div class="form-grid">
+    {% include "web/_field.html" with field=form.product_name %}
+    {% include "web/_field.html" with field=form.variety_name %}
+    {% include "web/_field.html" with field=form.quantity %}
+    {% include "web/_field.html" with field=form.unit %}
+  </div>
+  <h2>Quality</h2>
+  <div class="form-grid">
+    {% include "web/_field.html" with field=form.min_quality_grade %}
+    {% include "web/_field.html" with field=form.quality_notes full=1 %}
+  </div>
+  <h2>Use &amp; delivery</h2>
+  <div class="form-grid">
+    {% include "web/_field.html" with field=form.intended_application %}
+    {% include "web/_field.html" with field=form.packaging_requirements %}
+    {% include "web/_field.html" with field=form.delivery_location %}
+    {% include "web/_field.html" with field=form.delivery_deadline %}
+    {% include "web/_field.html" with field=form.delivery_arrangement %}
+    {% include "web/_field.html" with field=form.target_budget %}
+  </div>
+  <button class="primary" type="submit" id="request-submit">Submit &amp; find suppliers</button>
+</form>
+<script>
+(function () {
+  var form = document.getElementById("request-form"), btn = document.getElementById("request-submit");
+  form.addEventListener("submit", function () { btn.disabled = true; btn.textContent = "Finding suppliers…"; });
+  window.addEventListener("pageshow", function () { btn.disabled = false; btn.textContent = "Submit & find suppliers"; });
+})();
+</script>
+{% endblock %}

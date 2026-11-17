@@ -1,0 +1,66 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Payments{% endblock %}
+{% block content %}
+{% if user.is_buyer %}
+<div class="pagehead"><div><h1>💳 Payments</h1><p class="muted">Pay your orders with M-Pesa. Origin 254 holds your money and pays each seller only after you confirm you received their produce.</p></div></div>
+<div class="card expenses">
+  <h2>Total expenses</h2>
+  <div class="grid g4">
+    <div class="stat"><div class="v">{{ expenses.total|kes }}</div><div class="l">Total expenses (all orders)</div></div>
+    <div class="stat"><div class="v">{{ expenses.produce|kes }}</div><div class="l">Produce</div></div>
+    <div class="stat"><div class="v">{{ expenses.delivery|kes }}</div><div class="l">Delivery</div></div>
+    <div class="stat"><div class="v">{{ total_paid|kes }}</div><div class="l">Paid so far</div></div>
+  </div>
+  <div class="spread pay-panel">
+    <div><div class="muted">Still to pay</div><div class="due">{{ total_due|kes }}</div>
+      {% if expenses.refunds %}<small class="muted">Refund due to you: {{ expenses.refunds|kes }}</small>{% endif %}</div>
+    {% if payable_rows %}
+    <form method="post" action="{% url 'web:payments_pay' %}" class="upload-row" style="margin:0">{% csrf_token %}
+      {% if payable_rows|length > 1 %}<select name="order" aria-label="Order to pay" style="max-width:260px">{% for r in payable_rows %}<option value="{{ r.order.pk }}">{{ r.order.reference }} · {{ r.order.sourcing_request.product }} · {{ r.due|kes }}</option>{% endfor %}</select>
+      {% else %}<input type="hidden" name="order" value="{{ payable_rows.0.order.pk }}">{% endif %}
+      <input type="tel" name="phone" value="{{ phone }}" placeholder="M-Pesa number, e.g. 0712 345 678" required style="max-width:230px" aria-label="M-Pesa number">
+      <button class="pay-btn lg" type="submit">💳 Pay {% if payable_rows|length == 1 %}{{ payable_rows.0.due|kes }} {% endif %}with M-Pesa</button>
+    </form>
+    {% elif total_due %}<span class="muted">Payment opens once your suppliers reconfirm their stock.</span>
+    {% else %}<span class="badge ok">All paid 🎉</span>{% endif %}
+  </div>
+</div>
+<div class="card"><h2>Your orders</h2><div class="table-wrap"><table>
+<tr><th>Order</th><th>Product</th><th class="num">Total</th><th class="num">Paid</th><th class="num">To pay</th><th>Status</th><th>Pay</th></tr>
+{% for r in rows %}{% with o=r.order %}<tr>
+  <td><a href="{% url 'web:order_detail' o.pk %}"><strong>{{ o.reference }}</strong></a><br><small class="muted">{{ o.created_at|date:"d M Y" }}</small></td>
+  <td>{{ o.sourcing_request.product }}<br><small>{{ o.total_quantity|qty }} {{ o.sourcing_request.unit }}</small></td>
+  <td class="num">{{ o.total|kes }}</td><td class="num">{{ r.paid|kes }}</td><td class="num"><strong>{{ r.due|kes }}</strong></td>
+  <td>{% if r.state == "paid" %}<span class="badge ok">Paid</span>{% elif r.state == "pending" %}<span class="badge info">Waiting for M-Pesa</span>{% elif r.state == "partial" %}<span class="badge warn">Part paid</span>{% else %}<span class="badge">Not paid</span>{% endif %}</td>
+  <td>{% if r.pending %}<form method="post" action="{% url 'web:order_action' o.pk 'pay-refresh' %}">{% csrf_token %}<input type="hidden" name="payment" value="{{ r.pending.pk }}"><input type="hidden" name="next" value="payments"><button class="sm">Check status</button></form>
+  {% elif r.due and r.payable %}<form method="post" action="{% url 'web:order_action' o.pk 'pay' %}" class="upload-row" style="margin:0">{% csrf_token %}<input type="hidden" name="next" value="payments"><input type="tel" name="phone" value="{{ phone }}" placeholder="0712 345 678" required style="max-width:150px" aria-label="M-Pesa number"><button class="primary sm pay-btn" type="submit">Pay {{ r.due|kes }}</button></form>
+  {% elif r.due %}<small class="muted">After suppliers reconfirm</small>{% else %}<small class="muted">—</small>{% endif %}</td>
+</tr>{% endwith %}{% empty %}<tr><td colspan="7" class="empty">No orders yet.</td></tr>{% endfor %}
+</table></div>
+{% if provider == "simulated" %}<p class="muted" style="margin-top:8px"><small><strong>Test mode:</strong> no real money moves.</small></p>{% endif %}</div>
+<div class="card"><h2>Payment history</h2><div class="table-wrap"><table>
+<tr><th>Reference</th><th>Date</th><th>Order</th><th class="num">Amount</th><th>M-Pesa code</th><th>Status</th></tr>
+{% for p in history %}<tr><td>{{ p.reference }}</td><td>{{ p.created_at|date:"d M Y H:i" }}</td><td>{{ p.order.reference }}</td><td class="num">{{ p.amount|kes }}</td><td>{{ p.receipt_number|default:"—" }}</td><td><span class="badge {% if p.status == 'succeeded' %}ok{% elif p.status == 'pending' %}info{% else %}bad{% endif %}">{{ p.get_status_display }}</span></td></tr>
+{% empty %}<tr><td colspan="6" class="empty">No payments yet.</td></tr>{% endfor %}
+</table></div></div>
+
+{% else %}
+<div class="pagehead"><div><h1>💳 My payments</h1><p class="muted">Buyers pay Origin 254 first. When a buyer confirms they received your produce, you are paid the sale value minus Origin 254's {{ pct|floatformat:0 }}% commission.</p></div></div>
+<div class="grid g3">
+  <div class="stat"><div class="v">{{ received|kes }}</div><div class="l">Received</div></div>
+  <div class="stat"><div class="v">{{ awaiting|kes }}</div><div class="l">On the way (after delivery is confirmed)</div></div>
+  <div class="stat"><div class="v">{{ commission|kes }}</div><div class="l">Commission to Origin 254 ({{ pct|floatformat:0 }}%)</div></div>
+</div>
+<div class="card" style="margin-top:18px"><h2>Payouts</h2><div class="table-wrap"><table>
+<tr><th>Payout</th><th>Order</th><th class="num">Sale value</th><th class="num">Commission</th><th class="num">You receive</th><th>Status</th><th>M-Pesa code</th></tr>
+{% for po in payouts %}<tr><td>{{ po.reference }}<br><small class="muted">{{ po.created_at|date:"d M Y" }}</small></td><td><a href="{% url 'web:order_detail' po.order_line.order_id %}">{{ po.order_line.order.reference }}</a></td><td class="num">{{ po.gross_amount|kes }}</td><td class="num">− {{ po.fee|kes }}</td><td class="num"><strong>{{ po.amount|kes }}</strong></td>
+<td><span class="badge {% if po.status == 'paid' %}ok{% elif po.status == 'failed' or po.status == 'on_hold' %}warn{% else %}info{% endif %}">{{ po.get_status_display }}</span></td><td>{{ po.receipt_number|default:"—" }}</td></tr>
+{% empty %}<tr><td colspan="7" class="empty">No payouts yet. They appear when a buyer confirms receipt of your produce.</td></tr>{% endfor %}
+</table></div></div>
+<div class="card"><h2>Coming up</h2><p class="muted"><small>Orders in progress. You'll be paid once the buyer has paid and confirms delivery.</small></p><div class="table-wrap"><table>
+<tr><th>Order</th><th>Status</th><th class="num">Sale value</th><th class="num">Commission</th><th class="num">You'll receive</th><th>Buyer paid?</th></tr>
+{% for u in upcoming %}<tr><td><a href="{% url 'web:order_detail' u.line.order_id %}">{{ u.line.order.reference }}</a></td><td>{% badge u.line %}</td><td class="num">{{ u.line.total|kes }}</td><td class="num">− {{ u.fee|kes }}</td><td class="num"><strong>{{ u.net|kes }}</strong></td><td>{% if u.buyer_paid %}<span class="badge ok">Yes, held by Origin 254</span>{% else %}<span class="badge">Not yet</span>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6" class="empty">Nothing in progress.</td></tr>{% endfor %}
+</table></div></div>
+{% endif %}
+{% endblock %}

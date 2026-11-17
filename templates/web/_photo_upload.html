@@ -1,0 +1,5 @@
+<form method="post" enctype="multipart/form-data" action="{% url 'web:inventory_photo_upload' item.pk %}" class="upload-row">{% csrf_token %}
+  <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple required>
+  <input type="text" name="caption" placeholder="Caption (optional)" maxlength="120">
+  <button class="primary sm">Upload</button>
+</form>

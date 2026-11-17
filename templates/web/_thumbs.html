@@ -1,0 +1,1 @@
+<div class="thumbs">{% for p in item.photos.all %}<a class="thumb{% if small %} sm{% endif %}" href="{% url 'web:photo' p.pk %}" target="_blank" title="{{ p.caption }}"><img src="{% url 'web:photo' p.pk %}" alt="{{ p.caption|default:item.product.name }}" loading="lazy"></a>{% endfor %}</div>

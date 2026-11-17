@@ -1,0 +1,6 @@
+{% extends "web/base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="pagehead"><h1>Messages</h1></div>
+<div class="card">{% for c in convos %}<div class="spread" style="padding:10px 0;border-bottom:1px solid var(--border)"><div><a href="{% url 'web:conversation' c.pk %}"><strong>{{ c.subject }}</strong></a><br><small>{% for p in c.participants.all %}{% if p != user %}{{ p.display_name }}{% endif %}{% endfor %} · {{ c.messages.last.body|truncatechars:80 }}</small></div><small>{{ c.updated_at|timesince }} ago</small></div>{% empty %}<p class="empty">No conversations yet. Contact a matched supplier from a sourcing request.</p>{% endfor %}</div>
+{% endblock %}

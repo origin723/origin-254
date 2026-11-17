@@ -1,0 +1,110 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}{{ order.reference }}{% endblock %}
+{% block content %}
+<div class="pagehead">
+  <div><h1>Order {{ order.reference }}</h1>
+  <p class="muted">{{ order.total_quantity|qty }} kg {{ order.sourcing_request.product }} for {{ order.buyer.display_name }} · <a href="{% if user.is_platform_admin %}{% url 'web:admin_request_detail' order.sourcing_request_id %}{% else %}{% url 'web:request_detail' order.sourcing_request_id %}{% endif %}">{{ order.sourcing_request.reference }}</a> · {{ order.total|kes }}</p></div>
+  {% badge order %}
+</div>
+<p class="muted"><small>Workflow: supplier reconfirmation → payment (held by Origin 254) → quality inspection → pickup &amp; delivery → buyer confirms receipt → supplier paid → feedback</small></p>
+
+<div class="card" id="payment">
+  <div class="spread"><h2 style="margin:0">💳 Payment</h2>
+    {% if pay.state == "paid" %}<span class="badge ok">Paid</span>{% elif pay.state == "pending" %}<span class="badge info">Waiting for M-Pesa</span>{% elif pay.state == "partial" %}<span class="badge warn">Part paid</span>{% else %}<span class="badge">Not paid</span>{% endif %}</div>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="stat"><div class="v">{{ order.total|kes }}</div><div class="l">Order total</div></div>
+    <div class="stat"><div class="v">{{ pay.paid|kes }}</div><div class="l">Paid, held by Origin 254 until delivery</div></div>
+    <div class="stat"><div class="v">{{ pay.due|kes }}</div><div class="l">Still to pay</div></div>
+  </div>
+  {% if is_buyer %}
+    {% if pay.pending %}
+      <div class="flash info" style="margin-top:12px">An M-Pesa prompt for <strong>KES {{ pay.pending.amount|floatformat:0 }}</strong> was sent to <strong>{{ pay.pending.phone }}</strong>. Enter your M-Pesa PIN on your phone, then check the status.</div>
+      <form method="post" action="{% url 'web:order_action' order.pk 'pay-refresh' %}">{% csrf_token %}<input type="hidden" name="payment" value="{{ pay.pending.pk }}"><button class="primary">Check payment status</button></form>
+    {% elif pay.due and pay.payable %}
+      <form method="post" action="{% url 'web:order_action' order.pk 'pay' %}" class="upload-row" style="margin-top:12px">{% csrf_token %}
+        <label for="pay-phone" style="margin:0">M-Pesa number</label>
+        <input id="pay-phone" type="tel" name="phone" value="{{ pay.phone }}" placeholder="0712 345 678" required style="max-width:200px" autocomplete="tel">
+        <button class="primary" type="submit">Pay KES {{ pay.due|floatformat:0 }} with M-Pesa</button>
+      </form>
+      <p class="muted" style="margin-top:6px"><small>You'll get a prompt on your phone. Origin 254 holds the money and pays each supplier only after you confirm you received their produce.{% if pay.provider == "simulated" %} <strong>Test mode:</strong> no real money moves.{% endif %}</small></p>
+    {% elif pay.due %}
+      <p class="muted" style="margin-top:12px">You can pay once every supplier has reconfirmed their stock.</p>
+    {% endif %}
+  {% endif %}
+  {% if pay.refund_due %}<div class="flash warning" style="margin-top:12px">KES {{ pay.refund_due|floatformat:2 }} was paid for lots that were cancelled or rejected and is due back to the buyer.{% if user.is_platform_admin %}
+    <form method="post" action="{% url 'web:order_action' order.pk 'refund' %}" class="upload-row">{% csrf_token %}<input name="amount" type="number" step="0.01" min="1" max="{{ pay.refund_due|stringformat:'s' }}" value="{{ pay.refund_due|stringformat:'s' }}" style="max-width:140px"><input name="receipt_number" placeholder="Refund transaction code" required><button class="sm">Record refund</button></form>{% endif %}</div>{% endif %}
+  {% if pay.payments %}<details style="margin-top:10px"><summary>Payment history ({{ pay.payments|length }})</summary><div class="table-wrap"><table>
+    <tr><th>Reference</th><th>Date</th><th class="num">Amount</th><th>Phone</th><th>M-Pesa code</th><th>Status</th></tr>
+    {% for p in pay.payments %}<tr><td>{{ p.reference }}</td><td>{{ p.created_at|date:"d M Y H:i" }}</td><td class="num">{{ p.amount|kes }}</td><td>{{ p.phone|default:"—" }}</td><td>{{ p.receipt_number|default:"—" }}</td><td><span class="badge {% if p.status == 'succeeded' %}ok{% elif p.status == 'pending' %}info{% else %}bad{% endif %}">{{ p.get_status_display }}</span>{% if p.status != "succeeded" and p.result_description %}<br><small class="muted">{{ p.result_description }}</small>{% endif %}</td></tr>{% endfor %}
+  </table></div></details>{% endif %}
+</div>
+
+{% for line in lines %}
+<div class="card">
+  <div class="spread"><div><h2 style="margin:0">{{ line.supplier.business_name }}</h2><small class="muted">{{ line.quantity|qty }} {{ line.unit }} @ {{ line.price_per_unit|kes }} + {{ line.delivery_cost|kes }} delivery = <strong>{{ line.total|kes }}</strong> · deliver by {{ line.agreed_delivery_date|date:"d M" }} · {{ line.quotation.reference }}</small>
+  {% if line.payout_record %}{% with po=line.payout_record %}<br><small>Supplier payout {{ po.reference }}: <span class="badge {% if po.status == 'paid' %}ok{% elif po.status == 'failed' or po.status == 'on_hold' %}warn{% else %}info{% endif %}">{{ po.get_status_display }}</span> {{ po.amount|kes }}{% if po.fee %} (after {{ po.fee|kes }} fee){% endif %}{% if po.receipt_number %} · {{ po.receipt_number }}{% endif %}</small>{% endwith %}{% elif line.status == "completed" and pay.state != "paid" %}<br><small class="muted">Supplier is paid once the order is paid.</small>{% endif %}</div>{% badge line %}</div>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div><h3>Agreed quality</h3><dl class="kv"><dt>Grade</dt><dd>{{ line.get_quality_grade_display }}</dd>
+      {% for k, v in line.quality_specifications.specifications.items %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}
+      {% if line.quality_specifications.packaging %}<dt>Packaging</dt><dd>{{ line.quality_specifications.packaging }}</dd>{% endif %}</dl></div>
+    <div><h3>Inspections</h3>
+      {% for i in line.inspections.all %}<p><span class="badge {{ i.result|tone }}">{{ i.get_result_display }}</span> {{ i.get_stage_display }}<br><small>{{ i.inspector.display_name }} · {{ i.inspected_at|date:"d M H:i" }}{% for k, v in i.measurements.items %} · {{ k }} {{ v }}{% endfor %}{% if i.notes %} · {{ i.notes }}{% endif %}</small></p>{% empty %}<p class="muted">Not inspected yet.</p>{% endfor %}</div>
+    <div><h3>Delivery</h3>
+      {% if line.delivery %}{% with d=line.delivery %}<p>{% badge d %} {{ d.pickup_location.county }} → {{ d.dropoff_location.county }}<br><small>{% if d.logistics_partner %}{{ d.logistics_partner.display_name }}{% else %}{{ order.sourcing_request.get_delivery_arrangement_display }}{% endif %}{% if d.scheduled_date %} · {{ d.scheduled_date|date:"d M" }}{% endif %}{% if d.vehicle_reg %} · {{ d.vehicle_reg }}{% endif %}</small>
+      {% if d.delivered_at %}<br><small>Received {{ d.received_quantity|qty }} {{ line.unit }} by {{ d.received_by }} on {{ d.delivered_at|date:"d M H:i" }}</small>{% endif %}</p>{% endwith %}{% else %}<p class="muted">Created once supply is reconfirmed.</p>{% endif %}</div>
+  </div>
+
+  <div class="row" style="margin-top:8px">
+  {% if line.is_mine and line.status == "awaiting_reconfirmation" %}
+    <form method="post" action="{% url 'web:order_line_action' line.pk 'reconfirm' %}" class="row">{% csrf_token %}
+      <strong>Is this stock still available?</strong>
+      <button class="primary sm" name="available" value="yes">Yes — reserve {{ line.quantity|qty }} {{ line.unit }}</button>
+      <button class="danger sm" name="available" value="no">No longer available</button></form>
+  {% endif %}
+
+  {% if can_inspect and line.status == "confirmed" or can_inspect and line.status == "inspection_failed" or can_inspect and line.status == "delivered" %}
+    <details><summary>Record inspection</summary>
+      <form method="post" enctype="multipart/form-data" action="{% url 'web:order_line_action' line.pk 'inspect' %}">{% csrf_token %}
+      {% include "web/_form.html" with form=inspection_form %}<button class="primary sm">Save inspection</button></form></details>
+  {% endif %}
+
+  {% if is_buyer or user.is_platform_admin %}{% if line.delivery and line.delivery.status == "pending" or line.delivery and line.delivery.status == "scheduled" and not line.delivery.logistics_partner %}
+    <details><summary>Assign logistics partner</summary>
+      <form method="post" action="{% url 'web:order_line_action' line.pk 'assign' %}" class="row">{% csrf_token %}
+      <select name="logistics_partner" style="max-width:240px">{% for lp in logistics_partners %}<option value="{{ lp.pk }}">{{ lp.display_name }}</option>{% endfor %}</select>
+      <input type="date" name="scheduled_date" style="max-width:170px"><button class="sm">Assign</button></form></details>
+  {% endif %}{% endif %}
+
+  {% if line.can_update_delivery and line.delivery.status != "delivered" %}
+    <details><summary>Update delivery</summary>
+      <form method="post" enctype="multipart/form-data" action="{% url 'web:order_line_action' line.pk 'delivery' %}">{% csrf_token %}
+      {% include "web/_form.html" with form=delivery_form %}<button class="primary sm">Update</button></form></details>
+  {% endif %}
+
+  {% if is_buyer and line.status == "delivered" %}
+    <form method="post" action="{% url 'web:order_line_action' line.pk 'complete' %}" class="inline">{% csrf_token %}<button class="primary sm">Confirm receipt &amp; complete</button></form>
+  {% endif %}
+
+  {% if line.status == "completed" %}{% if is_buyer or line.is_mine %}
+    {% if line.my_review %}<span class="badge ok">You rated {{ line.my_review.rating }} ★</span>
+    {% else %}<details><summary>Leave feedback</summary><form method="post" action="{% url 'web:order_line_action' line.pk 'review' %}">{% csrf_token %}{% include "web/_form.html" with form=review_form %}<button class="primary sm">Submit review</button></form></details>{% endif %}
+  {% endif %}{% endif %}
+  </div>
+</div>
+{% endfor %}
+
+<div class="grid g2">
+  <div class="card"><h2>Timeline</h2><ul class="timeline">
+  {% for e in events %}<li><strong>{{ e.event|label }}</strong>{% if e.order_line %} · {{ e.order_line.supplier.business_name }}{% endif %}{% if e.note %} — {{ e.note }}{% endif %}<br><small>{{ e.actor.display_name|default:"System" }} · {{ e.created_at|date:"d M Y H:i" }}</small></li>{% endfor %}
+  </ul></div>
+  <div class="card"><h2>Issues &amp; disputes</h2>
+    {% for d in disputes %}<p>{% badge d %} <strong>{{ d.raised_by.display_name }}</strong>: {{ d.reason }}{% if d.resolution %}<br><small>Resolution: {{ d.resolution }}</small>{% endif %}</p>{% empty %}<p class="muted">No disputes.</p>{% endfor %}
+    <details><summary>Raise a dispute</summary><form method="post" action="{% url 'web:order_action' order.pk 'dispute' %}">{% csrf_token %}
+      <div class="field"><label>Supply line</label><select name="order_line"><option value="">Whole order</option>{% for l in lines %}<option value="{{ l.pk }}">{{ l.supplier.business_name }}</option>{% endfor %}</select></div>
+      <div class="field"><label>What went wrong?</label><textarea name="reason" rows="3" required></textarea></div><button class="danger sm">Raise dispute</button></form></details>
+    {% if is_buyer and order.status == "pending_confirmation" or is_buyer and order.status == "confirmed" %}
+    <details style="margin-top:10px"><summary>Cancel order</summary><form method="post" action="{% url 'web:order_action' order.pk 'cancel' %}">{% csrf_token %}<input name="reason" placeholder="Reason"><button class="danger sm" style="margin-top:6px">Cancel order &amp; release stock</button></form></details>{% endif %}
+  </div>
+</div>
+{% endblock %}

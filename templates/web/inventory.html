@@ -1,0 +1,27 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Inventory{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>My inventory</h1><p class="muted">Buyers are matched to stock you've confirmed within the last 14 days and that has at least {{ min_photos }} photos. Keep quantities current.</p></div></div>
+{% if not verified %}<div class="flash warning">Your listings won't appear in verified recommendations until your account is approved.</div>{% endif %}
+<div class="card"><div class="table-wrap"><table>
+<tr><th>Product</th><th>Photos</th><th class="num">Available</th><th>Grade</th><th>Quality</th><th class="num">Price</th><th>Location</th><th>Window</th><th>Confirmed</th><th></th></tr>
+{% for i in items %}<tr>
+  <td><strong>{{ i.product }}</strong>{% if i.variety %}<br><small>{{ i.variety.name }}</small>{% endif %}</td>
+  <td style="min-width:170px">{% if i.photos.all|length < min_photos %}<small class="badge bad">{{ i.photos.all|length }}/{{ min_photos }} required: hidden from buyers</small>{% endif %}<div class="thumbs">{% for p in i.photos.all %}<div class="thumb sm"><a href="{% url 'web:photo' p.pk %}" target="_blank"><img src="{% url 'web:photo' p.pk %}" alt="" loading="lazy"></a><form method="post" action="{% url 'web:photo_delete' p.pk %}">{% csrf_token %}<button title="Remove" aria-label="Remove photo">×</button></form></div>{% endfor %}</div>
+    {% if i.photos.all|length < max_photos %}<details><summary><small>+ Add photos</small></summary>{% include "web/_photo_upload.html" with item=i %}</details>{% endif %}</td>
+  <td class="num">{{ i.quantity_available|qty }} {{ i.unit }}</td><td>{{ i.get_quality_grade_display }}</td>
+  <td><small>{% for k, v in i.quality_attributes.items %}{{ v }}<br>{% endfor %}</small></td>
+  <td class="num">{{ i.price_per_unit|kes }}</td><td>{{ i.location.county }}</td>
+  <td><small>{{ i.available_from|date:"d M" }} – {{ i.available_until|date:"d M"|default:"open" }}</small></td>
+  <td>{% if not i.is_active %}<span class="badge muted">Hidden</span>{% elif i.photos.all|length < min_photos %}<span class="badge bad">Needs photos</span>{% elif i.is_stale %}<span class="badge bad">Stale</span>{% else %}<span class="badge ok">Current</span>{% endif %}<br><small>{{ i.last_confirmed_at|timesince }} ago</small></td>
+  <td class="row"><form method="post" action="{% url 'web:inventory_action' i.pk 'confirm' %}" class="inline">{% csrf_token %}<button class="sm">✓ Still accurate</button></form>
+  <a class="btn sm" href="?edit={{ i.pk }}#form">Edit</a>
+  {% if i.is_active %}<form method="post" action="{% url 'web:inventory_action' i.pk 'deactivate' %}" class="inline">{% csrf_token %}<button class="sm danger">Hide</button></form>{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="10" class="empty">No stock listed yet.</td></tr>{% endfor %}
+</table></div></div>
+<form method="post" enctype="multipart/form-data" class="card" id="form">{% csrf_token %}
+  <h2>{% if edit %}Edit {{ edit.product }} listing{% else %}Add stock{% endif %}</h2>
+  {% include "web/_form.html" %}
+  <button class="primary">{% if edit %}Save &amp; confirm{% else %}Add listing{% endif %}</button>{% if edit %} <a href="{% url 'web:inventory' %}" class="btn">Cancel</a>{% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<div class="pagehead"><h1>Orders</h1></div>
+<div class="card"><div class="table-wrap"><table>
+<tr><th>Order</th><th>Request</th><th>Product</th><th class="num">Suppliers</th><th class="num">Quantity</th><th class="num">Value</th><th>Created</th><th>Status</th></tr>
+{% for o in orders %}<tr><td><a href="{% url 'web:order_detail' o.pk %}"><strong>{{ o.reference }}</strong></a></td><td>{{ o.sourcing_request.reference }}</td><td>{{ o.sourcing_request.product }}</td><td class="num">{{ o.lines.count }}</td><td class="num">{{ o.total_quantity|qty }}</td><td class="num">{{ o.total|kes }}</td><td>{{ o.created_at|date:"d M Y" }}</td><td>{% badge o %}</td></tr>
+{% empty %}<tr><td colspan="8" class="empty">No orders.</td></tr>{% endfor %}
+</table></div></div>
+{% endblock %}

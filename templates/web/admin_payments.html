@@ -1,0 +1,52 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Payments &amp; payouts{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>💳 Payments &amp; payouts</h1><p class="muted">Buyer M-Pesa payments are held by Origin 254 and paid out to each supplier when the buyer confirms delivery.</p></div>
+<div><span class="badge {% if payment_provider == 'mpesa' %}ok{% else %}warn{% endif %}">Payments: {% if payment_provider == "mpesa" %}M-Pesa{% else %}test mode{% endif %}</span> <span class="badge">Payouts: {{ payout_provider }}</span></div></div>
+
+<div class="grid g4" style="margin-bottom:16px">
+  <div class="stat"><div class="v">{{ c.earned|kes }}</div><div class="l">Origin 254 commission earned ({{ c.percent|floatformat:0 }}% of each sale)</div></div>
+  <div class="stat"><div class="v">{{ c.pending|kes }}</div><div class="l">Commission on payouts not yet made</div></div>
+  <div class="stat"><div class="v">{{ c.received|kes }}</div><div class="l">Total received from buyers</div></div>
+  <div class="stat"><div class="v">{{ c.paid_out|kes }}</div><div class="l">Paid to sellers (sale value minus commission)</div></div>
+</div>
+<div class="grid g3">
+  <div class="stat"><div class="v">{{ c.held|kes }}</div><div class="l">Held for orders still in progress</div></div>
+  <div class="stat"><div class="v">{{ to_pay|length }}</div><div class="l">Payouts needing attention</div></div>
+  <div class="stat"><div class="v">{{ refunds|length }}</div><div class="l">Orders with a refund due</div></div>
+</div>
+
+<div class="card" style="margin-top:18px"><h2>Supplier payouts to make</h2><div class="table-wrap"><table>
+<tr><th>Payout</th><th>Supplier</th><th>Order</th><th class="num">Sale</th><th class="num">Commission</th><th class="num">Pay seller</th><th>M-Pesa number</th><th>Status</th><th>Action</th></tr>
+{% for po in to_pay %}<tr>
+  <td>{{ po.reference }}<br><small class="muted">{{ po.created_at|date:"d M Y" }}</small></td>
+  <td>{{ po.supplier.business_name }}</td>
+  <td><a href="{% url 'web:order_detail' po.order_line.order_id %}">{{ po.order_line.order.reference }}</a></td>
+  <td class="num">{{ po.gross_amount|kes }}</td><td class="num">{{ po.fee|kes }}</td><td class="num"><strong>{{ po.amount|kes }}</strong></td>
+  <td>{{ po.phone|default:"—" }}</td>
+  <td><span class="badge {% if po.status == 'failed' or po.status == 'on_hold' %}warn{% else %}info{% endif %}">{{ po.get_status_display }}</span>{% if po.result_description %}<br><small class="muted">{{ po.result_description }}</small>{% endif %}</td>
+  <td>{% if po.status == "on_hold" %}<form method="post">{% csrf_token %}<input type="hidden" name="payout" value="{{ po.pk }}"><button class="sm" name="action" value="release">Release (dispute settled)</button></form>
+  {% elif po.status == "ready" or po.status == "failed" %}
+    {% if payout_provider != "manual" %}<form method="post" class="inline">{% csrf_token %}<input type="hidden" name="payout" value="{{ po.pk }}"><button class="sm primary" name="action" value="send">Send via M-Pesa</button></form>{% endif %}
+    <details><summary>Record as paid</summary><form method="post" class="upload-row">{% csrf_token %}<input type="hidden" name="payout" value="{{ po.pk }}"><input name="receipt_number" placeholder="Transaction code" required minlength="6"><input name="note" placeholder="Note (optional)"><button class="sm" name="action" value="record">Save</button></form></details>
+  {% else %}<small class="muted">Waiting for M-Pesa</small>{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="9" class="empty">Nothing to pay out.</td></tr>{% endfor %}
+</table></div></div>
+
+{% if refunds %}<div class="card"><h2>Refunds due to buyers</h2><div class="table-wrap"><table>
+<tr><th>Order</th><th>Buyer</th><th class="num">Due</th><th></th></tr>
+{% for o, amt in refunds %}<tr><td>{{ o.reference }}</td><td>{{ o.buyer.display_name }}</td><td class="num">{{ amt|kes }}</td><td><a href="{% url 'web:order_detail' o.pk %}#payment">Record refund →</a></td></tr>{% endfor %}
+</table></div></div>{% endif %}
+
+<div class="card"><h2>Buyer payments</h2><div class="table-wrap"><table>
+<tr><th>Reference</th><th>Date</th><th>Order</th><th>Buyer</th><th class="num">Amount</th><th>M-Pesa code</th><th>Status</th></tr>
+{% for p in payments %}<tr><td>{{ p.reference }}</td><td>{{ p.created_at|date:"d M Y H:i" }}</td><td><a href="{% url 'web:order_detail' p.order_id %}">{{ p.order.reference }}</a></td><td>{{ p.payer.display_name }}</td><td class="num">{{ p.amount|kes }}</td><td>{{ p.receipt_number|default:"—" }}</td><td><span class="badge {% if p.status == 'succeeded' %}ok{% elif p.status == 'pending' %}info{% else %}bad{% endif %}">{{ p.get_status_display }}</span></td></tr>
+{% empty %}<tr><td colspan="7" class="empty">No payments yet.</td></tr>{% endfor %}
+</table></div></div>
+
+<div class="card"><h2>Recent payouts paid</h2><div class="table-wrap"><table>
+<tr><th>Payout</th><th>Supplier</th><th>Order</th><th class="num">Sale</th><th class="num">Commission</th><th class="num">Paid to seller</th><th>Method</th><th>Code</th><th>Paid</th></tr>
+{% for po in paid %}<tr><td>{{ po.reference }}</td><td>{{ po.supplier.business_name }}</td><td>{{ po.order_line.order.reference }}</td><td class="num">{{ po.gross_amount|kes }}</td><td class="num">{{ po.fee|kes }}</td><td class="num">{{ po.amount|kes }}</td><td>{{ po.get_method_display }}</td><td>{{ po.receipt_number }}</td><td>{{ po.paid_at|date:"d M Y" }}</td></tr>
+{% empty %}<tr><td colspan="9" class="empty">None yet.</td></tr>{% endfor %}
+</table></div></div>
+{% endblock %}

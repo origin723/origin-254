@@ -1,0 +1,9 @@
+{% extends "web/base.html" %}
+{% block title %}{{ convo.subject }}{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>{{ convo.subject }}</h1><p class="muted">With {% for p in convo.participants.all %}{% if p != user %}{{ p.display_name }}{% endif %}{% endfor %}{% if convo.sourcing_request %} · <a href="{% url 'web:request_detail' convo.sourcing_request_id %}">{{ convo.sourcing_request.reference }}</a>{% endif %}</p></div></div>
+<div class="card">
+{% for m in msgs %}<div class="msg {% if m.sender == user %}mine{% endif %}">{{ m.body|linebreaksbr }}<small class="muted">{{ m.sender.display_name }} · {{ m.created_at|date:"d M H:i" }}</small></div>{% endfor %}
+<form method="post" style="margin-top:14px">{% csrf_token %}<textarea name="body" rows="2" required placeholder="Write a message…"></textarea><button class="primary sm" style="margin-top:6px">Send</button></form>
+</div>
+{% endblock %}

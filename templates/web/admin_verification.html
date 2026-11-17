@@ -1,0 +1,17 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Verification{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Verification</h1><p class="muted">Only approved suppliers appear in verified recommendations. Every decision is audit-logged.</p></div></div>
+<div class="chips">{% for v, l in statuses %}<a href="?status={{ v }}" class="{% if status == v %}on{% endif %}">{{ l }}</a>{% endfor %}<a href="?status=all" class="{% if status == 'all' %}on{% endif %}">All</a></div>
+{% for label, kind, qs in groups %}
+<div class="card"><h2>{{ label }} ({{ qs|length }})</h2>
+<div class="table-wrap"><table><tr><th>Business</th><th>Contact</th><th>Location</th><th>Documents</th><th>Registered</th><th>Status</th><th>Decision</th></tr>
+{% for p in qs %}<tr><td><strong>{{ p.business_name }}</strong><br><small>{{ p.user.get_role_display }}{% if p.registration_number %} · {{ p.registration_number }}{% endif %}</small></td>
+<td><small>{{ p.user.get_full_name }}<br>{{ p.user.email }}<br>{{ p.user.phone }}</small></td><td>{{ p.location }}</td>
+<td>{% for d in p.user.documents.all %}<a href="{% url 'web:document_download' d.pk %}"><small>{{ d.get_doc_type_display }}</small></a><br>{% empty %}<small class="muted">None</small>{% endfor %}</td>
+<td><small>{{ p.created_at|date:"d M Y" }}</small></td><td>{% badge p "verification_status" %}</td>
+<td><form method="post" action="{% url 'web:admin_verify' kind p.pk %}">{% csrf_token %}<input name="notes" placeholder="Notes (sent to user)" style="margin-bottom:4px"><div class="row">
+<button class="primary sm" name="status" value="approved">Approve</button><button class="sm" name="status" value="rejected">Reject</button>{% if p.verification_status == "approved" %}<button class="danger sm" name="status" value="suspended">Suspend</button>{% endif %}</div></form></td></tr>
+{% empty %}<tr><td colspan="7" class="empty">Nothing here.</td></tr>{% endfor %}</table></div></div>
+{% endfor %}
+{% endblock %}

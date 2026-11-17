@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="origin254-app-url" content="http://127.0.0.1:8000">
+  <title>Origin 254</title>
+  <meta name="description" content="Origin 254 — rooted in Kenya, built for the world.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4faf1;
+      --surface: #ffffff;
+      --text: #1e2b1d;
+      --muted: #5d6e5a;
+      --accent: #ff9a1f;
+      --accent-2: #2f9e4f;
+      --border: #d9ecd2;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* Nav */
+    header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    .links { display: flex; gap: 28px; font-weight: 500; color: var(--muted); }
+    .links a:hover { color: var(--text); }
+    .auth { display: flex; gap: 10px; align-items: center; }
+    .auth .btn { padding: 8px 16px; font-size: .95rem; }
+    .menu-btn { display: none; background: none; border: 0; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+
+    /* Hero */
+    .hero { padding: 110px 0 90px; }
+    .eyebrow { display: inline-block; font-size: .85rem; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 6px 12px; border-radius: 999px; margin-bottom: 22px; }
+    h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; max-width: 14ch; }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 52ch; margin: 22px 0 34px; }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 13px 24px; border-radius: 10px; font-weight: 600; border: 1px solid var(--border); transition: transform .15s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.02em; margin-bottom: 12px; }
+    .lead { color: var(--muted); max-width: 60ch; margin-bottom: 44px; }
+    .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .card .icon { font-size: 1.6rem; margin-bottom: 14px; }
+    .card h3 { margin-bottom: 8px; font-size: 1.15rem; }
+    .card p { color: var(--muted); font-size: .97rem; }
+
+    .about { display: grid; gap: 48px; grid-template-columns: 1.2fr 1fr; align-items: center; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .stat b { display: block; font-size: 2rem; color: var(--accent-2); }
+    .stat span { color: var(--muted); font-size: .9rem; }
+
+    /* Contact */
+    form { display: grid; gap: 14px; max-width: 560px; }
+    input, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; }
+    textarea { min-height: 140px; resize: vertical; }
+    button.btn { cursor: pointer; font: inherit; font-weight: 600; }
+
+    footer { border-top: 1px solid var(--border); padding: 30px 0; color: var(--muted); font-size: .9rem; }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+    @media (max-width: 760px) {
+      .links { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 1px solid var(--border); }
+      .links.open { display: flex; }
+      .links a { padding: 14px 20px; }
+      .menu-btn { display: block; order: 3; }
+      .auth .btn { padding: 7px 12px; font-size: .9rem; }
+      .about { grid-template-columns: 1fr; }
+      .hero { padding: 70px 0 60px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <a href="#" class="logo">Origin<span>254</span></a>
+      <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
+      <div class="links" onclick="this.classList.remove('open')">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="auth">
+        <a href="http://127.0.0.1:8000/login/" data-app-path="/login/" class="btn">Log in</a>
+        <a href="http://127.0.0.1:8000/register/" data-app-path="/register/" class="btn primary">Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Rooted in Kenya 🇰🇪</span>
+        <h1>Where great ideas find their origin.</h1>
+        <p>Origin 254 helps businesses and creators turn bold ideas into real products, brands and experiences. <!-- TODO: replace with your real tagline --></p>
+        <div class="btns">
+          <a href="http://127.0.0.1:8000/register/" data-app-path="/register/" class="btn primary">Register</a>
+          <a href="http://127.0.0.1:8000/login/" data-app-path="/login/" class="btn">Log in</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <h2>What we do</h2>
+        <p class="lead">Placeholder services. Tell me what Origin 254 actually offers and I'll update these.</p>
+        <div class="grid">
+          <div class="card"><div class="icon">🎨</div><h3>Brand & Design</h3><p>Identity, logos and visual systems that make you memorable.</p></div>
+          <div class="card"><div class="icon">💻</div><h3>Web & Apps</h3><p>Fast, modern websites and applications built to grow with you.</p></div>
+          <div class="card"><div class="icon">📈</div><h3>Growth</h3><p>Marketing and strategy to reach the right audience.</p></div>
+          <div class="card"><div class="icon">🤝</div><h3>Consulting</h3><p>Hands-on guidance from idea to launch and beyond.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap about">
+        <div>
+          <h2>About Origin 254</h2>
+          <p class="lead" style="margin-bottom:0">We're a team proud of where we come from: 254. We combine local insight with global standards to build work that lasts. <!-- TODO: your story --></p>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>50+</b><span>Projects delivered</span></div>
+          <div class="stat"><b>30+</b><span>Happy clients</span></div>
+          <div class="stat"><b>5</b><span>Years experience</span></div>
+          <div class="stat"><b>24/7</b><span>Support</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <h2>Let's talk</h2>
+        <p class="lead">Have a project in mind? Send us a message.</p>
+        <form onsubmit="event.preventDefault(); const f=new FormData(this); window.location.href='mailto:hello@origin254.com?subject='+encodeURIComponent('Enquiry from '+f.get('name'))+'&body='+encodeURIComponent(f.get('message')+'\n\n— '+f.get('name')+' ('+f.get('email')+')');">
+          <input name="name" placeholder="Your name" required>
+          <input name="email" type="email" placeholder="Email address" required>
+          <textarea name="message" placeholder="Tell us about your project" required></textarea>
+          <button class="btn primary" type="submit">Send message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <script>document.write(new Date().getFullYear())</script> Origin 254. All rights reserved.</span>
+      <span>Nairobi, Kenya</span>
+    </div>
+  </footer>
+  <script>
+    // Log in / Register always go to the Origin 254 app, wherever this page is opened from
+    // (double-clicked file, VS Code Live Server, another static host). Change the
+    // <meta name="origin254-app-url"> value when the app is deployed to its real address.
+    (function () {
+      var meta = document.querySelector('meta[name="origin254-app-url"]');
+      var app = ((meta && meta.content) || "http://127.0.0.1:8000").replace(/\/$/, "");
+      var sameOrigin = location.origin === app;
+      document.querySelectorAll("[data-app-path]").forEach(function (a) {
+        a.href = (sameOrigin ? "" : app) + a.dataset.appPath;
+      });
+    })();
+  </script>
+</body>
+</html>

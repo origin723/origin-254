@@ -1,0 +1,10 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Matching configuration{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Matching configuration</h1><p class="muted">Weights are normalised to sum to 1. Changes apply to the next matching run and are audit-logged.</p></div></div>
+<div class="grid g2">
+<form method="post" class="card">{% csrf_token %}{% include "web/_form.html" %}<button class="primary">Save configuration</button></form>
+<div class="card"><h2>Effective weights</h2>{% for k, v in weights.items %}<div class="hbar"><span>{{ k|capfirst }}</span><div class="meter"><span style="width:{{ v|bar }}%"></span></div><small>{{ v|pct }}</small></div>{% endfor %}
+<p style="margin-top:12px"><small class="muted">Each candidate gets a 0–1 score per criterion. The weighted sum ranks suppliers; candidates below the minimum score are dropped. Unverified suppliers, stale inventory (&gt;14 days), listings beyond the maximum distance or unable to meet the deadline are excluded before scoring.</small></p></div>
+</div>
+{% endblock %}

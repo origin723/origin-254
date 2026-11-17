@@ -1,0 +1,2121 @@
+{
+ "source": "Constituency boundaries: github.com/mikelmaron/kenya-election-data (IEBC 2013, 290 constituencies). Coordinates are polygon centroids (WGS84). County points are area-weighted county centroids.",
+ "counties": [
+  {
+   "code": 1,
+   "name": "Mombasa",
+   "lat": -4.02009,
+   "lng": 39.65653,
+   "constituencies": [
+    {
+     "code": 1,
+     "name": "Changamwe",
+     "lat": -4.02935,
+     "lng": 39.61519
+    },
+    {
+     "code": 2,
+     "name": "Jomvu",
+     "lat": -3.9986,
+     "lng": 39.60474
+    },
+    {
+     "code": 3,
+     "name": "Kisauni",
+     "lat": -3.97386,
+     "lng": 39.68588
+    },
+    {
+     "code": 4,
+     "name": "Nyali",
+     "lat": -4.03275,
+     "lng": 39.70406
+    },
+    {
+     "code": 5,
+     "name": "Likoni",
+     "lat": -4.0966,
+     "lng": 39.63364
+    },
+    {
+     "code": 6,
+     "name": "Mvita",
+     "lat": -4.05401,
+     "lng": 39.66201
+    }
+   ]
+  },
+  {
+   "code": 2,
+   "name": "Kwale",
+   "lat": -4.18323,
+   "lng": 39.19041,
+   "constituencies": [
+    {
+     "code": 7,
+     "name": "Msambweni",
+     "lat": -4.43763,
+     "lng": 39.51327
+    },
+    {
+     "code": 8,
+     "name": "Lunga Lunga",
+     "lat": -4.46402,
+     "lng": 39.11043
+    },
+    {
+     "code": 9,
+     "name": "Matuga",
+     "lat": -4.24723,
+     "lng": 39.43447
+    },
+    {
+     "code": 10,
+     "name": "Kinango",
+     "lat": -3.98213,
+     "lng": 39.10559
+    }
+   ]
+  },
+  {
+   "code": 3,
+   "name": "Kilifi",
+   "lat": -3.17532,
+   "lng": 39.68666,
+   "constituencies": [
+    {
+     "code": 11,
+     "name": "Kilifi North",
+     "lat": -3.46378,
+     "lng": 39.8893
+    },
+    {
+     "code": 12,
+     "name": "Kilifi South",
+     "lat": -3.80529,
+     "lng": 39.74595
+    },
+    {
+     "code": 13,
+     "name": "Kaloleni",
+     "lat": -3.76284,
+     "lng": 39.52653
+    },
+    {
+     "code": 14,
+     "name": "Rabai",
+     "lat": -3.90646,
+     "lng": 39.60763
+    },
+    {
+     "code": 15,
+     "name": "Ganze",
+     "lat": -3.45509,
+     "lng": 39.5108
+    },
+    {
+     "code": 16,
+     "name": "Malindi",
+     "lat": -3.21404,
+     "lng": 39.91426
+    },
+    {
+     "code": 17,
+     "name": "Magarini",
+     "lat": -2.90205,
+     "lng": 39.7337
+    }
+   ]
+  },
+  {
+   "code": 4,
+   "name": "Tana River",
+   "lat": -1.52663,
+   "lng": 39.41777,
+   "constituencies": [
+    {
+     "code": 18,
+     "name": "Garsen",
+     "lat": -2.33807,
+     "lng": 39.51078
+    },
+    {
+     "code": 19,
+     "name": "Galole",
+     "lat": -1.49518,
+     "lng": 39.50298
+    },
+    {
+     "code": 20,
+     "name": "Bura",
+     "lat": -0.60013,
+     "lng": 39.2483
+    }
+   ]
+  },
+  {
+   "code": 5,
+   "name": "Lamu",
+   "lat": -2.07877,
+   "lng": 40.88288,
+   "constituencies": [
+    {
+     "code": 21,
+     "name": "Lamu East",
+     "lat": -1.93544,
+     "lng": 41.16595
+    },
+    {
+     "code": 22,
+     "name": "Lamu West",
+     "lat": -2.20272,
+     "lng": 40.63808
+    }
+   ]
+  },
+  {
+   "code": 6,
+   "name": "Taita-Taveta",
+   "lat": -3.43487,
+   "lng": 38.41864,
+   "constituencies": [
+    {
+     "code": 23,
+     "name": "Taveta",
+     "lat": -3.42753,
+     "lng": 37.95963
+    },
+    {
+     "code": 24,
+     "name": "Wundanyi",
+     "lat": -3.28727,
+     "lng": 38.28318
+    },
+    {
+     "code": 25,
+     "name": "Mwatate",
+     "lat": -3.72171,
+     "lng": 38.33891
+    },
+    {
+     "code": 26,
+     "name": "Voi",
+     "lat": -3.36597,
+     "lng": 38.64887
+    }
+   ]
+  },
+  {
+   "code": 7,
+   "name": "Garissa",
+   "lat": -0.489,
+   "lng": 40.19929,
+   "constituencies": [
+    {
+     "code": 27,
+     "name": "Garissa Township",
+     "lat": -0.24857,
+     "lng": 39.59075
+    },
+    {
+     "code": 28,
+     "name": "Balambala",
+     "lat": 0.06403,
+     "lng": 39.20136
+    },
+    {
+     "code": 29,
+     "name": "Lagdera",
+     "lat": 0.49066,
+     "lng": 39.34788
+    },
+    {
+     "code": 30,
+     "name": "Dadaab",
+     "lat": 0.06319,
+     "lng": 40.37285
+    },
+    {
+     "code": 31,
+     "name": "Fafi",
+     "lat": -0.7485,
+     "lng": 40.40852
+    },
+    {
+     "code": 32,
+     "name": "Ijara",
+     "lat": -1.52211,
+     "lng": 40.82265
+    }
+   ]
+  },
+  {
+   "code": 8,
+   "name": "Wajir",
+   "lat": 1.80795,
+   "lng": 40.03506,
+   "constituencies": [
+    {
+     "code": 33,
+     "name": "Wajir North",
+     "lat": 2.96819,
+     "lng": 39.64676
+    },
+    {
+     "code": 34,
+     "name": "Wajir East",
+     "lat": 1.9444,
+     "lng": 40.64188
+    },
+    {
+     "code": 35,
+     "name": "Tarbaj",
+     "lat": 2.3535,
+     "lng": 40.23315
+    },
+    {
+     "code": 36,
+     "name": "Wajir West",
+     "lat": 1.65733,
+     "lng": 39.53071
+    },
+    {
+     "code": 37,
+     "name": "Eldas",
+     "lat": 2.2783,
+     "lng": 39.45685
+    },
+    {
+     "code": 38,
+     "name": "Wajir South",
+     "lat": 0.98549,
+     "lng": 40.35852
+    }
+   ]
+  },
+  {
+   "code": 9,
+   "name": "Mandera",
+   "lat": 3.43639,
+   "lng": 40.73879,
+   "constituencies": [
+    {
+     "code": 39,
+     "name": "Mandera West",
+     "lat": 3.42468,
+     "lng": 40.1479
+    },
+    {
+     "code": 40,
+     "name": "Banissa",
+     "lat": 3.99382,
+     "lng": 40.5082
+    },
+    {
+     "code": 41,
+     "name": "Mandera North",
+     "lat": 3.64687,
+     "lng": 40.74238
+    },
+    {
+     "code": 42,
+     "name": "Mandera South",
+     "lat": 2.79768,
+     "lng": 40.77655
+    },
+    {
+     "code": 43,
+     "name": "Mandera East",
+     "lat": 3.70124,
+     "lng": 41.61
+    },
+    {
+     "code": 44,
+     "name": "Lafey",
+     "lat": 3.50302,
+     "lng": 41.24798
+    }
+   ]
+  },
+  {
+   "code": 10,
+   "name": "Marsabit",
+   "lat": 2.97864,
+   "lng": 37.56967,
+   "constituencies": [
+    {
+     "code": 45,
+     "name": "Moyale",
+     "lat": 3.1389,
+     "lng": 38.82383
+    },
+    {
+     "code": 46,
+     "name": "North Horr",
+     "lat": 3.37796,
+     "lng": 37.38532
+    },
+    {
+     "code": 47,
+     "name": "Saku",
+     "lat": 2.33376,
+     "lng": 37.94836
+    },
+    {
+     "code": 48,
+     "name": "Laisamis",
+     "lat": 2.29764,
+     "lng": 37.36123
+    }
+   ]
+  },
+  {
+   "code": 11,
+   "name": "Isiolo",
+   "lat": 1.01035,
+   "lng": 38.54217,
+   "constituencies": [
+    {
+     "code": 49,
+     "name": "Isiolo North",
+     "lat": 1.2606,
+     "lng": 38.46781
+    },
+    {
+     "code": 50,
+     "name": "Isiolo South",
+     "lat": 0.62985,
+     "lng": 38.65523
+    }
+   ]
+  },
+  {
+   "code": 12,
+   "name": "Meru",
+   "lat": 0.16669,
+   "lng": 37.76404,
+   "constituencies": [
+    {
+     "code": 51,
+     "name": "Igembe South",
+     "lat": 0.09234,
+     "lng": 38.143
+    },
+    {
+     "code": 52,
+     "name": "Igembe Central",
+     "lat": 0.29989,
+     "lng": 37.99716
+    },
+    {
+     "code": 53,
+     "name": "Igembe North",
+     "lat": 0.46413,
+     "lng": 37.98852
+    },
+    {
+     "code": 54,
+     "name": "Tigania West",
+     "lat": 0.18693,
+     "lng": 37.72148
+    },
+    {
+     "code": 55,
+     "name": "Tigania East",
+     "lat": 0.27636,
+     "lng": 37.77138
+    },
+    {
+     "code": 56,
+     "name": "North Imenti",
+     "lat": 0.05456,
+     "lng": 37.71682
+    },
+    {
+     "code": 57,
+     "name": "Buuri",
+     "lat": 0.08476,
+     "lng": 37.39846
+    },
+    {
+     "code": 58,
+     "name": "Central Imenti",
+     "lat": -0.04268,
+     "lng": 37.68345
+    },
+    {
+     "code": 59,
+     "name": "South Imenti",
+     "lat": -0.12614,
+     "lng": 37.60866
+    }
+   ]
+  },
+  {
+   "code": 13,
+   "name": "Tharaka-Nithi",
+   "lat": -0.20713,
+   "lng": 37.8703,
+   "constituencies": [
+    {
+     "code": 60,
+     "name": "Maara",
+     "lat": -0.23614,
+     "lng": 37.63192
+    },
+    {
+     "code": 61,
+     "name": "Chuka/Igambang'ombe",
+     "lat": -0.34001,
+     "lng": 37.67282
+    },
+    {
+     "code": 62,
+     "name": "Tharaka",
+     "lat": -0.1435,
+     "lng": 38.03161
+    }
+   ]
+  },
+  {
+   "code": 14,
+   "name": "Embu",
+   "lat": -0.60413,
+   "lng": 37.62656,
+   "constituencies": [
+    {
+     "code": 63,
+     "name": "Manyatta",
+     "lat": -0.419,
+     "lng": 37.46052
+    },
+    {
+     "code": 64,
+     "name": "Runyenjes",
+     "lat": -0.40544,
+     "lng": 37.56187
+    },
+    {
+     "code": 65,
+     "name": "Mbeere South",
+     "lat": -0.74582,
+     "lng": 37.61001
+    },
+    {
+     "code": 66,
+     "name": "Mbeere North",
+     "lat": -0.54194,
+     "lng": 37.76821
+    }
+   ]
+  },
+  {
+   "code": 15,
+   "name": "Kitui",
+   "lat": -1.49114,
+   "lng": 38.40702,
+   "constituencies": [
+    {
+     "code": 67,
+     "name": "Mwingi North",
+     "lat": -0.46394,
+     "lng": 38.29993
+    },
+    {
+     "code": 68,
+     "name": "Mwingi West",
+     "lat": -0.97153,
+     "lng": 37.95256
+    },
+    {
+     "code": 69,
+     "name": "Mwingi Central",
+     "lat": -0.92509,
+     "lng": 38.45225
+    },
+    {
+     "code": 70,
+     "name": "Kitui West",
+     "lat": -1.40762,
+     "lng": 37.85507
+    },
+    {
+     "code": 71,
+     "name": "Kitui Rural",
+     "lat": -1.56441,
+     "lng": 38.02141
+    },
+    {
+     "code": 72,
+     "name": "Kitui Central",
+     "lat": -1.37534,
+     "lng": 38.01319
+    },
+    {
+     "code": 73,
+     "name": "Kitui East",
+     "lat": -1.37292,
+     "lng": 38.50665
+    },
+    {
+     "code": 74,
+     "name": "Kitui South",
+     "lat": -2.16782,
+     "lng": 38.54132
+    }
+   ]
+  },
+  {
+   "code": 16,
+   "name": "Machakos",
+   "lat": -1.27962,
+   "lng": 37.4127,
+   "constituencies": [
+    {
+     "code": 75,
+     "name": "Masinga",
+     "lat": -0.9475,
+     "lng": 37.60763
+    },
+    {
+     "code": 76,
+     "name": "Yatta",
+     "lat": -1.23758,
+     "lng": 37.58111
+    },
+    {
+     "code": 77,
+     "name": "Kangundo",
+     "lat": -1.34168,
+     "lng": 37.35875
+    },
+    {
+     "code": 78,
+     "name": "Matungulu",
+     "lat": -1.21006,
+     "lng": 37.24908
+    },
+    {
+     "code": 79,
+     "name": "Kathiani",
+     "lat": -1.4179,
+     "lng": 37.29873
+    },
+    {
+     "code": 80,
+     "name": "Mavoko",
+     "lat": -1.43836,
+     "lng": 37.0594
+    },
+    {
+     "code": 81,
+     "name": "Machakos Town",
+     "lat": -1.58948,
+     "lng": 37.22609
+    },
+    {
+     "code": 82,
+     "name": "Mwala",
+     "lat": -1.42078,
+     "lng": 37.5251
+    }
+   ]
+  },
+  {
+   "code": 17,
+   "name": "Makueni",
+   "lat": -2.15781,
+   "lng": 37.78831,
+   "constituencies": [
+    {
+     "code": 83,
+     "name": "Mbooni",
+     "lat": -1.6545,
+     "lng": 37.59695
+    },
+    {
+     "code": 84,
+     "name": "Kilome",
+     "lat": -1.84792,
+     "lng": 37.28473
+    },
+    {
+     "code": 85,
+     "name": "Kaiti",
+     "lat": -1.77505,
+     "lng": 37.43904
+    },
+    {
+     "code": 86,
+     "name": "Makueni",
+     "lat": -1.93207,
+     "lng": 37.71191
+    },
+    {
+     "code": 87,
+     "name": "Kibwezi West",
+     "lat": -2.25599,
+     "lng": 37.80484
+    },
+    {
+     "code": 88,
+     "name": "Kibwezi East",
+     "lat": -2.61042,
+     "lng": 38.14571
+    }
+   ]
+  },
+  {
+   "code": 18,
+   "name": "Nyandarua",
+   "lat": -0.32221,
+   "lng": 36.48293,
+   "constituencies": [
+    {
+     "code": 89,
+     "name": "Kinangop",
+     "lat": -0.64655,
+     "lng": 36.5929
+    },
+    {
+     "code": 90,
+     "name": "Kipipiri",
+     "lat": -0.38421,
+     "lng": 36.50743
+    },
+    {
+     "code": 91,
+     "name": "Ol Kalou",
+     "lat": -0.27925,
+     "lng": 36.3348
+    },
+    {
+     "code": 92,
+     "name": "Ol Jorok",
+     "lat": -0.09328,
+     "lng": 36.33382
+    },
+    {
+     "code": 93,
+     "name": "Ndaragwa",
+     "lat": -0.09184,
+     "lng": 36.52972
+    }
+   ]
+  },
+  {
+   "code": 19,
+   "name": "Nyeri",
+   "lat": -0.34297,
+   "lng": 36.95642,
+   "constituencies": [
+    {
+     "code": 94,
+     "name": "Tetu",
+     "lat": -0.46011,
+     "lng": 36.83065
+    },
+    {
+     "code": 95,
+     "name": "Kieni",
+     "lat": -0.23703,
+     "lng": 36.94342
+    },
+    {
+     "code": 96,
+     "name": "Mathira",
+     "lat": -0.39265,
+     "lng": 37.14862
+    },
+    {
+     "code": 97,
+     "name": "Othaya",
+     "lat": -0.54588,
+     "lng": 36.83315
+    },
+    {
+     "code": 98,
+     "name": "Mukurweini",
+     "lat": -0.57835,
+     "lng": 37.08371
+    },
+    {
+     "code": 99,
+     "name": "Nyeri Town",
+     "lat": -0.4214,
+     "lng": 36.96751
+    }
+   ]
+  },
+  {
+   "code": 20,
+   "name": "Kirinyaga",
+   "lat": -0.52479,
+   "lng": 37.31991,
+   "constituencies": [
+    {
+     "code": 100,
+     "name": "Mwea",
+     "lat": -0.65907,
+     "lng": 37.36694
+    },
+    {
+     "code": 101,
+     "name": "Gichugu",
+     "lat": -0.4008,
+     "lng": 37.34855
+    },
+    {
+     "code": 102,
+     "name": "Ndia",
+     "lat": -0.54688,
+     "lng": 37.20687
+    },
+    {
+     "code": 103,
+     "name": "Kirinyaga Central",
+     "lat": -0.43967,
+     "lng": 37.26863
+    }
+   ]
+  },
+  {
+   "code": 21,
+   "name": "Murang'a",
+   "lat": -0.8097,
+   "lng": 37.03273,
+   "constituencies": [
+    {
+     "code": 104,
+     "name": "Kangema",
+     "lat": -0.67431,
+     "lng": 36.86598
+    },
+    {
+     "code": 105,
+     "name": "Mathioya",
+     "lat": -0.61998,
+     "lng": 36.91049
+    },
+    {
+     "code": 106,
+     "name": "Kiharu",
+     "lat": -0.71719,
+     "lng": 37.08892
+    },
+    {
+     "code": 107,
+     "name": "Kigumo",
+     "lat": -0.79189,
+     "lng": 36.92434
+    },
+    {
+     "code": 108,
+     "name": "Maragwa",
+     "lat": -0.87458,
+     "lng": 37.18107
+    },
+    {
+     "code": 109,
+     "name": "Kandara",
+     "lat": -0.88748,
+     "lng": 37.01795
+    },
+    {
+     "code": 110,
+     "name": "Gatanga",
+     "lat": -0.94303,
+     "lng": 37.07007
+    }
+   ]
+  },
+  {
+   "code": 22,
+   "name": "Kiambu",
+   "lat": -1.0688,
+   "lng": 36.82361,
+   "constituencies": [
+    {
+     "code": 111,
+     "name": "Gatundu South",
+     "lat": -0.97226,
+     "lng": 36.82376
+    },
+    {
+     "code": 112,
+     "name": "Gatundu North",
+     "lat": -0.90886,
+     "lng": 36.82942
+    },
+    {
+     "code": 113,
+     "name": "Juja",
+     "lat": -1.11244,
+     "lng": 37.03352
+    },
+    {
+     "code": 114,
+     "name": "Thika Town",
+     "lat": -1.06596,
+     "lng": 37.1627
+    },
+    {
+     "code": 115,
+     "name": "Ruiru",
+     "lat": -1.18498,
+     "lng": 37.00336
+    },
+    {
+     "code": 116,
+     "name": "Githunguri",
+     "lat": -1.07018,
+     "lng": 36.79497
+    },
+    {
+     "code": 117,
+     "name": "Kiambu",
+     "lat": -1.15995,
+     "lng": 36.84172
+    },
+    {
+     "code": 118,
+     "name": "Kiambaa",
+     "lat": -1.16514,
+     "lng": 36.76087
+    },
+    {
+     "code": 119,
+     "name": "Kabete",
+     "lat": -1.21735,
+     "lng": 36.69928
+    },
+    {
+     "code": 120,
+     "name": "Kikuyu",
+     "lat": -1.24851,
+     "lng": 36.61364
+    },
+    {
+     "code": 121,
+     "name": "Limuru",
+     "lat": -1.14428,
+     "lng": 36.62601
+    },
+    {
+     "code": 122,
+     "name": "Lari",
+     "lat": -0.94692,
+     "lng": 36.66752
+    }
+   ]
+  },
+  {
+   "code": 23,
+   "name": "Turkana",
+   "lat": 3.42479,
+   "lng": 35.43576,
+   "constituencies": [
+    {
+     "code": 123,
+     "name": "Turkana North",
+     "lat": 4.45369,
+     "lng": 35.48299
+    },
+    {
+     "code": 124,
+     "name": "Turkana West",
+     "lat": 4.07206,
+     "lng": 34.63632
+    },
+    {
+     "code": 125,
+     "name": "Turkana Central",
+     "lat": 3.16397,
+     "lng": 35.91248
+    },
+    {
+     "code": 126,
+     "name": "Loima",
+     "lat": 3.02569,
+     "lng": 35.14206
+    },
+    {
+     "code": 127,
+     "name": "Turkana South",
+     "lat": 2.3784,
+     "lng": 35.70057
+    },
+    {
+     "code": 128,
+     "name": "Turkana East",
+     "lat": 1.88134,
+     "lng": 36.19885
+    }
+   ]
+  },
+  {
+   "code": 24,
+   "name": "West Pokot",
+   "lat": 1.74021,
+   "lng": 35.24387,
+   "constituencies": [
+    {
+     "code": 129,
+     "name": "Kapenguria",
+     "lat": 1.51272,
+     "lng": 35.14627
+    },
+    {
+     "code": 130,
+     "name": "Sigor",
+     "lat": 1.56091,
+     "lng": 35.54559
+    },
+    {
+     "code": 131,
+     "name": "Kacheliba",
+     "lat": 2.05401,
+     "lng": 35.11264
+    },
+    {
+     "code": 132,
+     "name": "Pokot South",
+     "lat": 1.33944,
+     "lng": 35.29494
+    }
+   ]
+  },
+  {
+   "code": 25,
+   "name": "Samburu",
+   "lat": 1.31677,
+   "lng": 37.11842,
+   "constituencies": [
+    {
+     "code": 133,
+     "name": "Samburu West",
+     "lat": 1.03817,
+     "lng": 36.63878
+    },
+    {
+     "code": 134,
+     "name": "Samburu North",
+     "lat": 1.68027,
+     "lng": 36.83281
+    },
+    {
+     "code": 135,
+     "name": "Samburu East",
+     "lat": 1.07881,
+     "lng": 37.4773
+    }
+   ]
+  },
+  {
+   "code": 26,
+   "name": "Trans Nzoia",
+   "lat": 1.05093,
+   "lng": 34.95742,
+   "constituencies": [
+    {
+     "code": 136,
+     "name": "Kwanza",
+     "lat": 1.14542,
+     "lng": 34.97995
+    },
+    {
+     "code": 137,
+     "name": "Endebess",
+     "lat": 1.12523,
+     "lng": 34.77287
+    },
+    {
+     "code": 138,
+     "name": "Saboti",
+     "lat": 0.97135,
+     "lng": 34.8459
+    },
+    {
+     "code": 139,
+     "name": "Kiminini",
+     "lat": 0.91954,
+     "lng": 34.97159
+    },
+    {
+     "code": 140,
+     "name": "Cherangany",
+     "lat": 1.02371,
+     "lng": 35.19232
+    }
+   ]
+  },
+  {
+   "code": 27,
+   "name": "Uasin Gishu",
+   "lat": 0.52589,
+   "lng": 35.32204,
+   "constituencies": [
+    {
+     "code": 141,
+     "name": "Soy",
+     "lat": 0.81158,
+     "lng": 35.23438
+    },
+    {
+     "code": 142,
+     "name": "Turbo",
+     "lat": 0.59839,
+     "lng": 35.13936
+    },
+    {
+     "code": 143,
+     "name": "Moiben",
+     "lat": 0.7089,
+     "lng": 35.39786
+    },
+    {
+     "code": 144,
+     "name": "Ainabkoi",
+     "lat": 0.31436,
+     "lng": 35.45487
+    },
+    {
+     "code": 145,
+     "name": "Kapseret",
+     "lat": 0.42599,
+     "lng": 35.24369
+    },
+    {
+     "code": 146,
+     "name": "Kesses",
+     "lat": 0.21143,
+     "lng": 35.3951
+    }
+   ]
+  },
+  {
+   "code": 28,
+   "name": "Elgeyo-Marakwet",
+   "lat": 0.80216,
+   "lng": 35.53656,
+   "constituencies": [
+    {
+     "code": 147,
+     "name": "Marakwet East",
+     "lat": 1.14623,
+     "lng": 35.57723
+    },
+    {
+     "code": 148,
+     "name": "Marakwet West",
+     "lat": 1.0174,
+     "lng": 35.43123
+    },
+    {
+     "code": 149,
+     "name": "Keiyo North",
+     "lat": 0.70562,
+     "lng": 35.54479
+    },
+    {
+     "code": 150,
+     "name": "Keiyo South",
+     "lat": 0.35475,
+     "lng": 35.5881
+    }
+   ]
+  },
+  {
+   "code": 29,
+   "name": "Nandi",
+   "lat": 0.18663,
+   "lng": 35.11048,
+   "constituencies": [
+    {
+     "code": 151,
+     "name": "Tinderet",
+     "lat": 0.02724,
+     "lng": 35.31218
+    },
+    {
+     "code": 152,
+     "name": "Aldai",
+     "lat": 0.04712,
+     "lng": 34.95884
+    },
+    {
+     "code": 153,
+     "name": "Nandi Hills",
+     "lat": 0.06476,
+     "lng": 35.16341
+    },
+    {
+     "code": 154,
+     "name": "Chesumei",
+     "lat": 0.28141,
+     "lng": 35.09188
+    },
+    {
+     "code": 155,
+     "name": "Emgwen",
+     "lat": 0.18404,
+     "lng": 35.09397
+    },
+    {
+     "code": 156,
+     "name": "Mosop",
+     "lat": 0.45186,
+     "lng": 35.03059
+    }
+   ]
+  },
+  {
+   "code": 30,
+   "name": "Baringo",
+   "lat": 0.66918,
+   "lng": 35.9465,
+   "constituencies": [
+    {
+     "code": 157,
+     "name": "Tiaty",
+     "lat": 1.0489,
+     "lng": 36.01953
+    },
+    {
+     "code": 158,
+     "name": "Baringo North",
+     "lat": 0.75077,
+     "lng": 35.79545
+    },
+    {
+     "code": 159,
+     "name": "Baringo Central",
+     "lat": 0.42522,
+     "lng": 35.74938
+    },
+    {
+     "code": 160,
+     "name": "Baringo South",
+     "lat": 0.46591,
+     "lng": 36.06386
+    },
+    {
+     "code": 161,
+     "name": "Mogotio",
+     "lat": 0.16022,
+     "lng": 35.9839
+    },
+    {
+     "code": 162,
+     "name": "Eldama Ravine",
+     "lat": 0.02085,
+     "lng": 35.71596
+    }
+   ]
+  },
+  {
+   "code": 31,
+   "name": "Laikipia",
+   "lat": 0.32353,
+   "lng": 36.77175,
+   "constituencies": [
+    {
+     "code": 163,
+     "name": "Laikipia West",
+     "lat": 0.32326,
+     "lng": 36.48473
+    },
+    {
+     "code": 164,
+     "name": "Laikipia East",
+     "lat": -0.0498,
+     "lng": 36.83944
+    },
+    {
+     "code": 165,
+     "name": "Laikipia North",
+     "lat": 0.42199,
+     "lng": 36.90687
+    }
+   ]
+  },
+  {
+   "code": 32,
+   "name": "Nakuru",
+   "lat": -0.46385,
+   "lng": 36.07854,
+   "constituencies": [
+    {
+     "code": 166,
+     "name": "Molo",
+     "lat": -0.34255,
+     "lng": 35.78178
+    },
+    {
+     "code": 167,
+     "name": "Njoro",
+     "lat": -0.48978,
+     "lng": 35.96756
+    },
+    {
+     "code": 168,
+     "name": "Naivasha",
+     "lat": -0.87055,
+     "lng": 36.39314
+    },
+    {
+     "code": 169,
+     "name": "Gilgil",
+     "lat": -0.53861,
+     "lng": 36.26029
+    },
+    {
+     "code": 170,
+     "name": "Kuresoi South",
+     "lat": -0.51882,
+     "lng": 35.63702
+    },
+    {
+     "code": 171,
+     "name": "Kuresoi North",
+     "lat": -0.29332,
+     "lng": 35.60097
+    },
+    {
+     "code": 172,
+     "name": "Subukia",
+     "lat": -0.01417,
+     "lng": 36.18636
+    },
+    {
+     "code": 173,
+     "name": "Rongai",
+     "lat": -0.09488,
+     "lng": 35.99468
+    },
+    {
+     "code": 174,
+     "name": "Bahati",
+     "lat": -0.21238,
+     "lng": 36.12853
+    },
+    {
+     "code": 175,
+     "name": "Nakuru Town West",
+     "lat": -0.358,
+     "lng": 36.05752
+    },
+    {
+     "code": 176,
+     "name": "Nakuru Town East",
+     "lat": -0.35939,
+     "lng": 36.11468
+    }
+   ]
+  },
+  {
+   "code": 33,
+   "name": "Narok",
+   "lat": -1.25505,
+   "lng": 35.57635,
+   "constituencies": [
+    {
+     "code": 177,
+     "name": "Kilgoris",
+     "lat": -1.18167,
+     "lng": 34.87816
+    },
+    {
+     "code": 178,
+     "name": "Emurua Dikirr",
+     "lat": -0.98926,
+     "lng": 35.08103
+    },
+    {
+     "code": 179,
+     "name": "Narok North",
+     "lat": -0.81854,
+     "lng": 35.85973
+    },
+    {
+     "code": 180,
+     "name": "Narok East",
+     "lat": -1.13158,
+     "lng": 36.11978
+    },
+    {
+     "code": 181,
+     "name": "Narok South",
+     "lat": -1.45377,
+     "lng": 35.79111
+    },
+    {
+     "code": 182,
+     "name": "Narok West",
+     "lat": -1.38881,
+     "lng": 35.38581
+    }
+   ]
+  },
+  {
+   "code": 34,
+   "name": "Kajiado",
+   "lat": -2.12148,
+   "lng": 36.90885,
+   "constituencies": [
+    {
+     "code": 183,
+     "name": "Kajiado North",
+     "lat": -1.38175,
+     "lng": 36.6816
+    },
+    {
+     "code": 184,
+     "name": "Kajiado Central",
+     "lat": -2.19799,
+     "lng": 36.81813
+    },
+    {
+     "code": 185,
+     "name": "Kajiado East",
+     "lat": -1.94998,
+     "lng": 37.19006
+    },
+    {
+     "code": 186,
+     "name": "Kajiado West",
+     "lat": -1.73025,
+     "lng": 36.38917
+    },
+    {
+     "code": 187,
+     "name": "Kajiado South",
+     "lat": -2.65905,
+     "lng": 37.47077
+    }
+   ]
+  },
+  {
+   "code": 35,
+   "name": "Kericho",
+   "lat": -0.29583,
+   "lng": 35.31411,
+   "constituencies": [
+    {
+     "code": 188,
+     "name": "Kipkelion East",
+     "lat": -0.17186,
+     "lng": 35.51395
+    },
+    {
+     "code": 189,
+     "name": "Kipkelion West",
+     "lat": -0.15124,
+     "lng": 35.39737
+    },
+    {
+     "code": 190,
+     "name": "Ainamoi",
+     "lat": -0.30558,
+     "lng": 35.2773
+    },
+    {
+     "code": 191,
+     "name": "Bureti",
+     "lat": -0.56512,
+     "lng": 35.13397
+    },
+    {
+     "code": 192,
+     "name": "Belgut",
+     "lat": -0.41333,
+     "lng": 35.27036
+    },
+    {
+     "code": 193,
+     "name": "Sigowet/Soin",
+     "lat": -0.30134,
+     "lng": 35.11386
+    }
+   ]
+  },
+  {
+   "code": 36,
+   "name": "Bomet",
+   "lat": -0.7264,
+   "lng": 35.29863,
+   "constituencies": [
+    {
+     "code": 194,
+     "name": "Sotik",
+     "lat": -0.75766,
+     "lng": 35.13728
+    },
+    {
+     "code": 195,
+     "name": "Chepalungu",
+     "lat": -0.89883,
+     "lng": 35.25263
+    },
+    {
+     "code": 196,
+     "name": "Bomet East",
+     "lat": -0.83487,
+     "lng": 35.41959
+    },
+    {
+     "code": 197,
+     "name": "Bomet Central",
+     "lat": -0.72411,
+     "lng": 35.31511
+    },
+    {
+     "code": 198,
+     "name": "Konoin",
+     "lat": -0.54424,
+     "lng": 35.37411
+    }
+   ]
+  },
+  {
+   "code": 37,
+   "name": "Kakamega",
+   "lat": 0.40362,
+   "lng": 34.74463,
+   "constituencies": [
+    {
+     "code": 199,
+     "name": "Lugari",
+     "lat": 0.64345,
+     "lng": 34.91588
+    },
+    {
+     "code": 200,
+     "name": "Likuyani",
+     "lat": 0.76126,
+     "lng": 35.09053
+    },
+    {
+     "code": 201,
+     "name": "Malava",
+     "lat": 0.44922,
+     "lng": 34.83508
+    },
+    {
+     "code": 202,
+     "name": "Lurambi",
+     "lat": 0.28461,
+     "lng": 34.70264
+    },
+    {
+     "code": 203,
+     "name": "Navakholo",
+     "lat": 0.39726,
+     "lng": 34.67462
+    },
+    {
+     "code": 204,
+     "name": "Mumias West",
+     "lat": 0.27336,
+     "lng": 34.44413
+    },
+    {
+     "code": 205,
+     "name": "Mumias East",
+     "lat": 0.32716,
+     "lng": 34.56599
+    },
+    {
+     "code": 206,
+     "name": "Matungu",
+     "lat": 0.40528,
+     "lng": 34.46042
+    },
+    {
+     "code": 207,
+     "name": "Butere",
+     "lat": 0.21984,
+     "lng": 34.52412
+    },
+    {
+     "code": 208,
+     "name": "Khwisero",
+     "lat": 0.14535,
+     "lng": 34.58292
+    },
+    {
+     "code": 209,
+     "name": "Shinyalu",
+     "lat": 0.27093,
+     "lng": 34.85824
+    },
+    {
+     "code": 210,
+     "name": "Ikolomani",
+     "lat": 0.18974,
+     "lng": 34.7095
+    }
+   ]
+  },
+  {
+   "code": 38,
+   "name": "Vihiga",
+   "lat": 0.07623,
+   "lng": 34.7224,
+   "constituencies": [
+    {
+     "code": 211,
+     "name": "Vihiga",
+     "lat": 0.03265,
+     "lng": 34.69296
+    },
+    {
+     "code": 212,
+     "name": "Sabatia",
+     "lat": 0.11233,
+     "lng": 34.7561
+    },
+    {
+     "code": 213,
+     "name": "Hamisi",
+     "lat": 0.0956,
+     "lng": 34.82199
+    },
+    {
+     "code": 214,
+     "name": "Luanda",
+     "lat": 0.02145,
+     "lng": 34.60082
+    },
+    {
+     "code": 215,
+     "name": "Emuhaya",
+     "lat": 0.08551,
+     "lng": 34.61532
+    }
+   ]
+  },
+  {
+   "code": 39,
+   "name": "Bungoma",
+   "lat": 0.74931,
+   "lng": 34.64041,
+   "constituencies": [
+    {
+     "code": 216,
+     "name": "Mt. Elgon",
+     "lat": 0.92463,
+     "lng": 34.59673
+    },
+    {
+     "code": 217,
+     "name": "Sirisia",
+     "lat": 0.7426,
+     "lng": 34.47244
+    },
+    {
+     "code": 218,
+     "name": "Kabuchai",
+     "lat": 0.69,
+     "lng": 34.60335
+    },
+    {
+     "code": 219,
+     "name": "Bumula",
+     "lat": 0.56352,
+     "lng": 34.45689
+    },
+    {
+     "code": 220,
+     "name": "Kanduyi",
+     "lat": 0.55418,
+     "lng": 34.59238
+    },
+    {
+     "code": 221,
+     "name": "Webuye East",
+     "lat": 0.6583,
+     "lng": 34.78665
+    },
+    {
+     "code": 222,
+     "name": "Webuye West",
+     "lat": 0.62232,
+     "lng": 34.70294
+    },
+    {
+     "code": 223,
+     "name": "Kimilili",
+     "lat": 0.78263,
+     "lng": 34.73414
+    },
+    {
+     "code": 224,
+     "name": "Tongaren",
+     "lat": 0.78022,
+     "lng": 34.92772
+    }
+   ]
+  },
+  {
+   "code": 40,
+   "name": "Busia",
+   "lat": 0.38718,
+   "lng": 34.19352,
+   "constituencies": [
+    {
+     "code": 225,
+     "name": "Teso North",
+     "lat": 0.67749,
+     "lng": 34.34196
+    },
+    {
+     "code": 226,
+     "name": "Teso South",
+     "lat": 0.53916,
+     "lng": 34.21897
+    },
+    {
+     "code": 227,
+     "name": "Nambale",
+     "lat": 0.4824,
+     "lng": 34.31446
+    },
+    {
+     "code": 228,
+     "name": "Matayos",
+     "lat": 0.40243,
+     "lng": 34.16782
+    },
+    {
+     "code": 229,
+     "name": "Butula",
+     "lat": 0.34907,
+     "lng": 34.29524
+    },
+    {
+     "code": 230,
+     "name": "Funyula",
+     "lat": 0.24498,
+     "lng": 34.07779
+    },
+    {
+     "code": 231,
+     "name": "Budalangi",
+     "lat": 0.07653,
+     "lng": 33.99634
+    }
+   ]
+  },
+  {
+   "code": 41,
+   "name": "Siaya",
+   "lat": -0.06227,
+   "lng": 34.24762,
+   "constituencies": [
+    {
+     "code": 232,
+     "name": "Ugenya",
+     "lat": 0.23643,
+     "lng": 34.22617
+    },
+    {
+     "code": 233,
+     "name": "Ugunja",
+     "lat": 0.19187,
+     "lng": 34.33523
+    },
+    {
+     "code": 234,
+     "name": "Alego Usonga",
+     "lat": 0.06161,
+     "lng": 34.23275
+    },
+    {
+     "code": 235,
+     "name": "Gem",
+     "lat": 0.04631,
+     "lng": 34.4533
+    },
+    {
+     "code": 236,
+     "name": "Bondo",
+     "lat": -0.16453,
+     "lng": 34.12823
+    },
+    {
+     "code": 237,
+     "name": "Rarieda",
+     "lat": -0.25388,
+     "lng": 34.35244
+    }
+   ]
+  },
+  {
+   "code": 42,
+   "name": "Kisumu",
+   "lat": -0.16969,
+   "lng": 34.83519,
+   "constituencies": [
+    {
+     "code": 238,
+     "name": "Kisumu East",
+     "lat": -0.10871,
+     "lng": 34.79442
+    },
+    {
+     "code": 239,
+     "name": "Kisumu West",
+     "lat": -0.09177,
+     "lng": 34.65552
+    },
+    {
+     "code": 240,
+     "name": "Kisumu Central",
+     "lat": -0.11823,
+     "lng": 34.74178
+    },
+    {
+     "code": 241,
+     "name": "Seme",
+     "lat": -0.14919,
+     "lng": 34.51781
+    },
+    {
+     "code": 242,
+     "name": "Nyando",
+     "lat": -0.21268,
+     "lng": 34.86761
+    },
+    {
+     "code": 243,
+     "name": "Muhoroni",
+     "lat": -0.10773,
+     "lng": 35.08118
+    },
+    {
+     "code": 244,
+     "name": "Nyakach",
+     "lat": -0.32408,
+     "lng": 34.90679
+    }
+   ]
+  },
+  {
+   "code": 43,
+   "name": "Homa Bay",
+   "lat": -0.5429,
+   "lng": 34.35894,
+   "constituencies": [
+    {
+     "code": 245,
+     "name": "Kasipul",
+     "lat": -0.50178,
+     "lng": 34.71025
+    },
+    {
+     "code": 246,
+     "name": "Kabondo Kasipul",
+     "lat": -0.4433,
+     "lng": 34.86233
+    },
+    {
+     "code": 247,
+     "name": "Karachuonyo",
+     "lat": -0.36488,
+     "lng": 34.60152
+    },
+    {
+     "code": 248,
+     "name": "Rangwe",
+     "lat": -0.53894,
+     "lng": 34.56961
+    },
+    {
+     "code": 249,
+     "name": "Homa Bay Town",
+     "lat": -0.55669,
+     "lng": 34.47591
+    },
+    {
+     "code": 250,
+     "name": "Ndhiwa",
+     "lat": -0.73378,
+     "lng": 34.38203
+    },
+    {
+     "code": 251,
+     "name": "Mbita",
+     "lat": -0.45967,
+     "lng": 34.17643
+    },
+    {
+     "code": 252,
+     "name": "Suba",
+     "lat": -0.64537,
+     "lng": 34.09385
+    }
+   ]
+  },
+  {
+   "code": 44,
+   "name": "Migori",
+   "lat": -0.9896,
+   "lng": 34.36332,
+   "constituencies": [
+    {
+     "code": 253,
+     "name": "Rongo",
+     "lat": -0.77582,
+     "lng": 34.59595
+    },
+    {
+     "code": 254,
+     "name": "Awendo",
+     "lat": -0.87218,
+     "lng": 34.54256
+    },
+    {
+     "code": 255,
+     "name": "Suna East",
+     "lat": -1.05673,
+     "lng": 34.48795
+    },
+    {
+     "code": 256,
+     "name": "Suna West",
+     "lat": -1.09237,
+     "lng": 34.35985
+    },
+    {
+     "code": 257,
+     "name": "Uriri",
+     "lat": -0.94234,
+     "lng": 34.44885
+    },
+    {
+     "code": 258,
+     "name": "Nyatike",
+     "lat": -0.92305,
+     "lng": 34.14029
+    },
+    {
+     "code": 259,
+     "name": "Kuria West",
+     "lat": -1.1768,
+     "lng": 34.51575
+    },
+    {
+     "code": 260,
+     "name": "Kuria East",
+     "lat": -1.27717,
+     "lng": 34.63722
+    }
+   ]
+  },
+  {
+   "code": 45,
+   "name": "Kisii",
+   "lat": -0.77478,
+   "lng": 34.77472,
+   "constituencies": [
+    {
+     "code": 261,
+     "name": "Bonchari",
+     "lat": -0.66714,
+     "lng": 34.69049
+    },
+    {
+     "code": 262,
+     "name": "South Mugirango",
+     "lat": -0.85241,
+     "lng": 34.65672
+    },
+    {
+     "code": 263,
+     "name": "Bomachoge Borabu",
+     "lat": -0.91286,
+     "lng": 34.75539
+    },
+    {
+     "code": 264,
+     "name": "Bobasi",
+     "lat": -0.83325,
+     "lng": 34.80918
+    },
+    {
+     "code": 265,
+     "name": "Bomachoge Chache",
+     "lat": -0.81273,
+     "lng": 34.70992
+    },
+    {
+     "code": 266,
+     "name": "Nyaribari Masaba",
+     "lat": -0.84147,
+     "lng": 34.93238
+    },
+    {
+     "code": 267,
+     "name": "Nyaribari Chache",
+     "lat": -0.74164,
+     "lng": 34.82344
+    },
+    {
+     "code": 268,
+     "name": "Kitutu Chache North",
+     "lat": -0.56722,
+     "lng": 34.82065
+    },
+    {
+     "code": 269,
+     "name": "Kitutu Chache South",
+     "lat": -0.62078,
+     "lng": 34.75453
+    }
+   ]
+  },
+  {
+   "code": 46,
+   "name": "Nyamira",
+   "lat": -0.64284,
+   "lng": 34.96465,
+   "constituencies": [
+    {
+     "code": 270,
+     "name": "Kitutu Masaba",
+     "lat": -0.69108,
+     "lng": 34.90279
+    },
+    {
+     "code": 271,
+     "name": "West Mugirango",
+     "lat": -0.58615,
+     "lng": 34.93028
+    },
+    {
+     "code": 272,
+     "name": "North Mugirango",
+     "lat": -0.50388,
+     "lng": 34.99343
+    },
+    {
+     "code": 273,
+     "name": "Borabu",
+     "lat": -0.71633,
+     "lng": 35.02243
+    }
+   ]
+  },
+  {
+   "code": 47,
+   "name": "Nairobi",
+   "lat": -1.29342,
+   "lng": 36.8682,
+   "constituencies": [
+    {
+     "code": 274,
+     "name": "Westlands",
+     "lat": -1.241,
+     "lng": 36.78894
+    },
+    {
+     "code": 275,
+     "name": "Dagoretti North",
+     "lat": -1.28131,
+     "lng": 36.77998
+    },
+    {
+     "code": 276,
+     "name": "Dagoretti South",
+     "lat": -1.28514,
+     "lng": 36.7157
+    },
+    {
+     "code": 277,
+     "name": "Lang'ata",
+     "lat": -1.35703,
+     "lng": 36.80536
+    },
+    {
+     "code": 278,
+     "name": "Kibra",
+     "lat": -1.30655,
+     "lng": 36.78874
+    },
+    {
+     "code": 279,
+     "name": "Roysambu",
+     "lat": -1.20552,
+     "lng": 36.88434
+    },
+    {
+     "code": 280,
+     "name": "Kasarani",
+     "lat": -1.25195,
+     "lng": 37.0089
+    },
+    {
+     "code": 281,
+     "name": "Ruaraka",
+     "lat": -1.24659,
+     "lng": 36.87973
+    },
+    {
+     "code": 282,
+     "name": "Embakasi South",
+     "lat": -1.33156,
+     "lng": 36.87815
+    },
+    {
+     "code": 283,
+     "name": "Embakasi North",
+     "lat": -1.24969,
+     "lng": 36.89814
+    },
+    {
+     "code": 284,
+     "name": "Embakasi Central",
+     "lat": -1.27098,
+     "lng": 36.92173
+    },
+    {
+     "code": 285,
+     "name": "Embakasi East",
+     "lat": -1.30868,
+     "lng": 36.93741
+    },
+    {
+     "code": 286,
+     "name": "Embakasi West",
+     "lat": -1.2714,
+     "lng": 36.89839
+    },
+    {
+     "code": 287,
+     "name": "Makadara",
+     "lat": -1.29857,
+     "lng": 36.86927
+    },
+    {
+     "code": 288,
+     "name": "Kamukunji",
+     "lat": -1.27796,
+     "lng": 36.85946
+    },
+    {
+     "code": 289,
+     "name": "Starehe",
+     "lat": -1.29281,
+     "lng": 36.83531
+    },
+    {
+     "code": 290,
+     "name": "Mathare",
+     "lat": -1.26066,
+     "lng": 36.86124
+    }
+   ]
+  }
+ ]
+}

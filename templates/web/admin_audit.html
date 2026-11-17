@@ -1,0 +1,8 @@
+{% extends "web/base.html" %}
+{% block title %}Audit log{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Audit log</h1><p class="muted">Immutable record of sensitive actions.</p></div><form class="row"><input name="q" value="{{ q }}" placeholder="Search action, user, target" style="max-width:260px"><button class="sm">Search</button></form></div>
+<div class="card"><div class="table-wrap"><table><tr><th>When</th><th>Who</th><th>Action</th><th>Target</th><th>Details</th><th>IP</th></tr>
+{% for l in logs %}<tr><td><small>{{ l.created_at|date:"d M Y H:i:s" }}</small></td><td>{{ l.actor.username|default:"system" }}</td><td><code>{{ l.action }}</code></td><td>{{ l.target_repr|truncatechars:60 }}</td><td><small>{% for k, v in l.details.items %}{{ k }}={{ v }} {% endfor %}</small></td><td><small>{{ l.ip_address|default:"" }}</small></td></tr>
+{% empty %}<tr><td colspan="6" class="empty">No entries.</td></tr>{% endfor %}</table></div></div>
+{% endblock %}

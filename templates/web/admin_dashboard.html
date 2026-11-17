@@ -1,0 +1,54 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Admin overview{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Platform overview</h1><p class="muted">Updated {{ m.generated_at|date:"d M Y H:i" }}</p></div>
+<div class="row"><a class="btn primary" href="{% url 'web:admin_payments' %}">💳 Payments &amp; commission{% if payouts_due %} <span class="badge warn">{{ payouts_due }} payout{{ payouts_due|pluralize }} to make</span>{% endif %}</a></div>
+<div class="chips"><a href="?" class="{% if not days %}on{% endif %}">All time</a><a href="?days=30" class="{% if days == '30' %}on{% endif %}">30 days</a><a href="?days=7" class="{% if days == '7' %}on{% endif %}">7 days</a></div></div>
+
+{% with pv=m.users.pending_verification %}{% if pv.suppliers or pv.buyers or pv.logistics %}
+<div class="flash warning"><a href="{% url 'web:admin_verification' %}">{{ pv.suppliers }} supplier(s), {{ pv.buyers }} buyer(s) and {{ pv.logistics }} logistics partner(s) awaiting verification →</a></div>{% endif %}{% endwith %}
+
+<div class="grid g4" style="margin-bottom:18px">
+  <div class="stat"><div class="v">{{ c.earned|kes }}</div><div class="l">Commission earned ({{ c.percent|floatformat:0 }}%)</div></div>
+  <div class="stat"><div class="v">{{ c.pending|kes }}</div><div class="l">Commission pending (payouts not yet made)</div></div>
+  <div class="stat"><div class="v">{{ c.received|kes }}</div><div class="l">Buyer payments received</div></div>
+  <div class="stat"><div class="v">{{ c.paid_out|kes }}</div><div class="l">Paid out to sellers</div></div>
+</div>
+<div class="grid g4" style="margin-bottom:18px">
+  <div class="stat"><div class="v">{{ m.sourcing.total_requests }}</div><div class="l">Sourcing requests</div></div>
+  <div class="stat"><div class="v">{{ m.sourcing.match_rate|pct }}</div><div class="l">Requests with matches</div></div>
+  <div class="stat"><div class="v">{{ m.orders.completed_value_kes|kes }}</div><div class="l">Completed trade value</div></div>
+  <div class="stat"><div class="v">{{ m.orders.delivered_quantity|qty }}</div><div class="l">Quantity delivered (kg)</div></div>
+</div>
+<div class="grid g3">
+  <div class="card"><h2>Matching performance</h2><dl class="kv">
+    <dt>Full-coverage rate</dt><dd>{{ m.sourcing.full_coverage_rate|pct }}</dd>
+    <dt>Avg matches / request</dt><dd>{{ m.matching.avg_matches_per_request|default:"—" }}</dd>
+    <dt>Avg match score</dt><dd>{{ m.matching.avg_score|default:"—" }}</dd>
+    <dt>Avg distance</dt><dd>{% if m.matching.avg_distance_km %}{{ m.matching.avg_distance_km }} km{% else %}—{% endif %}</dd>
+    <dt>Supplier response</dt><dd>{{ m.matching.supplier_response_rate|pct }}</dd>
+    <dt>Requests quoted</dt><dd>{{ m.sourcing.quotation_rate|pct }}</dd>
+    <dt>Time to 1st quote</dt><dd>{% if m.sourcing.avg_hours_to_first_quote is not None %}{{ m.sourcing.avg_hours_to_first_quote }} h{% else %}—{% endif %}</dd></dl>
+    <a href="{% url 'web:admin_config' %}"><small>Tune weights →</small></a></div>
+  <div class="card"><h2>Orders &amp; quality</h2><dl class="kv">
+    <dt>Orders</dt><dd>{{ m.orders.total }}</dd>
+    {% for s, n in m.orders.by_status.items %}<dt>&nbsp;&nbsp;{{ s|label }}</dt><dd>{{ n }}</dd>{% endfor %}
+    <dt>Multi-supplier</dt><dd>{{ m.orders.multi_supplier_orders }}</dd>
+    <dt>On-time delivery</dt><dd>{{ m.orders.on_time_delivery_rate|pct }}</dd>
+    <dt>Inspection pass</dt><dd>{{ m.orders.inspection_pass_rate|pct }}</dd>
+    <dt>Open disputes</dt><dd>{% if m.orders.open_disputes %}<a href="{% url 'web:admin_disputes' %}"><span class="badge bad">{{ m.orders.open_disputes }}</span></a>{% else %}0{% endif %}</dd></dl></div>
+  <div class="card"><h2>Users</h2><dl class="kv">
+    {% for r, n in m.users.by_role.items %}<dt>{{ r|capfirst }}</dt><dd>{{ n }}</dd>{% endfor %}
+    <dt>Approved suppliers</dt><dd>{{ m.users.approved_suppliers }}</dd></dl></div>
+</div>
+<div class="grid g2">
+  <div class="card"><h2>Most-requested products</h2>
+    {% for p in m.top_products %}<div class="hbar"><span>{{ p.product__name }}</span><div class="meter"><span style="width:100%"></span></div><small>{{ p.requests }}</small></div>{% empty %}<p class="muted">No data yet.</p>{% endfor %}</div>
+  <div class="card"><h2>Top suppliers (completed value)</h2>
+    <div class="table-wrap"><table><tr><th>Supplier</th><th class="num">Orders</th><th class="num">Qty</th><th class="num">Value</th></tr>
+    {% for s in m.top_suppliers %}<tr><td>{{ s.supplier__business_name }}</td><td class="num">{{ s.orders }}</td><td class="num">{{ s.delivered|qty }}</td><td class="num">{{ s.value|kes }}</td></tr>{% empty %}<tr><td colspan="4" class="muted">No completed orders yet.</td></tr>{% endfor %}</table></div></div>
+</div>
+<div class="card"><div class="spread"><h2>Recent sourcing requests</h2><a href="{% url 'web:admin_requests' %}">All →</a></div>
+<div class="table-wrap"><table><tr><th>Ref</th><th>Buyer</th><th>Product</th><th class="num">Qty</th><th class="num">Matches</th><th>Status</th></tr>
+{% for r in recent_requests %}<tr><td><a href="{% url 'web:admin_request_detail' r.pk %}">{{ r.reference }}</a></td><td>{{ r.buyer.display_name }}</td><td>{{ r.product }}</td><td class="num">{{ r.quantity|qty }} {{ r.unit }}</td><td class="num">{{ r.matches.count }}</td><td>{% badge r %}</td></tr>{% empty %}<tr><td colspan="6" class="muted">None.</td></tr>{% endfor %}</table></div></div>
+{% endblock %}

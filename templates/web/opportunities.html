@@ -1,0 +1,13 @@
+{% extends "web/base.html" %}{% load o254 %}
+{% block title %}Opportunities{% endblock %}
+{% block content %}
+<div class="pagehead"><div><h1>Sourcing opportunities</h1><p class="muted">Buyer requests your stock was matched to.</p></div></div>
+<div class="card"><div class="table-wrap"><table>
+<tr><th>Request</th><th>Buyer need</th><th>Your listing</th><th class="num">Distance</th><th>Deadline</th><th class="num">Match</th><th>Status</th></tr>
+{% for m in matches %}<tr><td><a href="{% url 'web:opportunity_detail' m.pk %}"><strong>{{ m.sourcing_request.reference }}</strong></a></td>
+<td>{{ m.sourcing_request.quantity|qty }} {{ m.sourcing_request.unit }} {{ m.sourcing_request.product }}<br><small>{{ m.sourcing_request.intended_application }}</small></td>
+<td>{{ m.available_quantity|qty }} {{ m.sourcing_request.unit }}{% if m.suggested_quantity %}<br><small>suggested {{ m.suggested_quantity|qty }}</small>{% endif %}</td>
+<td class="num">{{ m.distance_km }} km</td><td>{{ m.sourcing_request.delivery_deadline|date:"d M" }}</td><td class="num">{{ m.score|floatformat:2 }}</td><td>{% badge m %}</td></tr>
+{% empty %}<tr><td colspan="7" class="empty">No opportunities yet.</td></tr>{% endfor %}
+</table></div></div>
+{% endblock %}
