@@ -146,9 +146,32 @@ PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", PROJECT_ROOT / "private_medi
 if "test" in sys.argv[1:2]:  # keep files written by the test suite out of the real media folder
     import tempfile
     PRIVATE_MEDIA_ROOT = Path(tempfile.mkdtemp(prefix="origin254-test-media-"))
+# Uploaded files (product photos, verification documents, inspection reports, PODs).
+# With S3_BUCKET set they go to S3-compatible object storage (PrimeCloud Storage /
+# Cloudflare R2); otherwise to PRIVATE_MEDIA_ROOT on local disk. The bucket stays
+# private: files are streamed through Django views that check permissions.
+S3_BUCKET = env("S3_BUCKET", "")
+if S3_BUCKET and "test" not in sys.argv[1:2]:
+    _default_storage = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": S3_BUCKET,
+            "endpoint_url": env("S3_ENDPOINT_URL", ""),
+            "access_key": env("S3_ACCESS_KEY_ID", ""),
+            "secret_key": env("S3_SECRET_ACCESS_KEY", ""),
+            "region_name": env("S3_REGION", "auto"),
+            "location": env("S3_PREFIX", "private_media"),
+            "signature_version": "s3v4",
+            "default_acl": None,  # R2 has no ACLs; access is private by default
+            "querystring_auth": True,
+            "file_overwrite": False,
+        },
+    }
+else:
+    _default_storage = {"BACKEND": "django.core.files.storage.FileSystemStorage",
+                        "OPTIONS": {"location": PRIVATE_MEDIA_ROOT}}
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage",
-                "OPTIONS": {"location": PRIVATE_MEDIA_ROOT}},
+    "default": _default_storage,
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"
                     if not DEBUG else "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }

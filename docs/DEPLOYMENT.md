@@ -42,6 +42,8 @@ Put a TLS-terminating reverse proxy (Caddy, nginx, or a cloud load balancer) in 
 | `DJANGO_SECURE_SSL_REDIRECT` | Redirect HTTP to HTTPS | `1` when not in debug |
 | `DATABASE_URL` | `postgres://user:pass@host:5432/origin254` | local `origin254` |
 | `PRIVATE_MEDIA_ROOT` | Directory for verification documents, inspection reports and PODs. **Must not be web-served.** Back it up | `./private_media` |
+| `S3_BUCKET` | Store uploads in S3-compatible object storage (PrimeCloud Storage / R2) instead of `PRIVATE_MEDIA_ROOT`. Keep the bucket private; files are streamed through permission-checked views. Copy existing files with `manage.py upload_media` | empty (local disk) |
+| `S3_ENDPOINT_URL`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PREFIX` | Object storage connection. R2: region `auto`; prefix defaults to `private_media` | |
 | `CORS_ALLOWED_ORIGINS` | Origins of separate frontends | |
 | `NOTIFICATION_CHANNELS` | Subset of `in_app,email,sms,whatsapp` | `in_app,email` |
 | `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` | SMTP settings | console |
@@ -105,6 +107,6 @@ Schedule it with cron, for example `15 2 * * * cd /srv/origin254/backend && ../.
 
 ## Scaling notes
 
-- The app is stateless apart from `PRIVATE_MEDIA_ROOT`. To run several instances, move files to S3-compatible storage (`django-storages`, signed URLs) and run more gunicorn workers or containers behind the load balancer.
+- With `S3_BUCKET` set the app is stateless, so you can run several containers behind the load balancer. Without it, uploads live in `PRIVATE_MEDIA_ROOT` and need a persistent disk.
 - Move notification delivery (`comms.notify._deliver`) to a task queue (Celery or RQ with Redis) when SMS or email volume grows.
 - Matching is currently synchronous and fast at MVP scale: a few SQL queries, plus Python scoring over at most a few hundred listings. At national scale, run it in the task queue and keep the PostGIS index.
