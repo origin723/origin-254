@@ -1,11 +1,5 @@
-# Origin 254 production image.
-#
-# Build context is the REPOSITORY ROOT (the image needs frontend/ for templates
-# and static files):
-#   docker build -f backend/Dockerfile .     (or: docker build .  using ../Dockerfile)
-# The root Dockerfile is an identical copy for platforms that only look for a
-# Dockerfile in the build folder (PrimeCloud: Build Root Directory = / (Root)).
-# Keep the two files identical.
+# Origin 254 production image. Build context is this backend/ folder:
+#   docker build backend/          (PrimeCloud: Build Root Directory = backend)
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
@@ -17,16 +11,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_
 RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-COPY backend/requirements.txt backend/requirements.txt
-RUN pip install -r backend/requirements.txt
-
-COPY backend/ backend/
-COPY frontend/ frontend/
-RUN test -d frontend/templates && test -d frontend/static \
-    || (echo "frontend/ missing: build with the repository root as context (docker build -f backend/Dockerfile .)" && exit 1)
-
+# Code lives in /app/backend so settings' PROJECT_ROOT is /app (static, media, backups).
 WORKDIR /app/backend
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
 RUN DJANGO_SECRET_KEY=build DJANGO_DEBUG=0 python manage.py collectstatic --noinput \
     && chmod +x start.sh \
     && useradd --create-home --uid 1000 app \

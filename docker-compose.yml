@@ -17,9 +17,7 @@ services:
       retries: 10
 
   web:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    build: ./backend
     env_file: .env
     environment:
       DATABASE_URL: postgres://origin254:${POSTGRES_PASSWORD:-change-me}@db:5432/origin254
@@ -36,9 +34,7 @@ services:
         condition: service_healthy
 
   backup:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    build: ./backend
     env_file: .env
     environment:
       DATABASE_URL: postgres://origin254:${POSTGRES_PASSWORD:-change-me}@db:5432/origin254

@@ -11,7 +11,6 @@ from urllib.parse import unquote, urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent  # backend/
 PROJECT_ROOT = BASE_DIR.parent  # repo root: .env, runtime data dirs
-FRONTEND_DIR = PROJECT_ROOT / "frontend"  # templates/ and static/
 
 
 def _load_dotenv(path: Path) -> None:
@@ -103,7 +102,7 @@ ROOT_URLCONF = "origin254.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [FRONTEND_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -136,7 +135,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = PROJECT_ROOT / "staticfiles"
-STATICFILES_DIRS = [FRONTEND_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Verification documents, inspection reports and proofs of delivery are stored
 # outside any publicly served directory and only streamed through

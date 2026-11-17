@@ -36,7 +36,7 @@ Origin 254 is a **multi-sided agricultural sourcing and value-addition marketpla
 | Server | `runserver` for development; gunicorn in Docker / production |
 | Payments | Safaricom M-Pesa Daraja API (STK Push for buyers, B2C for payouts) with a `simulated` test mode |
 | SMS / WhatsApp | Pluggable providers: `console` (log only), Africa's Talking, Twilio |
-| Front end | Plain HTML/CSS (`frontend/static/css/app.css`), no JS framework. Inter font. Bright "leaf green + mango orange" theme, light mode only |
+| Front end | Plain HTML/CSS (`backend/static/css/app.css`), no JS framework. Inter font. Bright "leaf green + mango orange" theme, light mode only |
 
 Dependencies are pinned in `backend/requirements.txt`. The virtual environment is `.venv/` (an older `env/` virtualenv may exist and must **not** be used).
 
@@ -60,7 +60,7 @@ Activate with `source .venv/bin/activate` (run `deactivate` first if another env
 
 | URL | What |
 |---|---|
-| `http://127.0.0.1:8000/` | Public landing page (`frontend/templates/landing.html`, illustrated hero `frontend/static/img/hero-agritech.svg`) |
+| `http://127.0.0.1:8000/` | Public landing page (`backend/templates/landing.html`, illustrated hero `backend/static/img/hero-agritech.svg`) |
 | `/login/`, `/register/` | Sign in / create account (no verification step by default) |
 | `/app/` | Web app; the dashboard adapts to the user's role |
 | `/api/v1/` | REST API |
@@ -117,12 +117,13 @@ backend/              Django project (run manage.py from here or as backend/mana
   apps/comms/           Conversation, Message, Notification; multi-channel notify()
   apps/reviews/         Review; supplier performance metrics (reliability score)
   apps/web/             server-rendered views, forms, template tags (badge, kes, qty, pct, label …)
-  tests/                automated tests (see section 15)
-frontend/             server-rendered UI assets used by Django, plus the standalone index.html landing page
   templates/            landing.html, web/*.html (one per page), partials _field, _form, _thumbs, _photo_upload
   static/               css/app.css, img/hero-agritech.svg
+  tests/                automated tests (see section 15)
+  Dockerfile, start.sh  production image (build context: backend/)
+frontend/             standalone index.html landing page (links into the Django app)
 docs/                 ARCHITECTURE.md, DATABASE.md, API.md, DEPLOYMENT.md, openapi.yaml
-Dockerfile, docker-compose.yml   production image (gunicorn) and Compose with postgis/postgis:16-3.4
+docker-compose.yml    Compose with postgis/postgis:16-3.4, builds backend/Dockerfile
 ```
 
 ### Architectural conventions (follow these when changing code)
@@ -320,7 +321,7 @@ Every notification is stored in-app and additionally sent over `NOTIFICATION_CHA
 
 ## 12. Front-end design
 
-`frontend/static/css/app.css` defines colour tokens on `:root` (light theme only, `color-scheme: light`): leaf green `--brand #2f9e4f` / `--brand-dark #1f7a3a`, mango `--accent #ff9a1f`, sun `--sun #ffd23f`, sky `--sky #3aa7e8`, soft mint background `--bg #f4faf1`. Stat cards have coloured top stripes; money actions use the orange `.pay-btn` style. Templates use the `o254` tag library: `badge` (status pill), `tone`, `kes` (KES 1,234), `qty`, `pct`, `bar`, `isodate`, `label` (snake_case → Words). Date inputs use ISO `YYYY-MM-DD` (`apps.web.forms.DateInput`). Optional fields show a faint "if applicable" placeholder. After CSS changes run `collectstatic` (or hard-reload the browser with Cmd + Shift + R).
+`backend/static/css/app.css` defines colour tokens on `:root` (light theme only, `color-scheme: light`): leaf green `--brand #2f9e4f` / `--brand-dark #1f7a3a`, mango `--accent #ff9a1f`, sun `--sun #ffd23f`, sky `--sky #3aa7e8`, soft mint background `--bg #f4faf1`. Stat cards have coloured top stripes; money actions use the orange `.pay-btn` style. Templates use the `o254` tag library: `badge` (status pill), `tone`, `kes` (KES 1,234), `qty`, `pct`, `bar`, `isodate`, `label` (snake_case → Words). Date inputs use ISO `YYYY-MM-DD` (`apps.web.forms.DateInput`). Optional fields show a faint "if applicable" placeholder. After CSS changes run `collectstatic` (or hard-reload the browser with Cmd + Shift + R).
 
 ---
 
