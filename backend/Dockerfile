@@ -1,9 +1,11 @@
 # Origin 254 production image.
 #
 # Build context is the REPOSITORY ROOT (the image needs frontend/ for templates
-# and static files), with this file as the Dockerfile:
-#   docker build -f backend/Dockerfile .
-# On PrimeCloud: Dockerfile path = backend/Dockerfile, root directory = repo root.
+# and static files):
+#   docker build -f backend/Dockerfile .     (or: docker build .  using ../Dockerfile)
+# The root Dockerfile is an identical copy for platforms that only look for a
+# Dockerfile in the build folder (PrimeCloud: Build Root Directory = / (Root)).
+# Keep the two files identical.
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
