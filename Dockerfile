@@ -7,10 +7,11 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY backend/requirements.txt backend/requirements.txt
+RUN pip install -r backend/requirements.txt
 
 COPY . .
+WORKDIR /app/backend
 RUN DJANGO_SECRET_KEY=build DJANGO_DEBUG=0 python manage.py collectstatic --noinput \
     && useradd --create-home app && mkdir -p /app/private_media /app/backups && chown -R app /app
 USER app

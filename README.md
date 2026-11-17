@@ -36,9 +36,9 @@ Origin 254 is a **multi-sided agricultural sourcing and value-addition marketpla
 | Server | `runserver` for development; gunicorn in Docker / production |
 | Payments | Safaricom M-Pesa Daraja API (STK Push for buyers, B2C for payouts) with a `simulated` test mode |
 | SMS / WhatsApp | Pluggable providers: `console` (log only), Africa's Talking, Twilio |
-| Front end | Plain HTML/CSS (`static/css/app.css`), no JS framework. Inter font. Bright "leaf green + mango orange" theme, light mode only |
+| Front end | Plain HTML/CSS (`frontend/static/css/app.css`), no JS framework. Inter font. Bright "leaf green + mango orange" theme, light mode only |
 
-Dependencies are pinned in `requirements.txt`. The virtual environment is `.venv/` (an older `env/` virtualenv may exist and must **not** be used).
+Dependencies are pinned in `backend/requirements.txt`. The virtual environment is `.venv/` (an older `env/` virtualenv may exist and must **not** be used).
 
 ---
 
@@ -48,19 +48,19 @@ Dependencies are pinned in `requirements.txt`. The virtual environment is `.venv
 cd "Origin 254"
 brew services start postgresql@16          # PostgreSQL must be running
 createdb origin254                          # first time only
-python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
+python3.13 -m venv .venv && .venv/bin/pip install -r backend/requirements.txt
 cp .env.example .env                        # then edit values (see section 13)
-.venv/bin/python manage.py migrate
-.venv/bin/python manage.py load_kenya_locations   # 47 counties + 290 constituencies
-.venv/bin/python manage.py createsuperuser        # optional: your own admin
-.venv/bin/python manage.py runserver              # http://127.0.0.1:8000
+.venv/bin/python backend/manage.py migrate
+.venv/bin/python backend/manage.py load_kenya_locations   # 47 counties + 290 constituencies
+.venv/bin/python backend/manage.py createsuperuser        # optional: your own admin
+.venv/bin/python backend/manage.py runserver              # http://127.0.0.1:8000
 ```
 
 Activate with `source .venv/bin/activate` (run `deactivate` first if another env such as `(env)` is active, otherwise `ModuleNotFoundError: No module named 'django'`).
 
 | URL | What |
 |---|---|
-| `http://127.0.0.1:8000/` | Public landing page (`templates/landing.html`, illustrated hero `static/img/hero-agritech.svg`) |
+| `http://127.0.0.1:8000/` | Public landing page (`frontend/templates/landing.html`, illustrated hero `frontend/static/img/hero-agritech.svg`) |
 | `/login/`, `/register/` | Sign in / create account (no verification step by default) |
 | `/app/` | Web app; the dashboard adapts to the user's role |
 | `/api/v1/` | REST API |
@@ -74,9 +74,9 @@ Activate with `source .venv/bin/activate` (run `deactivate` first if another env
 ### Demo data
 
 ```bash
-.venv/bin/python manage.py seed_demo            # idempotent demo users, catalogue, stock with 2 placeholder photos each
-.venv/bin/python manage.py mango_demo           # runs the full 1,500 kg mango scenario end to end
-.venv/bin/python manage.py mango_demo --stop-after quotes   # stages: request, matching, contact, quotes, agreement, inspection, delivery, complete
+.venv/bin/python backend/manage.py seed_demo            # idempotent demo users, catalogue, stock with 2 placeholder photos each
+.venv/bin/python backend/manage.py mango_demo           # runs the full 1,500 kg mango scenario end to end
+.venv/bin/python backend/manage.py mango_demo --stop-after quotes   # stages: request, matching, contact, quotes, agreement, inspection, delivery, complete
 ```
 
 > **Warning:** `mango_demo` and `seed_demo --reset` **delete all transactional data** (sourcing requests, matches, quotations, orders, payments, payouts, sale history, conversations, notifications, reviews), including data created by real users. Never run them on a database with real activity.
@@ -105,20 +105,22 @@ Usernames ending `_coop` / `_agg` are historical; those accounts are ordinary fa
 ## 4. Code layout
 
 ```
-origin254/            settings.py (env-driven), urls.py (router + routes), wsgi.py
-apps/core/            Location, AuditLog, MatchingConfig; geo (PostGIS / haversine), analytics, error envelope,
-                      permissions, references, demo images; management commands
-apps/accounts/        User + Role, Supplier/Buyer/Logistics profiles, verification, private documents
-apps/catalog/         Category, Product, ProductVariety, InventoryItem, InventoryPhoto; typed-name resolution
-apps/sourcing/        SourcingRequest, Match, Quotation; matching engine, nearest suppliers, market report
-apps/orders/          Order, OrderLine, Inspection, Delivery, OrderEvent, Dispute, SaleRecord
-apps/payments/        Payment, Payout; M-Pesa / simulated providers; escrow + commission logic; callbacks
-apps/comms/           Conversation, Message, Notification; multi-channel notify()
-apps/reviews/         Review; supplier performance metrics (reliability score)
-apps/web/             server-rendered views, forms, template tags (badge, kes, qty, pct, label …)
-templates/            landing.html, web/*.html (one per page), partials _field, _form, _thumbs, _photo_upload
-static/               css/app.css, img/hero-agritech.svg
-tests/                automated tests (see section 15)
+backend/              Django project (run manage.py from here or as backend/manage.py)
+  origin254/            settings.py (env-driven), urls.py (router + routes), wsgi.py
+  apps/core/            Location, AuditLog, MatchingConfig; geo (PostGIS / haversine), analytics, error envelope,
+                        permissions, references, demo images; management commands
+  apps/accounts/        User + Role, Supplier/Buyer/Logistics profiles, verification, private documents
+  apps/catalog/         Category, Product, ProductVariety, InventoryItem, InventoryPhoto; typed-name resolution
+  apps/sourcing/        SourcingRequest, Match, Quotation; matching engine, nearest suppliers, market report
+  apps/orders/          Order, OrderLine, Inspection, Delivery, OrderEvent, Dispute, SaleRecord
+  apps/payments/        Payment, Payout; M-Pesa / simulated providers; escrow + commission logic; callbacks
+  apps/comms/           Conversation, Message, Notification; multi-channel notify()
+  apps/reviews/         Review; supplier performance metrics (reliability score)
+  apps/web/             server-rendered views, forms, template tags (badge, kes, qty, pct, label …)
+  tests/                automated tests (see section 15)
+frontend/             server-rendered UI assets used by Django, plus the standalone index.html landing page
+  templates/            landing.html, web/*.html (one per page), partials _field, _form, _thumbs, _photo_upload
+  static/               css/app.css, img/hero-agritech.svg
 docs/                 ARCHITECTURE.md, DATABASE.md, API.md, DEPLOYMENT.md, openapi.yaml
 Dockerfile, docker-compose.yml   production image (gunicorn) and Compose with postgis/postgis:16-3.4
 ```
@@ -318,7 +320,7 @@ Every notification is stored in-app and additionally sent over `NOTIFICATION_CHA
 
 ## 12. Front-end design
 
-`static/css/app.css` defines colour tokens on `:root` (light theme only, `color-scheme: light`): leaf green `--brand #2f9e4f` / `--brand-dark #1f7a3a`, mango `--accent #ff9a1f`, sun `--sun #ffd23f`, sky `--sky #3aa7e8`, soft mint background `--bg #f4faf1`. Stat cards have coloured top stripes; money actions use the orange `.pay-btn` style. Templates use the `o254` tag library: `badge` (status pill), `tone`, `kes` (KES 1,234), `qty`, `pct`, `bar`, `isodate`, `label` (snake_case → Words). Date inputs use ISO `YYYY-MM-DD` (`apps.web.forms.DateInput`). Optional fields show a faint "if applicable" placeholder. After CSS changes run `collectstatic` (or hard-reload the browser with Cmd + Shift + R).
+`frontend/static/css/app.css` defines colour tokens on `:root` (light theme only, `color-scheme: light`): leaf green `--brand #2f9e4f` / `--brand-dark #1f7a3a`, mango `--accent #ff9a1f`, sun `--sun #ffd23f`, sky `--sky #3aa7e8`, soft mint background `--bg #f4faf1`. Stat cards have coloured top stripes; money actions use the orange `.pay-btn` style. Templates use the `o254` tag library: `badge` (status pill), `tone`, `kes` (KES 1,234), `qty`, `pct`, `bar`, `isodate`, `label` (snake_case → Words). Date inputs use ISO `YYYY-MM-DD` (`apps.web.forms.DateInput`). Optional fields show a faint "if applicable" placeholder. After CSS changes run `collectstatic` (or hard-reload the browser with Cmd + Shift + R).
 
 ---
 
@@ -371,7 +373,7 @@ Tests use a temporary private-media folder automatically.
 ## 15. Tests
 
 ```bash
-.venv/bin/python manage.py test tests        # 132 tests, PostgreSQL test database
+.venv/bin/python backend/manage.py test tests        # 132 tests, PostgreSQL test database
 ```
 
 | File | Covers |
@@ -414,7 +416,7 @@ Run the whole suite after every change; keep it green.
 
 1. Read section 4's conventions first; put rules in `services.py` and call them from both `api.py` and `apps/web/views.py`.
 2. Raise `WorkflowError` for rule violations; never return ad-hoc error formats.
-3. Add or update tests in `tests/` for every behaviour change and run `manage.py test tests`.
+3. Add or update tests in `backend/tests/` for every behaviour change and run `manage.py test tests`.
 4. After model changes run `makemigrations` + `migrate`; after API changes regenerate `docs/openapi.yaml`.
 5. Keep docs in sync: this README, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/API.md`, `docs/DEPLOYMENT.md`, `.env.example`.
 6. Do not run `mango_demo` / `seed_demo --reset` on a database with real users. Do not commit `.env`, `private_media/` or `backups/`.

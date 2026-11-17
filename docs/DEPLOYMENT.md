@@ -21,7 +21,7 @@ Put a TLS-terminating reverse proxy (Caddy, nginx, or a cloud load balancer) in 
 
 ## Option B: any Linux host or PaaS
 
-1. Python 3.13, then `pip install -r requirements.txt`.
+1. Python 3.13, then `pip install -r backend/requirements.txt`.
 2. PostgreSQL 14+ with PostGIS: `apt install postgresql-16-postgis-3`, or a managed database with PostGIS enabled (AWS RDS, Azure, GCP Cloud SQL and DigitalOcean all support it).
 3. Set the environment variables (table below), then run:
    ```bash
@@ -90,7 +90,7 @@ python manage.py backup_db --keep-days 30  # change retention
 pg_restore --clean --if-exists -d "$DATABASE_URL" backups/origin254-20261117-021500.dump   # restore
 ```
 
-Schedule it with cron, for example `15 2 * * * cd /srv/origin254 && .venv/bin/python manage.py backup_db`, or use your platform's scheduler. Copy the backup directory and `PRIVATE_MEDIA_ROOT` off the server (object storage such as S3). Managed databases add point-in-time recovery on top. Each backup run is recorded in the audit log.
+Schedule it with cron, for example `15 2 * * * cd /srv/origin254/backend && ../.venv/bin/python manage.py backup_db`, or use your platform's scheduler. Copy the backup directory and `PRIVATE_MEDIA_ROOT` off the server (object storage such as S3). Managed databases add point-in-time recovery on top. Each backup run is recorded in the audit log.
 
 ## Production checklist
 

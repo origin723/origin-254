@@ -9,7 +9,9 @@ from datetime import timedelta
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent  # backend/
+PROJECT_ROOT = BASE_DIR.parent  # repo root: .env, runtime data dirs
+FRONTEND_DIR = PROJECT_ROOT / "frontend"  # templates/ and static/
 
 
 def _load_dotenv(path: Path) -> None:
@@ -23,7 +25,7 @@ def _load_dotenv(path: Path) -> None:
         os.environ.setdefault(key.strip(), value.strip())
 
 
-_load_dotenv(BASE_DIR / ".env")
+_load_dotenv(PROJECT_ROOT / ".env")
 
 
 def env(key, default=None):
@@ -41,7 +43,7 @@ def env_list(key, default=""):
 def database_from_url(url: str) -> dict:
     parsed = urlparse(url)
     if parsed.scheme in {"sqlite", "sqlite3"}:
-        return {"ENGINE": "django.db.backends.sqlite3", "NAME": parsed.path.lstrip("/") or BASE_DIR / "db.sqlite3"}
+        return {"ENGINE": "django.db.backends.sqlite3", "NAME": parsed.path.lstrip("/") or PROJECT_ROOT / "db.sqlite3"}
     return {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": parsed.path.lstrip("/"),
@@ -100,7 +102,7 @@ ROOT_URLCONF = "origin254.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [FRONTEND_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -132,13 +134,13 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = PROJECT_ROOT / "staticfiles"
+STATICFILES_DIRS = [FRONTEND_DIR / "static"]
 
 # Verification documents, inspection reports and proofs of delivery are stored
 # outside any publicly served directory and only streamed through
 # permission-checked views.
-PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", BASE_DIR / "private_media"))
+PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", PROJECT_ROOT / "private_media"))
 if "test" in sys.argv[1:2]:  # keep files written by the test suite out of the real media folder
     import tempfile
     PRIVATE_MEDIA_ROOT = Path(tempfile.mkdtemp(prefix="origin254-test-media-"))
@@ -266,7 +268,7 @@ MIN_PHOTOS_PER_LISTING = int(env("MIN_PHOTOS_PER_LISTING", 2))
 INVENTORY_STALE_DAYS = int(env("INVENTORY_STALE_DAYS", 14))
 
 # --- Backups ----------------------------------------------------------------
-BACKUP_DIR = Path(env("BACKUP_DIR", BASE_DIR / "backups"))
+BACKUP_DIR = Path(env("BACKUP_DIR", PROJECT_ROOT / "backups"))
 BACKUP_RETENTION_DAYS = int(env("BACKUP_RETENTION_DAYS", 14))
 
 # --- Security (production) ----------------------------------------------------
