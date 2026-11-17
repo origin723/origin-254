@@ -2,6 +2,7 @@
 
 Every state change goes through the same service functions as the REST API.
 """
+import logging
 from decimal import Decimal
 from functools import wraps
 
@@ -43,6 +44,8 @@ from apps.sourcing.matching import ROAD_FACTOR, nearest_first_plan, nearest_supp
 from apps.sourcing.models import Match, Quotation, SourcingRequest
 
 from . import forms
+
+logger = logging.getLogger("origin254.web")
 
 
 def role_required(*checks):
@@ -423,13 +426,19 @@ def inventory_photo_upload(request, pk):
 def inventory_photo_delete(request, pk):
     photo = get_object_or_404(InventoryPhoto, pk=pk, inventory_item__supplier__user=request.user)
     item = photo.inventory_item
-    if item.is_active and item.photos.count() <= settings.MIN_PHOTOS_PER_LISTING:
-        messages.error(request, f"Products need at least {settings.MIN_PHOTOS_PER_LISTING} photos. "
-                                "Upload a replacement first, then remove this one.")
-        return back(request, "web:inventory")
-    photo.image.delete(save=False)
-    photo.delete()
-    messages.success(request, "Photo removed.")
+    storage, name = photo.image.storage, photo.image.name
+    photo.delete()  # remove the record first: a leftover file is harmless, a dangling record is not
+    if name:
+        try:
+            storage.delete(name)
+        except Exception as exc:  # missing file or storage unavailable: still removed from the listing
+            logger.warning("Photo %s removed but its file %r could not be deleted: %s", pk, name, exc)
+    missing = item.photos_missing
+    if item.is_active and missing:
+        messages.warning(request, f"Photo removed. This listing is hidden from buyers until you add "
+                                  f"{missing} more photo{'s' if missing > 1 else ''}.")
+    else:
+        messages.success(request, "Photo removed.")
     return back(request, "web:inventory")
 
 

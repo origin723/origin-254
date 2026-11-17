@@ -289,6 +289,7 @@ MPESA_B2C_SECURITY_CREDENTIAL = env("MPESA_B2C_SECURITY_CREDENTIAL", "")
 REQUIRE_ACCOUNT_VERIFICATION = env_bool("REQUIRE_ACCOUNT_VERIFICATION", False)
 # Stock listings need at least this many product photos before buyers can see them.
 MIN_PHOTOS_PER_LISTING = int(env("MIN_PHOTOS_PER_LISTING", 2))
+MAX_PHOTOS_PER_LISTING = int(env("MAX_PHOTOS_PER_LISTING", 6))
 # Inventory not reconfirmed within this many days is treated as stale and is
 # excluded from matching until the supplier updates it.
 INVENTORY_STALE_DAYS = int(env("INVENTORY_STALE_DAYS", 14))

@@ -166,7 +166,7 @@ class InventoryItem(TimeStampedModel):
         return max(settings.MIN_PHOTOS_PER_LISTING - self.photos.count(), 0)
 
 
-MAX_PHOTOS_PER_LISTING = 6
+MAX_PHOTOS_PER_LISTING = settings.MAX_PHOTOS_PER_LISTING
 MAX_PHOTO_MB = 5
 PHOTO_EXTENSIONS = ["jpg", "jpeg", "png", "webp"]
 

@@ -102,11 +102,33 @@ class ProductPhotoTests(TestCase):
         self.client.post(f"/app/photos/{photo.pk}/delete/")
         self.assertFalse(InventoryPhoto.objects.filter(pk=photo.pk).exists())
 
-    def test_cannot_delete_below_two_photos(self):
+    def test_delete_below_two_photos_warns_and_hides_listing(self):
+        from unittest import mock
+
+        from django.core.files.storage import FileSystemStorage
         photo = self.item.photos.first()
-        r = self.client.post(f"/app/photos/{photo.pk}/delete/", follow=True)
-        self.assertContains(r, "at least 2 photos")
-        self.assertTrue(InventoryPhoto.objects.filter(pk=photo.pk).exists())
+        with mock.patch.object(FileSystemStorage, "delete"):  # keep the shared fixture file for other tests
+            r = self.client.post(f"/app/photos/{photo.pk}/delete/", follow=True)
+        self.assertContains(r, "hidden from buyers until you add 1 more photo")
+        self.assertFalse(InventoryPhoto.objects.filter(pk=photo.pk).exists())
+        self.assertFalse(self.item.has_required_photos)
+
+    def test_delete_photo_whose_file_is_gone(self):
+        self.upload(png())  # its own photo: deleting a shared fixture file would leak into other tests
+        photo = self.item.photos.last()
+        photo.image.storage.delete(photo.image.name)  # e.g. lost on an old server or never uploaded
+        self.client.post(f"/app/photos/{photo.pk}/delete/")
+        self.assertFalse(InventoryPhoto.objects.filter(pk=photo.pk).exists())
+
+    def test_delete_photo_when_storage_fails(self):
+        from unittest import mock
+
+        from django.core.files.storage import FileSystemStorage
+        photo = self.item.photos.first()
+        with mock.patch.object(FileSystemStorage, "delete", side_effect=OSError("storage down")):
+            r = self.client.post(f"/app/photos/{photo.pk}/delete/", follow=True)
+        self.assertEqual(r.status_code, 200)
+        self.assertFalse(InventoryPhoto.objects.filter(pk=photo.pk).exists())
 
     def test_listing_without_two_photos_is_hidden_from_buyers(self):
         from apps.catalog.models import Product

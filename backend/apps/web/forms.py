@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
 
@@ -183,7 +184,8 @@ class MultipleFileField(forms.FileField):
 
 
 class PhotoUploadForm(forms.Form):
-    photos = MultipleFileField(label="Product photos", help_text="JPG, PNG or WebP, up to 5 MB each, 6 per listing")
+    photos = MultipleFileField(label="Product photos",
+                               help_text=f"JPG, PNG or WebP, up to 5 MB each, {settings.MAX_PHOTOS_PER_LISTING} per listing")
     caption = forms.CharField(max_length=120, required=False, label="Caption (optional)")
 
 
@@ -204,8 +206,8 @@ class InventoryForm(forms.ModelForm):
     other_details = forms.CharField(required=False, max_length=500, label="Any other details",
                                     widget=forms.Textarea(attrs={"rows": 2, "placeholder": "if applicable"}))
     photos = MultipleFileField(required=False, label="Product photos (at least 2)",
-                               help_text="At least 2 clear photos of the actual produce. JPG, PNG or WebP, "
-                                         "up to 5 MB each, 6 per listing")
+                               help_text=f"At least {settings.MIN_PHOTOS_PER_LISTING} clear photos of the actual produce. "
+                                         f"JPG, PNG or WebP, up to 5 MB each, {settings.MAX_PHOTOS_PER_LISTING} per listing")
 
     field_order = ["product_name", "variety_name"]
 
