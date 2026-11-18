@@ -1,0 +1,443 @@
+{
+ "banana-1.jpg": {
+  "title": "File:Madeira-Camara de Lobos-Banana Bunch-01ESD.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Madeira-Camara_de_Lobos-Banana_Bunch-01ESD.jpg",
+  "author": "Rikki Mitterer",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "banana-2.jpg": {
+  "title": "File:Madeira-Camara de Lobos-Banana Bunch-02ESD.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Madeira-Camara_de_Lobos-Banana_Bunch-02ESD.jpg",
+  "author": "Rikki Mitterer",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "banana-3.jpg": {
+  "title": "File:Bunch of green banana with prominent purple banana flower.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_green_banana_with_prominent_purple_banana_flower.jpg",
+  "author": "Waran R Samay",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "tomato-1.jpg": {
+  "title": "File:Cocktail tomatoes at Campbell farmer's market.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Cocktail_tomatoes_at_Campbell_farmer%27s_market.jpg",
+  "author": "Grendelkhan",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "tomato-2.jpg": {
+  "title": "File:Grape tomatoes on the vine at Ljubljana Central Market.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Grape_tomatoes_on_the_vine_at_Ljubljana_Central_Market.JPG",
+  "author": "domdomegg",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "tomato-3.jpg": {
+  "title": "File:TOMATOES IN GOMBE OLD MARKET.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:TOMATOES_IN_GOMBE_OLD_MARKET.jpg",
+  "author": "Yahuzaishat",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "carrot-1.jpg": {
+  "title": "File:The Bunch of Carrots PH - geograph.org.uk - 4725477.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:The_Bunch_of_Carrots_PH_-_geograph.org.uk_-_4725477.jpg",
+  "author": "Jonathan Billinger",
+  "licence": "CC BY-SA 2.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/2.0"
+ },
+ "carrot-2.jpg": {
+  "title": "File:Bunch of Carrots (Hampton Bishop) - geograph.org.uk - 7123367.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_Carrots_(Hampton_Bishop)_-_geograph.org.uk_-_7123367.jpg",
+  "author": "Fabian Musto",
+  "licence": "CC BY-SA 2.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/2.0"
+ },
+ "carrot-3.jpg": {
+  "title": "File:Bunch of carrots.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_carrots.jpg",
+  "author": "BazzaDaRambler",
+  "licence": "CC BY 2.0",
+  "licence_url": "https://creativecommons.org/licenses/by/2.0"
+ },
+ "maize-1.jpg": {
+  "title": "File:Sundrying maize on cobs 03.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sundrying_maize_on_cobs_03.jpg",
+  "author": "Geossegawa",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "maize-2.jpg": {
+  "title": "File:Sundrying maize on cobs 04.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sundrying_maize_on_cobs_04.jpg",
+  "author": "Geossegawa",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "maize-3.jpg": {
+  "title": "File:Sundrying maize on cobs 01.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sundrying_maize_on_cobs_01.jpg",
+  "author": "Geossegawa",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "sorghum-1.jpg": {
+  "title": "File:Sorghum bicolor noir MHNT.BOT.2016.12.2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sorghum_bicolor_noir_MHNT.BOT.2016.12.2.jpg",
+  "author": "Roger Culos",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "sorghum-2.jpg": {
+  "title": "File:Sorghum bicolor Moderne MHNT.BOT.2015.34.152.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sorghum_bicolor_Moderne_MHNT.BOT.2015.34.152.jpg",
+  "author": "Roger Culos",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "sorghum-3.jpg": {
+  "title": "File:A plate of sorghum grain.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:A_plate_of_sorghum_grain.jpg",
+  "author": "Salil Kumar Mukherjee",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "rice-1.jpg": {
+  "title": "File:Mushqbudji rice grains close-up.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Mushqbudji_rice_grains_close-up.jpg",
+  "author": "Zahoor Ahmad Reshi",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "rice-2.jpg": {
+  "title": "File:Rice grains (IRRI).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Rice_grains_(IRRI).jpg",
+  "author": "IRRI Images",
+  "licence": "CC BY 2.0",
+  "licence_url": "https://creativecommons.org/licenses/by/2.0"
+ },
+ "rice-3.jpg": {
+  "title": "File:Rice Grains at Bakin Dogo Market Kaduna North.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Rice_Grains_at_Bakin_Dogo_Market_Kaduna_North.jpg",
+  "author": "JoabJacob",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "green-grams-1.jpg": {
+  "title": "File:Vigna radiata MHNT.BOT.2009.17.4.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Vigna_radiata_MHNT.BOT.2009.17.4.jpg",
+  "author": "Roger Culos",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "green-grams-2.jpg": {
+  "title": "File:Mung beans (Vigna radiata).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Mung_beans_(Vigna_radiata).jpg",
+  "author": "Ivar Leidus",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "green-grams-3.jpg": {
+  "title": "File:Vigna radiata 256733486.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Vigna_radiata_256733486.jpg",
+  "author": "Dinesh Valke",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "macadamia-1.jpg": {
+  "title": "File:Macadamia nuts.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Macadamia_nuts.jpg",
+  "author": "စာကလေး SarKaLay",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "macadamia-2.jpg": {
+  "title": "File:Macadamia nuts on tree.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Macadamia_nuts_on_tree.JPG",
+  "author": "MorePix",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "macadamia-3.jpg": {
+  "title": "File:Macadamia (nuts).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Macadamia_(nuts).jpg",
+  "author": "Tish Madesh",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "cassava-1.jpg": {
+  "title": "File:Harvested cassava roots 03.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Harvested_cassava_roots_03.jpg",
+  "author": "Denis kasozi",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "cassava-2.jpg": {
+  "title": "File:Harvested cassava roots 08.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Harvested_cassava_roots_08.jpg",
+  "author": "Denis kasozi",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "cassava-3.jpg": {
+  "title": "File:Harvested cassava roots 04.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Harvested_cassava_roots_04.jpg",
+  "author": "Denis kasozi",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "mango-1.jpg": {
+  "title": "File:Sapindales - Mangifera indica cultivars fruits - 2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sapindales_-_Mangifera_indica_cultivars_fruits_-_2.jpg",
+  "author": "Emőke Dénes",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "mango-2.jpg": {
+  "title": "File:Sapindales - Mangifera indica cultivars fruits - 1.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sapindales_-_Mangifera_indica_cultivars_fruits_-_1.jpg",
+  "author": "Emőke Dénes",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "mango-3.jpg": {
+  "title": "File:Starr 030415-0003 Mangifera indica.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Starr_030415-0003_Mangifera_indica.jpg",
+  "author": "Forest & Kim Starr",
+  "licence": "CC BY 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0"
+ },
+ "avocado-1.jpg": {
+  "title": "File:Persea americana fruit 2.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Persea_americana_fruit_2.JPG",
+  "author": "B.navez",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "avocado-2.jpg": {
+  "title": "File:Persea americana - Fruit and Spice Park - Homestead, Florida - DSC08860.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Persea_americana_-_Fruit_and_Spice_Park_-_Homestead,_Florida_-_DSC08860.jpg",
+  "author": "Daderot",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "avocado-3.jpg": {
+  "title": "File:Persea americana - Fruit and Spice Park - Homestead, Florida - DSC08857.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Persea_americana_-_Fruit_and_Spice_Park_-_Homestead,_Florida_-_DSC08857.jpg",
+  "author": "Daderot",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "passion-fruit-1.jpg": {
+  "title": "File:Passiflora Edulis Closed Fruit.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Passiflora_Edulis_Closed_Fruit.jpg",
+  "author": "Alexander Klink",
+  "licence": "CC BY 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0"
+ },
+ "passion-fruit-2.jpg": {
+  "title": "File:Passiflora Edulis Open Fruit2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Passiflora_Edulis_Open_Fruit2.jpg",
+  "author": "Alexander Klink",
+  "licence": "CC BY 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0"
+ },
+ "passion-fruit-3.jpg": {
+  "title": "File:Passion fruit.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Passion_fruit.jpg",
+  "author": "Challiyan at Malayalam Wikipedia",
+  "licence": "CC BY 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0"
+ },
+ "onion-1.jpg": {
+  "title": "File:Red Onion on White.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Red_Onion_on_White.JPG",
+  "author": "Colin",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "onion-2.jpg": {
+  "title": "File:Red onion bulb.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Red_onion_bulb.jpg",
+  "author": "Eric Polk",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "onion-3.jpg": {
+  "title": "File:Red onions in packet.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Red_onions_in_packet.JPG",
+  "author": "Surya Prakash.S.A.",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "beans-1.jpg": {
+  "title": "File:Phaseolus vulgaris MHNT.BOT.2016.24.73.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Phaseolus_vulgaris_MHNT.BOT.2016.24.73.jpg",
+  "author": "Roger Culos",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "beans-2.jpg": {
+  "title": "File:Phaseolus vulgaris white beans, witte boon.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Phaseolus_vulgaris_white_beans,_witte_boon.jpg",
+  "author": "Rasbak",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "beans-3.jpg": {
+  "title": "File:Kidney beans (Phaseolus vulgaris) marketed Baubau.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Kidney_beans_(Phaseolus_vulgaris)_marketed_Baubau.jpg",
+  "author": "David E Mead",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "groundnuts-1.jpg": {
+  "title": "File:Peanuts (Arachis hypogaea) - in shell, shell cracked open, shelled, peeled.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Peanuts_(Arachis_hypogaea)_-_in_shell,_shell_cracked_open,_shelled,_peeled.jpg",
+  "author": "Ivar Leidus",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "groundnuts-2.jpg": {
+  "title": "File:Peanuts in their shells.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Peanuts_in_their_shells.jpg",
+  "author": "TorbeyCharbel",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "groundnuts-3.jpg": {
+  "title": "File:Roasted Peanuts with shell.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Roasted_Peanuts_with_shell.jpg",
+  "author": "Sanjay Acharya",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "coffee-1.jpg": {
+  "title": "File:Ripe coffee cherries.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Ripe_coffee_cherries.jpg",
+  "author": "Musimbi gerald",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "coffee-2.jpg": {
+  "title": "File:Coffee cherries of varying ripeness, on a tree in Colombia (by Brian Smith).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Coffee_cherries_of_varying_ripeness,_on_a_tree_in_Colombia_(by_Brian_Smith).jpg",
+  "author": "U. S. Fish and Wildlife Service - Northeast Region",
+  "licence": "Public domain",
+  "licence_url": ""
+ },
+ "coffee-3.jpg": {
+  "title": "File:Coffee arabica cherry.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Coffee_arabica_cherry.jpg",
+  "author": "Roger Burger",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "sukuma-wiki-1.jpg": {
+  "title": "File:190908 073 Chicago Botanic Gdn - Heritage Garden, Europe Bed, Brassica oleracea Acephala group Red Russian-type Kale, Lavandula x allardii 'Meerlo' Variegated Lavender (48860964763).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:190908_073_Chicago_Botanic_Gdn_-_Heritage_Garden,_Europe_Bed,_Brassica_oleracea_Acephala_group_Red_Russian-type_Kale,_Lavandula_x_allardii_%27Meerlo%27_Variegated_Lavender_(48860964763).jpg",
+  "author": "cultivar413 from Fallbrook, California",
+  "licence": "CC BY 2.0",
+  "licence_url": "https://creativecommons.org/licenses/by/2.0"
+ },
+ "sukuma-wiki-2.jpg": {
+  "title": "File:Brassica oleracea var.acephala-1-yercaud-salem-India.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Brassica_oleracea_var.acephala-1-yercaud-salem-India.jpg",
+  "author": "Yercaud-elango",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "sukuma-wiki-3.jpg": {
+  "title": "File:Brassica oleracea var.acephala-3-yercaud-salem-India.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Brassica_oleracea_var.acephala-3-yercaud-salem-India.jpg",
+  "author": "Yercaud-elango",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "irish-potato-1.jpg": {
+  "title": "File:Irish potatoes in a sack in a market.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Irish_potatoes_in_a_sack_in_a_market.jpg",
+  "author": "Owobusingye",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "irish-potato-2.jpg": {
+  "title": "File:Two irish potatoes in a sack in a market.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Two_irish_potatoes_in_a_sack_in_a_market.jpg",
+  "author": "Owobusingye",
+  "licence": "CC BY 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0"
+ },
+ "irish-potato-3.jpg": {
+  "title": "File:Potatoes at Leicester Market.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Potatoes_at_Leicester_Market.jpg",
+  "author": "NotFromUtrecht",
+  "licence": "CC BY-SA 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/3.0"
+ },
+ "sweet-potato-1.jpg": {
+  "title": "File:Sweet Potatoes displayed at Monday Market, Kaduna South Local Government.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sweet_Potatoes_displayed_at_Monday_Market,_Kaduna_South_Local_Government.jpg",
+  "author": "JoabJacob",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "sweet-potato-2.jpg": {
+  "title": "File:Pile of Sweet Potatoes at Barkin Dogo Market, Kaduna North 02.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pile_of_Sweet_Potatoes_at_Barkin_Dogo_Market,_Kaduna_North_02.jpg",
+  "author": "Samsule2",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "sweet-potato-3.jpg": {
+  "title": "File:Pile of Sweet Potatoes at Barkin Dogo Market, Kaduna North 01.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pile_of_Sweet_Potatoes_at_Barkin_Dogo_Market,_Kaduna_North_01.jpg",
+  "author": "Samsule2",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "pineapple-1.jpg": {
+  "title": "File:കൈതച്ചക്ക.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E0%B4%95%E0%B5%88%E0%B4%A4%E0%B4%9A%E0%B5%8D%E0%B4%9A%E0%B4%95%E0%B5%8D%E0%B4%95.jpg",
+  "author": "Suniltg at Malayalam Wikipedia",
+  "licence": "CC BY 3.0",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0"
+ },
+ "pineapple-2.jpg": {
+  "title": "File:Pineapple fruit 2.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pineapple_fruit_2.jpg",
+  "author": "Wilfredor",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "pineapple-3.jpg": {
+  "title": "File:Pineapple Chunks.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Pineapple_Chunks.jpg",
+  "author": "Gaurav Dhwaj Khadka",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "cabbage-1.jpg": {
+  "title": "File:Cabbages at Gara market, Srikakulam.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Cabbages_at_Gara_market,_Srikakulam.jpg",
+  "author": "K.Venkataramana",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ },
+ "cabbage-2.jpg": {
+  "title": "File:Cabbages in philippine market.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Cabbages_in_philippine_market.jpg",
+  "author": "Adryan R. Villanueva",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "https://creativecommons.org/licenses/by-sa/4.0"
+ },
+ "cabbage-3.jpg": {
+  "title": "File:Cabbages - Harbourside Market, Wellington, New Zealand - DSC09800.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Cabbages_-_Harbourside_Market,_Wellington,_New_Zealand_-_DSC09800.jpg",
+  "author": "Daderot",
+  "licence": "CC0",
+  "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+ }
+}
