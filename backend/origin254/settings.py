@@ -185,8 +185,11 @@ else:
                         "OPTIONS": {"location": PRIVATE_MEDIA_ROOT}}
 STORAGES = {
     "default": _default_storage,
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"
-                    if not DEBUG else "django.contrib.staticfiles.storage.StaticFilesStorage"},
+    # Production: hashed filenames (app.3f2a1c.css) so a deploy never mixes new HTML/JS with
+    # CSS cached by browsers or the CDN; WhiteNoise serves them with long-lived caching.
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+                    if DEBUG or "test" in sys.argv[1:2]
+                    else "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 MAX_DOCUMENT_SIZE_MB = 10

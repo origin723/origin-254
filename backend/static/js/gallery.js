@@ -64,6 +64,7 @@
 
   function open(links, start) {
     if (!overlay) build();
+    if (getComputedStyle(overlay).position !== "fixed") return false;  // styles missing: let the link open normally
     photos = links.map(function (a) {
       var t = a.querySelector("img");
       return { src: a.href, alt: (t && t.alt) || a.title || "Photo" };
@@ -77,6 +78,7 @@
     document.body.classList.add("gallery-open");
     show(start);
     overlay.querySelector(".gallery-close").focus();
+    return true;
   }
 
   function close() {
@@ -90,8 +92,7 @@
     var a = e.target.closest(".thumbs a[href]");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;  // allow open-in-new-tab
     var links = Array.prototype.slice.call(a.closest(".thumbs").querySelectorAll("a[href]"));
-    e.preventDefault();
-    open(links, links.indexOf(a));
+    if (open(links, links.indexOf(a))) e.preventDefault();
   });
 
   document.addEventListener("keydown", function (e) {
