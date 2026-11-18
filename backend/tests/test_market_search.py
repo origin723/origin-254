@@ -64,3 +64,29 @@ class MarketSearchTests(TestCase):
 
     def test_logistics_cannot_use_market_search(self):
         self.assertEqual(self.client_for("john.kamau").get("/app/market/").status_code, 403)
+
+
+class ProductPickerTests(TestCase):
+    """Product fields accept free typing and offer the known products to pick from (<datalist>)."""
+
+    @classmethod
+    def setUpTestData(cls):
+        call_command("seed_kenya", password="test-pass-123", stdout=StringIO())
+
+    def test_product_fields_link_to_product_list(self):
+        for username, pages in [("wambui.njoroge", ["/app/suppliers/nearest/", "/app/requests/new/", "/app/market/"]),
+                                ("grace.wanjiku", ["/app/inventory/", "/app/market/"])]:
+            c = Client()
+            c.force_login(User.objects.get(username=username))
+            for page in pages:
+                html = c.get(page).content.decode()
+                self.assertIn('list="product-options"', html, page)
+                self.assertIn('<datalist id="product-options">', html, page)
+                self.assertIn('<option value="Sukuma wiki">', html, page)
+
+    def test_typed_product_not_in_list_still_accepted(self):
+        c = Client()
+        c.force_login(User.objects.get(username="wambui.njoroge"))
+        loc = User.objects.get(username="wambui.njoroge").buyer_profile.location_id
+        r = c.get("/app/suppliers/nearest/", {"product": "Dragon fruit", "location": loc})
+        self.assertEqual(r.status_code, 200)

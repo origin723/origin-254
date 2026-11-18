@@ -74,6 +74,8 @@
   </main>
 </div>
 {% endwith %}
+{% if user.is_authenticated %}<datalist id="product-options">{% for n in product_options %}<option value="{{ n }}">{% endfor %}</datalist>
+<datalist id="variety-options">{% for n in variety_options %}<option value="{{ n }}">{% endfor %}</datalist>{% endif %}
 <script src="{% asset_url 'js/gallery.js' %}" defer></script>
 </body>
 </html>

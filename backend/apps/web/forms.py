@@ -64,7 +64,7 @@ class RegisterForm(forms.Form):
 
 
 class NearestSuppliersForm(forms.Form):
-    product = forms.CharField(max_length=120, label="Product", help_text="Type any product, e.g. Mango")
+    product = forms.CharField(max_length=120, label="Product", help_text="Type any product or pick one from the list")
     location = forms.ModelChoiceField(queryset=Location.objects.all(), label="Deliver to / your location")
     min_quantity = forms.DecimalField(required=False, min_value=0, max_digits=12, decimal_places=2,
                                       label="Minimum stock (optional)")
@@ -72,7 +72,8 @@ class NearestSuppliersForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["product"].widget.attrs.update({"autocomplete": "off", "placeholder": "e.g. Mango"})
+        self.fields["product"].widget.attrs.update({"autocomplete": "off", "placeholder": "Type or pick, e.g. Mango",
+                                                    "list": "product-options"})
         grouped_locations(self.fields["location"])
 
     def clean_product(self):
@@ -114,9 +115,9 @@ class SourcingRequestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         today = timezone.localdate()
-        for name in ("product_name", "variety_name"):
-            self.fields[name].widget.attrs["autocomplete"] = "off"
-        self.fields["product_name"].widget.attrs["placeholder"] = "e.g. Mango"
+        for name, options in (("product_name", "product-options"), ("variety_name", "variety-options")):
+            self.fields[name].widget.attrs.update({"autocomplete": "off", "list": options})
+        self.fields["product_name"].widget.attrs["placeholder"] = "Type or pick, e.g. Mango"
         self.fields["variety_name"].widget.attrs["placeholder"] = "e.g. Apple"
         self.fields["delivery_deadline"].initial = today + timedelta(days=7)
         self.fields["delivery_deadline"].widget.attrs["min"] = today.isoformat()
@@ -214,8 +215,8 @@ class InventoryForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        for name in ("product_name", "variety_name"):
-            self.fields[name].widget.attrs["autocomplete"] = "off"
+        for name, options in (("product_name", "product-options"), ("variety_name", "variety-options")):
+            self.fields[name].widget.attrs.update({"autocomplete": "off", "list": options})
         grouped_locations(self.fields["location"])
         if self.instance.pk:
             self.fields["product_name"].initial = self.instance.product.name

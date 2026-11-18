@@ -6,7 +6,7 @@
 {% if detail %}
 <p><a href="{% url 'web:market' %}">← All products and buyers</a></p>
 <form method="get" class="card market-search">
-  <div class="row"><input type="search" name="product" value="{{ q }}" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Check market</button></div>
+  <div class="row"><input type="search" name="product" value="{{ q }}" list="product-options" placeholder="Type or pick a product, e.g. Mango" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Check market</button></div>
   {% if q and q|length < 2 %}<div class="err">Type at least 2 letters.</div>{% endif %}
 </form>
 
@@ -61,7 +61,7 @@
 <form method="get" class="card market-filters">
   <input type="hidden" name="tab" value="{{ tab }}">{% if f.category %}<input type="hidden" name="category" value="{{ f.category.pk }}">{% endif %}
   <div class="row">
-    <input type="search" name="q" value="{{ f.q }}" maxlength="80" autocomplete="off" style="flex:1;min-width:200px"
+    <input type="search" name="q" value="{{ f.q }}" maxlength="80" autocomplete="off"{% if tab == "products" %} list="product-options"{% endif %} style="flex:1;min-width:200px"
       placeholder="{% if tab == 'people' %}{% if farmer %}Processor, business type or product, e.g. juice, Nyota{% else %}Farmer, farm or product, e.g. avocado, Wanjiku{% endif %}{% else %}Product or variety, e.g. mango, Hass, rice{% endif %}">
     <select name="county" aria-label="County"><option value="">All counties</option>{% for c in counties %}<option value="{{ c }}"{% if c == f.county %} selected{% endif %}>{{ c }}</option>{% endfor %}</select>
     <button class="primary" type="submit">Search</button>

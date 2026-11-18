@@ -37,7 +37,7 @@
 <form method="get" action="{% url 'web:market' %}" class="card market-search">
   <h2>🔎 Is there a market for my product?</h2>
   <p class="muted">Type any product to see how many buyers want it right now, how much, where, and recent prices paid.</p>
-  <div class="row"><input type="search" name="product" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Search market</button></div>
+  <div class="row"><input type="search" name="product" list="product-options" placeholder="Type or pick a product, e.g. Mango" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Search market</button></div>
 </form>
 <div class="grid g4" style="margin-bottom:18px">
   <div class="stat"><div class="v">{{ stats.listings }}</div><div class="l">Active listings</div></div>
