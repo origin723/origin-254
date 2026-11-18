@@ -202,7 +202,11 @@ class Command(BaseCommand):
         orders.reconfirm_line(farmer.user, line, available=True, note="Stock reserved")
         order.refresh_from_db()
         if settings.PAYMENT_PROVIDER == "simulated":
-            start_payment(buyer.user, order, buyer.user.phone or "0700000001")
+            try:
+                with transaction.atomic():
+                    start_payment(buyer.user, order, buyer.user.phone or "0712345678")
+            except ValidationError:  # saved phone isn't a valid Kenyan mobile: use a test number
+                start_payment(buyer.user, order, "0712345678")
         if self.admin:
             orders.record_inspection(self.admin, line, Inspection.Stage.PRE_DISPATCH, Inspection.Result.PASSED,
                                      grade_observed=req.min_quality_grade, measurements={},
