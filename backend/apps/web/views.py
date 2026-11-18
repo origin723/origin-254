@@ -397,12 +397,31 @@ def _announce_offers(request, item):
                                   f"{item.product} matched your stock. See Opportunities.")
 
 
-@supplier_required
+@role_required("is_supplier", "is_buyer", "is_platform_admin")
 def market(request):
-    """Farmer tool: is there a market for this product? Open buyer demand, recent prices, competition."""
+    """Market search for both sides, filtered by text, category and county.
+
+    Farmers: products processors need (open demand) and the processors; ?product=X opens the
+    detailed market check for one product. Processors: products in stock and the farmers.
+    """
+    from apps.sourcing import directory
+
+    farmer = request.user.is_supplier
     q = request.GET.get("product", "").strip()[:120]
-    report = market_report(q, request.user.supplier_profile) if len(q) >= 2 else None
-    return render(request, "web/market.html", {"q": q, "report": report})
+    if farmer and q:
+        report = market_report(q, request.user.supplier_profile) if len(q) >= 2 else None
+        return render(request, "web/market.html", {"q": q, "report": report, "detail": True, "farmer": True})
+
+    f = directory.Filters.from_request(request.GET)
+    tab = "people" if request.GET.get("tab") == "people" else "products"
+    ctx = {"farmer": farmer, "f": f, "tab": tab, "categories": directory.categories(),
+           "counties": directory.counties()}
+    if tab == "products":
+        ctx["demand"] = directory.demand_by_product(f) if farmer else None
+        ctx["listings"] = None if farmer else directory.visible_listings(f)
+    else:
+        ctx["people"] = directory.processors(f) if farmer else directory.farmers(f)
+    return render(request, "web/market.html", ctx)
 
 
 @supplier_required

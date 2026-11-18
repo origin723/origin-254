@@ -37,6 +37,7 @@
           <a href="{% url 'web:request_new' %}" class="{% if p == '/app/requests/new/' %}active{% endif %}">+ New request</a>
           <a href="{% url 'web:request_list' %}" class="{% if '/requests' in p and 'new' not in p %}active{% endif %}">My requests</a>
           <a href="{% url 'web:nearest_suppliers' %}" class="{% if 'nearest' in p %}active{% endif %}">Nearest suppliers</a>
+          <a href="{% url 'web:market' %}" class="{% if '/market' in p %}active{% endif %}">🔎 Market search</a>
           <a href="{% url 'web:order_list' %}" class="{% if '/orders' in p %}active{% endif %}">Orders</a>
           <a href="{% url 'web:payments' %}" class="{% if p == '/app/payments/' %}active{% endif %}">💳 Payments</a>
           <a href="{% url 'web:history' %}" class="{% if 'history' in p %}active{% endif %}">Purchase history</a>

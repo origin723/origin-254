@@ -1,9 +1,12 @@
 {% extends "web/base.html" %}{% load o254 %}
 {% block title %}Market search{% endblock %}
 {% block content %}
-<div class="pagehead"><div><h1>🔎 Market search</h1><p class="muted">Check whether buyers are looking for a product before you plant, harvest or list it.</p></div></div>
+<div class="pagehead"><div><h1>🔎 Market search</h1><p class="muted">{% if farmer %}See what processors are buying and who they are, before you plant, harvest or list.{% else %}Find produce in stock and the farmers who grow it.{% endif %}</p></div></div>
+
+{% if detail %}
+<p><a href="{% url 'web:market' %}">← All products and buyers</a></p>
 <form method="get" class="card market-search">
-  <div class="row"><input type="search" name="product" value="{{ q }}" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px" autofocus><button class="primary" type="submit">Search market</button></div>
+  <div class="row"><input type="search" name="product" value="{{ q }}" placeholder="e.g. Mango, Avocado, Sorghum" required minlength="2" maxlength="120" autocomplete="off" style="flex:1;min-width:200px"><button class="primary" type="submit">Check market</button></div>
   {% if q and q|length < 2 %}<div class="err">Type at least 2 letters.</div>{% endif %}
 </form>
 
@@ -52,5 +55,76 @@
 </div>
 {% endif %}
 {% endwith %}
+{% endif %}
+{% else %}
+
+<form method="get" class="card market-filters">
+  <input type="hidden" name="tab" value="{{ tab }}">{% if f.category %}<input type="hidden" name="category" value="{{ f.category.pk }}">{% endif %}
+  <div class="row">
+    <input type="search" name="q" value="{{ f.q }}" maxlength="80" autocomplete="off" style="flex:1;min-width:200px"
+      placeholder="{% if tab == 'people' %}{% if farmer %}Processor, business type or product, e.g. juice, Nyota{% else %}Farmer, farm or product, e.g. avocado, Wanjiku{% endif %}{% else %}Product or variety, e.g. mango, Hass, rice{% endif %}">
+    <select name="county" aria-label="County"><option value="">All counties</option>{% for c in counties %}<option value="{{ c }}"{% if c == f.county %} selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <button class="primary" type="submit">Search</button>
+    {% if f.active %}<a class="btn" href="?tab={{ tab }}">Clear</a>{% endif %}
+  </div>
+  <div class="chips" role="group" aria-label="Category">
+    <a class="chip{% if not f.category %} on{% endif %}" href="?tab={{ tab }}&q={{ f.q|urlencode }}&county={{ f.county|urlencode }}">All categories</a>
+    {% for c in categories %}<a class="chip{% if f.category.pk == c.pk %} on{% endif %}" href="?tab={{ tab }}&category={{ c.pk }}&q={{ f.q|urlencode }}&county={{ f.county|urlencode }}">{{ c.name }}</a>{% endfor %}
+  </div>
+</form>
+
+<nav class="tabs" aria-label="Search in">
+  <a class="{% if tab == 'products' %}on{% endif %}" href="?tab=products&q={{ f.q|urlencode }}&county={{ f.county|urlencode }}{% if f.category %}&category={{ f.category.pk }}{% endif %}">{% if farmer %}Products buyers need{% else %}Products in stock{% endif %}</a>
+  <a class="{% if tab == 'people' %}on{% endif %}" href="?tab=people&q={{ f.q|urlencode }}&county={{ f.county|urlencode }}{% if f.category %}&category={{ f.category.pk }}{% endif %}">{% if farmer %}Processors{% else %}Farmers{% endif %}</a>
+</nav>
+
+{% if tab == "products" and farmer %}
+<div class="card"><div class="table-wrap"><table>
+  <tr><th>Product</th><th class="num">Open requests</th><th class="num">Buyers</th><th class="num">Quantity wanted</th><th>Deliver to</th><th>Earliest deadline</th><th></th></tr>
+  {% for row in demand %}
+  <tr>
+    <td><strong>{{ row.product.name }}</strong><br><small class="muted">{{ row.product.category.name }}</small></td>
+    <td class="num">{{ row.requests }}</td>
+    <td class="num">{{ row.buyers|length }}</td>
+    <td class="num">{% if row.kg %}{{ row.kg|qty }} kg{% endif %}{% for u, n in row.other_units.items %}{% if row.kg or not forloop.first %} + {% endif %}{{ n|qty }} {{ u|lower }}{% endfor %}</td>
+    <td><small>{{ row.counties|join:", " }}</small></td>
+    <td>{{ row.earliest|date:"d M Y" }}</td>
+    <td><a class="btn sm primary" href="?product={{ row.product.name|urlencode }}">Market details →</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="empty">No open buyer requests{% if f.active %} match these filters{% endif %} right now. List your stock anyway: you're matched automatically when a buyer posts a request.</td></tr>{% endfor %}
+</table></div>
+<p class="muted" style="margin-top:10px"><small>Buyer names are shown on a request once you're matched to it. See the Processors tab for who is buying.</small></p></div>
+
+{% elif tab == "products" %}
+<div class="card"><div class="table-wrap"><table>
+  <tr><th>Photos</th><th>Product</th><th class="num">In stock</th><th>Grade</th><th class="num">Price</th><th>Farmer · location</th><th></th></tr>
+  {% for i in listings %}
+  <tr>
+    <td>{% include "web/_thumbs.html" with item=i small=1 %}</td>
+    <td><strong>{{ i.product.name }}</strong>{% if i.variety %}<br><small>{{ i.variety.name }}</small>{% endif %}<br><small class="muted">{{ i.product.category.name }}</small></td>
+    <td class="num">{{ i.quantity_available|qty }} {{ i.get_unit_display|lower }}</td>
+    <td><small>{{ i.get_quality_grade_display }}</small></td>
+    <td class="num">{% if i.price_per_unit %}{{ i.price_per_unit|kes }}<br><small class="muted">per {{ i.unit }}</small>{% else %}<small class="muted">on request</small>{% endif %}</td>
+    <td>{{ i.supplier.business_name }}<br><small class="muted">{{ i.location.name }}, {{ i.location.county }}{% if i.can_deliver %} · delivers{% endif %}</small></td>
+    <td><a class="btn sm primary" href="{% url 'web:request_new' %}?product={{ i.product.name|urlencode }}">Request →</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="empty">No stock{% if f.active %} matches these filters{% endif %} right now. Post a sourcing request and farmers are matched to it as soon as they list.</td></tr>{% endfor %}
+</table></div></div>
+
+{% else %}
+<div class="card"><div class="table-wrap"><table>
+  <tr><th>{% if farmer %}Processor{% else %}Farmer{% endif %}</th><th>Location</th><th>{% if farmer %}Buys{% else %}Has in stock{% endif %}</th><th class="num">{% if farmer %}Open requests{% else %}Listings{% endif %}</th>{% if not farmer %}<th class="num">Reliability</th>{% endif %}</tr>
+  {% for person in people %}{% with pr=person.profile %}
+  <tr>
+    <td><strong>{{ pr.business_name }}</strong><br><small class="muted">{% if farmer %}{{ pr.business_type|default:"Processor" }}{% else %}{{ pr.user.get_full_name }}{% if pr.certifications %} · {{ pr.certifications }}{% endif %}{% endif %}</small></td>
+    <td>{{ pr.location.name }}<br><small class="muted">{{ pr.location.county }}</small></td>
+    <td>{% for name in person.products %}<span class="tag">{{ name }}</span>{% empty %}<small class="muted">—</small>{% endfor %}</td>
+    <td class="num">{% if farmer %}{{ person.open_requests }}{% else %}{{ person.listings }}{% endif %}</td>
+    {% if not farmer %}<td class="num">{% if pr.reliability_score %}{{ pr.reliability_score|pct }}{% else %}<small class="muted">New</small>{% endif %}</td>{% endif %}
+  </tr>{% endwith %}
+  {% empty %}<tr><td colspan="5" class="empty">No verified {% if farmer %}processors{% else %}farmers{% endif %}{% if f.active %} match these filters{% endif %}.</td></tr>{% endfor %}
+</table></div>
+<p class="muted" style="margin-top:10px"><small>Only verified businesses are listed. Contact details are shared through Origin 254 once you're matched on a request.</small></p></div>
+{% endif %}
 {% endif %}
 {% endblock %}

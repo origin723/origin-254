@@ -83,9 +83,16 @@ class MarketSearchTests(TestCase):
         self.req.save()
         self.assertEqual(market_report("Mango", user("embu_farm").supplier_profile).rows, [])
 
-    def test_only_suppliers_can_use_it(self):
+    def test_buyers_get_the_supply_view_not_the_farmer_report(self):
         self.client.force_login(user("mama_jam"))
-        self.assertEqual(self.client.get("/app/market/", {"product": "Mango"}).status_code, 403)
+        r = self.client.get("/app/market/", {"product": "Mango"})
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Products in stock")
+        self.assertNotIn("report", r.context)
+
+    def test_logistics_partners_cannot_use_it(self):
+        self.client.force_login(user("swift_logistics"))
+        self.assertEqual(self.client.get("/app/market/").status_code, 403)
 
     def test_short_query_shows_nothing(self):
         self.assertIsNone(self.get("embu_farm", "m").context["report"])
