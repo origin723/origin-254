@@ -1,4 +1,4 @@
-"""Populate a realistic Kenyan marketplace: 10 users per role, produce listings with
+"""Populate a realistic Kenyan marketplace: 10 users per role (plus 3 beef ranchers), produce listings with
 real product photos, sourcing requests, quotations, approvals and orders.
 
     python manage.py seed_kenya                      # idempotent: safe to re-run
@@ -60,6 +60,7 @@ CATALOGUE = {
     "Groundnuts": ("Legumes", "groundnuts", ["Red Valencia", "Homa Bay local"], False),
     "Macadamia": ("Nuts & beverage crops", "macadamia", ["Murang'a 20", "Kiambu 3"], False),
     "Coffee": ("Nuts & beverage crops", "coffee", ["SL28 cherry", "Ruiru 11 cherry"], False),
+    "Beef": ("Meat & livestock", "beef", ["Boran (grass-fed)", "Sahiwal", "Boran cross"], True),
 }
 
 # (first, last, business, constituency, county, delivery radius km,
@@ -85,6 +86,13 @@ FARMERS = [
      [("Groundnuts", "Red Valencia", 2500, G1, 160), ("Sorghum", "Serena", 2500, G2, 48), ("Sweet potato", "Kabode (orange-fleshed)", 2000, G1, 45)]),
     ("Kariuki", "Ndirangu", "Ndirangu Thika Farms", "Gatundu South", "Kiambu", 400,
      [("Pineapple", "MD2", 4000, PREM, 55), ("Passion fruit", "Purple", 1500, G1, 120), ("Coffee", "SL28 cherry", 3000, G1, 85)]),
+    # Ranchers: beef is their top product.
+    ("Lemayian", "Sankale", "Sankale Ranch", "Narok North", "Narok", 300,
+     [("Beef", "Boran (grass-fed)", 1500, PREM, 600), ("Maize", "White", 3000, G1, 45)]),
+    ("Wairimu", "Gitau", "Gitau Laikipia Ranch", "Laikipia West", "Laikipia", 300,
+     [("Beef", "Sahiwal", 1200, G1, 560), ("Irish potato", "Shangi", 2000, G1, 44)]),
+    ("Saitoti", "Koileken", "Kajiado Plains Beef", "Kajiado Central", "Kajiado", 250,
+     [("Beef", "Boran cross", 2000, G1, 550), ("Onion", "Bombay Red", 1500, G1, 85)]),
 ]
 
 # (first, last, business, business type, constituency, county, monthly kg,
@@ -107,7 +115,8 @@ PROCESSORS = [
       ("Sweet potato", 1500, G1, "Sweet potato chips", "Sacks", 70000)]),
     ("Joyce", "Muthoni", "Mama Mboga Fresh Cuts", "Fresh-cut vegetables for supermarkets", "Westlands", "Nairobi", 18000,
      [("Sukuma wiki", 1000, G1, "Washed, chopped sukuma packs", "Bundles in crates", 35000),
-      ("Cabbage", 2000, G1, "Coleslaw mix", "Nets", 55000)]),
+      ("Cabbage", 2000, G1, "Coleslaw mix", "Nets", 55000),
+      ("Beef", 600, G1, "Ready-to-cook beef stew packs", "Chilled 0-4 °C, vacuum-packed", 360000)]),
     ("Stephen", "Mutiso", "Ukambani Ndengu Packers", "Pulses cleaning & packing", "Machakos Town", "Machakos", 40000,
      [("Green grams", 1500, G1, "Packed ndengu, 1 kg retail", "90 kg bags", 220000),
       ("Beans", 2000, G2, "Packed beans, 1 kg retail", "90 kg bags", 230000)]),
@@ -284,9 +293,18 @@ class Command(BaseCommand):
 
     def _photos(self, item, slug, start):
         files = sorted(self.photos_dir.glob(f"{slug}-*.jpg"))
-        if not files:
-            return
         need = max(settings.MIN_PHOTOS_PER_LISTING - item.photos.count(), 0)
+        if not files:  # no photo set for this product (e.g. beef): placeholders the supplier replaces
+            from apps.core.demo_images import placeholder_png
+
+            palettes = [((150, 40, 40), (90, 30, 25)), ((180, 70, 60), (110, 45, 35))]
+            for k in range(need):
+                top, bottom = palettes[(start + k) % len(palettes)]
+                photo = InventoryPhoto(inventory_item=item, caption="Placeholder photo – replace with your own")
+                photo.image.save(f"{slug}-placeholder-{k + 1}.png", ContentFile(placeholder_png(top, bottom, size=480)),
+                                 save=False)
+                photo.save()
+            return
         for k in range(need):
             f = files[(start + k) % len(files)]
             c = self.credits.get(f.name, {})
