@@ -128,8 +128,12 @@ class CloudinaryStorage(Storage):
         if "w" in mode or "a" in mode:
             raise ValueError("Cloudinary files are read-only once saved")
         resource_type, public_id, ext = self._resource(name)
-        url, _ = cloudinary.utils.cloudinary_url(public_id, resource_type=resource_type, type=self.delivery_type,
-                                                 format=ext or None, sign_url=True, secure=True)
+        if resource_type == "image":  # signed CDN delivery URL
+            url, _ = cloudinary.utils.cloudinary_url(public_id, resource_type=resource_type, type=self.delivery_type,
+                                                     format=ext, sign_url=True, secure=True)
+        else:  # signed API download: CDN delivery of PDFs/ZIPs is blocked on many accounts by default
+            url = cloudinary.utils.private_download_url(public_id, "", resource_type=resource_type,
+                                                        type=self.delivery_type)
         try:
             with urllib.request.urlopen(url, timeout=30) as resp:
                 data = resp.read()

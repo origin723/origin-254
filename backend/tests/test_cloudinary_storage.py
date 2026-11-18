@@ -39,8 +39,13 @@ class CloudinaryStorageTests(SimpleTestCase):
             with self.storage.open("verification/5/doc.pdf") as f:
                 self.assertEqual(f.read(), b"file-bytes")
         url = urlopen.call_args.args[0]
-        self.assertIn("demo-cloud/raw/authenticated/s--", url)  # signed, private delivery
-        self.assertTrue(url.endswith("origin254/verification/5/doc.pdf"))
+        self.assertIn("api.cloudinary.com/v1_1/demo-cloud/raw/download", url)  # signed API download
+        self.assertIn("signature=", url)
+        with mock.patch("urllib.request.urlopen", return_value=resp) as urlopen:
+            self.storage.open("product_photos/1/x.jpg")
+        url = urlopen.call_args.args[0]
+        self.assertIn("demo-cloud/image/authenticated/s--", url)  # signed CDN delivery for images
+        self.assertTrue(url.endswith("origin254/product_photos/1/x.jpg"))
 
     def test_open_missing_file(self):
         err = urllib.error.HTTPError("u", 404, "Not Found", {}, None)
