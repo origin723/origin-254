@@ -25,9 +25,13 @@ STORAGE_UNAVAILABLE_MESSAGE = "File storage is temporarily unavailable, so the f
 
 
 def is_storage_error(exc):
-    """True for errors raised by the S3/R2 client (bad credentials, network, service errors)."""
+    """True for remote media-storage failures (Cloudinary, S3/R2: credentials, network, service)."""
+    from apps.core.storage import StorageUnavailable
+
+    if isinstance(exc, StorageUnavailable):
+        return True
     try:
         from botocore.exceptions import BotoCoreError, ClientError
-    except ImportError:  # object storage not installed
+    except ImportError:  # S3 client not installed
         return False
     return isinstance(exc, (BotoCoreError, ClientError))

@@ -148,16 +148,21 @@ if "test" in sys.argv[1:2]:  # keep files written by the test suite out of the r
     import tempfile
     PRIVATE_MEDIA_ROOT = Path(tempfile.mkdtemp(prefix="origin254-test-media-"))
 # Uploaded files (product photos, verification documents, inspection reports, PODs).
-# MEDIA_STORAGE picks where they live: "s3" (S3-compatible object storage, e.g.
-# PrimeCloud Storage / R2), "database" (core.StoredFile rows in PostgreSQL; fine for
-# small volumes when no working bucket or disk exists) or "local" (PRIVATE_MEDIA_ROOT).
-# Default: s3 if S3_BUCKET is set, else local. Tests always use a temporary local folder.
+# MEDIA_STORAGE picks where they live: "cloudinary" (private Cloudinary assets; needs
+# CLOUDINARY_URL), "s3" (S3-compatible object storage, e.g. PrimeCloud Storage / R2),
+# "database" (core.StoredFile rows in PostgreSQL; small volumes only) or "local"
+# (PRIVATE_MEDIA_ROOT). Default: cloudinary if CLOUDINARY_URL is set, else s3 if S3_BUCKET
+# is set, else local. Tests always use a temporary local folder.
 # Files are never public: they are streamed through permission-checked views.
+CLOUDINARY_URL = env("CLOUDINARY_URL", "")  # cloudinary://API_KEY:API_SECRET@CLOUD_NAME (read by the SDK)
+CLOUDINARY_FOLDER = env("CLOUDINARY_FOLDER", "origin254")
 S3_BUCKET = env("S3_BUCKET", "")
-MEDIA_STORAGE = env("MEDIA_STORAGE", "s3" if S3_BUCKET else "local").lower()
+MEDIA_STORAGE = env("MEDIA_STORAGE", "cloudinary" if CLOUDINARY_URL else "s3" if S3_BUCKET else "local").lower()
 if "test" in sys.argv[1:2]:
     MEDIA_STORAGE = "local"
-if MEDIA_STORAGE == "database":
+if MEDIA_STORAGE == "cloudinary":
+    _default_storage = {"BACKEND": "apps.core.storage.CloudinaryStorage"}
+elif MEDIA_STORAGE == "database":
     _default_storage = {"BACKEND": "apps.core.storage.DatabaseStorage"}
 elif MEDIA_STORAGE == "s3":
     _default_storage = {

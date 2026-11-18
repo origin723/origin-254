@@ -42,6 +42,8 @@ Put a TLS-terminating reverse proxy (Caddy, nginx, or a cloud load balancer) in 
 | `DJANGO_SECURE_SSL_REDIRECT` | Redirect HTTP to HTTPS | `1` when not in debug |
 | `DATABASE_URL` | `postgres://user:pass@host:5432/origin254` | local `origin254` |
 | `PRIVATE_MEDIA_ROOT` | Directory for verification documents, inspection reports and PODs. **Must not be web-served.** Back it up | `./private_media` |
+| `MEDIA_STORAGE` | Where uploads are stored: `cloudinary`, `s3`, `database` or `local`. Files stay private and are streamed through permission-checked views. Copy existing files with `manage.py upload_media` | `cloudinary` if `CLOUDINARY_URL` set, else `s3` if `S3_BUCKET` set, else `local` |
+| `CLOUDINARY_URL`, `CLOUDINARY_FOLDER` | Cloudinary account (`cloudinary://KEY:SECRET@CLOUD`, from the Cloudinary dashboard) and folder prefix | folder `origin254` |
 | `S3_BUCKET` | Store uploads in S3-compatible object storage (PrimeCloud Storage / R2) instead of `PRIVATE_MEDIA_ROOT`. Keep the bucket private; files are streamed through permission-checked views. Copy existing files with `manage.py upload_media` | empty (local disk) |
 | `S3_ENDPOINT_URL`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PREFIX` | Object storage connection. R2: region `auto`; prefix defaults to `private_media` | |
 | `CORS_ALLOWED_ORIGINS` | Origins of separate frontends | |
