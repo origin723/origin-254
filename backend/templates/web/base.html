@@ -1,4 +1,4 @@
-{% load static %}<!doctype html>
+{% load static o254 %}<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,7 +6,7 @@
   <title>{% block title %}Origin 254{% endblock %} · Origin 254</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="stylesheet" href="{% asset_url 'css/app.css' %}">
 </head>
 <body>
 {% with p=request.path %}
@@ -73,6 +73,6 @@
   </main>
 </div>
 {% endwith %}
-<script src="{% static 'js/gallery.js' %}" defer></script>
+<script src="{% asset_url 'js/gallery.js' %}" defer></script>
 </body>
 </html>

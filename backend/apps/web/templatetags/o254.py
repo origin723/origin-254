@@ -1,6 +1,8 @@
 from decimal import Decimal
 
 from django import template
+from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 
 register = template.Library()
 
@@ -81,3 +83,19 @@ def isodate(value):
 def label(value):
     """min_size_mm -> Min size mm; delivery_picked_up -> Delivery picked up."""
     return str(value).replace("_", " ").capitalize()
+
+
+_ASSET_VERSIONS = {}
+
+
+@register.simple_tag
+def asset_url(path):
+    """Static URL with ?v=<content hash>, so browsers and CDNs refetch a file whenever it changes
+    (also when DEBUG serves un-hashed file names)."""
+    if path not in _ASSET_VERSIONS:
+        import hashlib
+
+        found = finders.find(path)
+        _ASSET_VERSIONS[path] = hashlib.sha256(open(found, "rb").read()).hexdigest()[:10] if found else ""
+    url, version = static(path), _ASSET_VERSIONS[path]
+    return f"{url}?v={version}" if version else url
