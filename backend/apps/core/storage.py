@@ -180,3 +180,16 @@ class CloudinaryStorage(Storage):
 
     def url(self, name):
         raise NotImplementedError("Files are served through permission-checked views, not public URLs")
+
+    def signed_image_url(self, name, width=None):
+        """Signed CDN URL for an image (optionally resized), for a view to redirect to after its
+        permission check, so app workers don't proxy the bytes. None for non-image files."""
+        import cloudinary.utils
+
+        resource_type, public_id, ext = self._resource(name)
+        if resource_type != "image":
+            return None
+        options = {"crop": "fill", "width": width, "height": width, "gravity": "auto"} if width else {}
+        url, _ = cloudinary.utils.cloudinary_url(public_id, resource_type="image", type=self.delivery_type,
+                                                 format=ext, sign_url=True, secure=True, **options)
+        return url

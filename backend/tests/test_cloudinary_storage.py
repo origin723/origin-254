@@ -71,3 +71,9 @@ class CloudinaryStorageTests(SimpleTestCase):
             self.storage.delete("product_photos/1/x.jpg")
         self.assertEqual(destroy.call_args.args[0], "origin254/product_photos/1/x")
         self.assertEqual(destroy.call_args.kwargs["type"], "authenticated")
+
+    def test_signed_image_url_resizes_images_and_skips_other_files(self):
+        url = self.storage.signed_image_url("product_photos/1/x.jpg", width=200)
+        self.assertIn("demo-cloud/image/authenticated/s--", url)
+        self.assertIn("w_200", url)
+        self.assertIsNone(self.storage.signed_image_url("verification/1/doc.pdf"))

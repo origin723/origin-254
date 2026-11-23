@@ -183,7 +183,7 @@ class NearestSupplierPhotoTests(TestCase):
         r = c.get("/app/suppliers/nearest/", {"product": "Mango",
                                                "location": Location.objects.get(name="Nairobi Industrial Area").pk})
         import re
-        urls = re.findall(r'src="(/app/photos/\d+/)"', r.content.decode())
+        urls = re.findall(r'src="(/app/photos/\d+/(?:\?size=thumb)?)"', r.content.decode())
         self.assertTrue(urls)
         for url in urls:
             resp = c.get(url)
@@ -201,3 +201,19 @@ class NearestSupplierPhotoTests(TestCase):
         self.assertContains(r, "Collection only")
         self.assertNotContains(r, "Up to 0 km")
         self.assertContains(r, " kilograms</td>")
+
+    def test_photo_view_redirects_to_signed_cdn_url_when_storage_offers_one(self):
+        from unittest import mock
+
+        from django.core.files.storage import FileSystemStorage
+        from apps.catalog.models import InventoryPhoto
+        photo = InventoryPhoto.objects.select_related("inventory_item__supplier__user").first()
+        c = Client()
+        c.force_login(photo.inventory_item.supplier.user)
+        signer = mock.Mock(return_value="https://cdn.example/signed/x.jpg")
+        with mock.patch.object(FileSystemStorage, "signed_image_url", signer, create=True):
+            r = c.get(f"/app/photos/{photo.pk}/?size=thumb")
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r["Location"], "https://cdn.example/signed/x.jpg")
+        self.assertEqual(signer.call_args.kwargs["width"], 200)
+

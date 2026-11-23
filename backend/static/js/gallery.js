@@ -112,7 +112,7 @@
     });
     strip.innerHTML = photos.map(function (p, n) {
       return '<button type="button" role="option" data-i="' + n + '" aria-label="Photo ' + (n + 1) + '">' +
-             '<img src="' + p.src + '" alt="" loading="lazy"></button>';
+             '<img src="' + p.src + (p.src.indexOf("?") < 0 ? "?" : "&") + 'size=thumb" alt="" loading="lazy"></button>';
     }).join("");
     lastFocus = document.activeElement;
     overlay.hidden = false;

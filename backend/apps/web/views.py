@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.db.models import Q
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponseRedirect
 from apps.core.files import open_stored
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -466,6 +466,15 @@ def photo_view(request, pk):
     photo = get_object_or_404(InventoryPhoto.objects.select_related("inventory_item__supplier"), pk=pk)
     if not can_view_photo(request.user, photo):
         raise Http404
+    # Thumbnails ask for ?size=thumb (200px). On Cloudinary, redirect to a signed CDN URL instead of
+    # streaming the bytes through a worker; other storages stream as before.
+    width = 200 if request.GET.get("size") == "thumb" else None
+    signed = getattr(photo.image.storage, "signed_image_url", None)
+    url = signed(photo.image.name, width=width) if signed else None
+    if url:
+        response = HttpResponseRedirect(url)
+        response["Cache-Control"] = "private, max-age=3600"
+        return response
     ext = photo.image.name.rsplit(".", 1)[-1].lower()
     content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}[ext]
     response = FileResponse(open_stored(photo.image), content_type=content_type)

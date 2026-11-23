@@ -64,7 +64,7 @@
   <div class="photo-list">
   {% for item in listings %}
     <div><div class="spread"><strong>{{ item.product }}{% if item.variety %} · {{ item.variety.name }}{% endif %} <small class="muted">{{ item.quantity_available|qty }} {{ item.unit }}</small></strong>{% if item.photos.all|length < min_photos %}<span class="badge bad">{{ item.photos.all|length }}/{{ min_photos }} photos: hidden from buyers</span>{% else %}<small class="muted">{{ item.photos.all|length }} / {{ max_photos }} <span class="badge ok">Visible to buyers</span></small>{% endif %}</div>
-      <div class="thumbs">{% for p in item.photos.all %}<div class="thumb"><a href="{% url 'web:photo' p.pk %}"><img src="{% url 'web:photo' p.pk %}" alt="{{ p.caption|default:item.product.name }}" loading="lazy"></a><form method="post" action="{% url 'web:photo_delete' p.pk %}">{% csrf_token %}<button title="Remove photo" aria-label="Remove photo">×</button></form></div>{% empty %}<div class="thumb empty-slot">📷</div>{% endfor %}</div>
+      <div class="thumbs">{% for p in item.photos.all %}<div class="thumb"><a href="{% url 'web:photo' p.pk %}"><img src="{% url 'web:photo' p.pk %}?size=thumb" alt="{{ p.caption|default:item.product.name }}" loading="lazy"></a><form method="post" action="{% url 'web:photo_delete' p.pk %}">{% csrf_token %}<button title="Remove photo" aria-label="Remove photo">×</button></form></div>{% empty %}<div class="thumb empty-slot">📷</div>{% endfor %}</div>
       {% if item.photos.all|length < max_photos %}{% include "web/_photo_upload.html" %}{% endif %}
     </div>
   {% empty %}<div class="empty">Add stock first, then upload photos of it. <a href="{% url 'web:inventory' %}#form">Add stock →</a></div>{% endfor %}
